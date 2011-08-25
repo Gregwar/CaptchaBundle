@@ -1,0 +1,8 @@
+
+services:
+    # captcha type
+    captcha.type:
+        class: Gregwar\CaptchaBundle\Type\CaptchaType
+        arguments: [@session]
+        tags:
+            - { name: form.type, alias: captcha }
