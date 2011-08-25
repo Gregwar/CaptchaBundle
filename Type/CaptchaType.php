@@ -11,6 +11,7 @@ use Symfony\Component\Form\Exception\FormException;
 use Symfony\Component\HttpFoundation\Session;
 
 use Gregwar\CaptchaBundle\Validator\CaptchaValidator;
+use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
 
 /**
  * Captcha type
@@ -37,7 +38,9 @@ class CaptchaType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form)
     {
-        $view->set('captcha_code', $this->generateCaptchaValue());
+        $generator = new CaptchaGenerator($this->generateCaptchaValue());
+
+        $view->set('captcha_code', $generator->getCode());
     }    
 
     public function getParent(array $options)

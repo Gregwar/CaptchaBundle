@@ -1,4 +1,4 @@
 {% block captcha_widget %}
-    [{{ captcha_code }}]<br />
+    <img src="{{ captcha_code }}" /><br />
     {{ form_widget(form) }}
 {% endblock %}
