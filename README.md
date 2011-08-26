@@ -56,6 +56,19 @@ You can use the "captcha" type in your forms this way:
 Note that the generated image will be embeded in the HTML document, to avoid dealing
 with route and subrequests.
 
+Form theming
+============
+
+If you want to put the image in an other way, you can form theme `captcha_bundle` (this
+is the default behavior) :
+
+```html
+{% block captcha_widget %}
+    <img src="{{ captcha_code }}" title="captcha" width="120" height="40" />
+    {{ form_widget(form) }}
+{% endblock %}
+```
+
 License
 =======
 

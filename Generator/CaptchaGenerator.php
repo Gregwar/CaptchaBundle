@@ -22,6 +22,7 @@ class CaptchaGenerator {
     public function generate()
     {
         $i = imagecreatetruecolor(120,40);
+
         $col = imagecolorallocate($i, mt_rand(0,110), mt_rand(0,110), mt_rand(0,110));
 
         imagefill($i, 0, 0, 0xFFFFFF);
