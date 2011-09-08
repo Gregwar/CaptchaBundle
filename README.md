@@ -1,43 +1,75 @@
 Gregwar's CaptchaBundle
 =====================
 
-`GregwarCaptchaBundle` provides the form type "captcha"
+The `GregwarCaptchaBundle` adds support for a "captcha" form type for the
+Symfony2 form component.
 
 Installation
 ============
 
-To install `GregwarCaptchaBundle`, first adds it to your `deps`:
+### Step 1: Download the GregwarCaptchaBundle
 
+Ultimately, the GregwarCaptchaBundle files should be downloaded to the
+'vendor/bundles/Gregwar/CaptchaBundle' directory.
+
+You can accomplish this several ways, depending on your personal preference.
+The first method is the standard Symfony2 method.
+
+**Using the vendors script **
+
+Add the following lines to your `deps` file:
+
+```
     [GregwarCaptchaBundle]
         git=git://github.com/Gregwar/CaptchaBundle.git
         target=/bundles/Gregwar/CaptchaBundle
-
-And run `php bin/vendors install`. Then add the namespace to your `app/autoload.php` 
-file:
-
-```php
-<?php
-...
-'Gregwar' => __DIR__.'/../vendor/bundles',
-...
 ```
 
-And registers the bundle in your `app/AppKernel.php`:
+Now, run the vendors script to download the bundle:
+
+``` bash
+$ php bin/vendors install
+```
+
+***Using submodules***
+If you prefer instead to use git submodules, then run the following:
+
+``` bash
+$ git submodule add git://github.com/Gregwar/CaptchaBundle.git vendor/bundles/Gregwar/CaptchaBundle
+$ git submodule update --init
+```
+
+### Step 2: Configure the Autoloader
+
+Now you will need to add the `Gregwar` namespace to your autoloader:
+
+``` php
+<?php
+// app/autoload.php
+
+$loader->registerNamspaces(array(
+    // ...
+    'Gregwar' => __DIR__.'/../vendor/bundles',
+));
+```
+### Step 3: Enable the bundle
+
+Finally, enable the bundle in the kernel:
 
 ```php
 <?php
-//...
+// app/appKernel.php
+
 public function registerBundles()
 {
     $bundles = array(
-        ...
+        // ...
         new Gregwar\CaptchaBundle\GregwarCaptchaBundle(),
-        ...
     );
-...
+}
 ```
 
-Adds the following configuration to your `app/config/config.yml`:
+Add the following configuration to your `app/config/config.yml`:
 
     gregwar_captcha: ~
 
@@ -71,5 +103,6 @@ is the default behavior) :
 
 License
 =======
+This bundle is under the MIT license. See the complete license in the bundle:
+    LICENSE
 
-This bundle is under MIT license
