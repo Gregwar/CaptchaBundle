@@ -3,6 +3,6 @@ services:
     # captcha type
     captcha.type:
         class: Gregwar\CaptchaBundle\Type\CaptchaType
-        arguments: [@session]
+        arguments: [@session, @service_container]
         tags:
             - { name: form.type, alias: captcha }

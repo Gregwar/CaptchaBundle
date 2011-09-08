@@ -14,14 +14,17 @@ class CaptchaGenerator {
         $this->value = $value;
     }
 
-    public function getCode()
+    public function getCode($width = 120, $height = 40)
     {
-        return 'data:image/jpeg;base64,'.base64_encode($this->generate());
+        return 'data:image/jpeg;base64,'.base64_encode($this->generate($width, $height));
     }
-
-    public function generate()
+    
+    /**
+     * Generate the image
+     */
+    public function generate($width, $height)
     {
-        $i = imagecreatetruecolor(120,40);
+        $i = imagecreatetruecolor($width,$height);
 
         $col = imagecolorallocate($i, mt_rand(0,110), mt_rand(0,110), mt_rand(0,110));
 
@@ -83,7 +86,7 @@ class CaptchaGenerator {
         return ob_get_clean();
     }
 
-    function getCol($image, $x, $y)
+    protected function getCol($image, $x, $y)
     {
         $L = imagesx($image);
         $H = imagesy($image);
@@ -92,7 +95,7 @@ class CaptchaGenerator {
         else return imagecolorat($image, $x, $y);
     }
 
-    function getRGB($col) {
+    protected function getRGB($col) {
         return array(
             (int)($col >> 16) & 0xff,
             (int)($col >> 8) & 0xff,
