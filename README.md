@@ -92,6 +92,9 @@ You can use the "captcha" type in your forms this way:
 Note that the generated image will be embeded in the HTML document, to avoid dealing
 with route and subrequests.
 
+Options
+=======
+
 You can define the following type option :
 
 * **width**: the width of the captcha image (default=120)
