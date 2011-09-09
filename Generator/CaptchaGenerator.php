@@ -41,7 +41,13 @@ class CaptchaGenerator {
         }
 
         // Write CAPTCHA text
-        imagettftext($i, 28, 0, 5, 32, $col, dirname(__FILE__).'/Font/captcha.ttf', $this->value);
+        $size = $width/5.0;
+        $font = __DIR__.'/Font/captcha.ttf';
+        $box = imagettfbbox($size, 0, $font, $this->value);
+        $txt_width = $box[2] - $box[0];
+        $txt_height = $box[1] - $box[7];
+
+        imagettftext($i, $size, 0, ($width-$txt_width)/2, ($height-$txt_height)/2+$size, $col, $font, $this->value);
 
         // Distort the image
         $X = mt_rand(0, $width);
