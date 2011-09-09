@@ -22,16 +22,16 @@ use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
 class CaptchaType extends AbstractType
 {
     /**
-     * The image height
-     * @var integer
-     */
-    protected $height;
-    
-    /**
      * The image width
      * @var integer
      */
     protected $width;
+
+    /**
+     * The image height
+     * @var integer
+     */
+    protected $height;
 
     /** 
      * The session
@@ -42,11 +42,11 @@ class CaptchaType extends AbstractType
     private $key = 'captcha';
 
 
-    public function __construct(Session $session, ContainerInterface $container)
+    public function __construct(Session $session, $width, $height)
     {
         $this->session = $session;
-        $this->height = $container->getParameter('gregwar_captcha.image.height');
-        $this->width  = $container->getParameter('gregwar_captcha.image.width');
+        $this->width = $width;
+        $this->height = $height;
         
     }
 
@@ -64,7 +64,20 @@ class CaptchaType extends AbstractType
         $view->set('captcha_code', $generator->getCode($this->width, $this->height));
         $view->set('captcha_width', $this->width);
         $view->set('captcha_height', $this->height);
-    }    
+    }
+
+    public function getDefaultOptions(array $options = array()) 
+    {
+        if (isset($options['width'])) {
+            $this->width = $options['width'];
+            $this->height = $options['height'];
+        }
+
+        return array(
+            'width' => $this->width,
+            'height' => $this->height
+        );
+    }
 
     public function getParent(array $options)
     {
