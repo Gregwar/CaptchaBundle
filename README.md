@@ -15,7 +15,7 @@ Ultimately, the GregwarCaptchaBundle files should be downloaded to the
 You can accomplish this several ways, depending on your personal preference.
 The first method is the standard Symfony2 method.
 
-**Using the vendors script **
+***Using the vendors script***
 
 Add the following lines to your `deps` file:
 
@@ -32,6 +32,7 @@ $ php bin/vendors install
 ```
 
 ***Using submodules***
+
 If you prefer instead to use git submodules, then run the following:
 
 ``` bash
@@ -69,6 +70,9 @@ public function registerBundles()
 }
 ```
 
+Configuration
+=============
+
 Add the following configuration to your `app/config/config.yml`:
 
     gregwar_captcha: ~
@@ -91,13 +95,16 @@ with route and subrequests.
 Form theming
 ============
 
-If you want to put the image in an other way, you can form theme `captcha_bundle` (this
-is the default behavior) :
+The widget support the standard symfony theming, see the [documentation](http://symfony.com/doc/current/book/forms.html#form-theming) for details on how to accomplish this.
+
+The default rendering is:
 
 ```html
 {% block captcha_widget %}
-    <img src="{{ captcha_code }}" title="captcha" width="120" height="40" />
+{% spaceless %}
+    <img src="{{ captcha_code }}" title="captcha" width="{{ captcha_width }}" height="{{ captcha_height }}" />
     {{ form_widget(form) }}
+{% spaceless %}
 {% endblock %}
 ```
 
