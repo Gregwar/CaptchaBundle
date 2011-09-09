@@ -1,4 +1,7 @@
 {% block captcha_widget %}
-    <img src="{{ captcha_code }}" title="captcha" width="120" height="40" />
+{% spaceless %}
+    <img src="{{ captcha_code }}" title="captcha" width="{{ captcha_width }}" height="{{ captcha_height }}" />
     {{ form_widget(form) }}
+{% endspaceless %}
 {% endblock %}
+

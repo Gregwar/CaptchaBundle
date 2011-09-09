@@ -14,14 +14,17 @@ class CaptchaGenerator {
         $this->value = $value;
     }
 
-    public function getCode()
+    public function getCode($width = 120, $height = 40)
     {
-        return 'data:image/jpeg;base64,'.base64_encode($this->generate());
+        return 'data:image/jpeg;base64,'.base64_encode($this->generate($width, $height));
     }
-
-    public function generate()
+    
+    /**
+     * Generate the image
+     */
+    public function generate($width, $height)
     {
-        $i = imagecreatetruecolor(120,40);
+        $i = imagecreatetruecolor($width,$height);
 
         $col = imagecolorallocate($i, mt_rand(0,110), mt_rand(0,110), mt_rand(0,110));
 
@@ -30,10 +33,10 @@ class CaptchaGenerator {
         // Draw random lines
         for ($t=0; $t<10; $t++) {
             $tcol = imagecolorallocate($i, 100+mt_rand(0,150), 100+mt_rand(0,150), 100+mt_rand(0,150));
-            $Xa = mt_rand(0, 120);
-            $Ya = mt_rand(0, 40);
-            $Xb = mt_rand(0, 120);
-            $Yb = mt_rand(0, 40);
+            $Xa = mt_rand(0, $width);
+            $Ya = mt_rand(0, $height);
+            $Xb = mt_rand(0, $width);
+            $Yb = mt_rand(0, $height);
             imageline($i, $Xa, $Ya, $Xb, $Yb, $tcol);
         }
 
@@ -41,15 +44,15 @@ class CaptchaGenerator {
         imagettftext($i, 28, 0, 5, 32, $col, dirname(__FILE__).'/Font/captcha.ttf', $this->value);
 
         // Distort the image
-        $X = mt_rand(0, 120);
-        $Y = mt_rand(0, 40);
+        $X = mt_rand(0, $width);
+        $Y = mt_rand(0, $height);
         $Phase=mt_rand(0,10);
         $Scale = 1.3 + mt_rand(0,10000)/30000;
         $Amp=1+mt_rand(0,1000)/1000;
-        $out = imagecreatetruecolor(120,40);
+        $out = imagecreatetruecolor($width, $height);
 
-        for ($x=0; $x<120; $x++)
-            for ($y=0; $y<40; $y++) {
+        for ($x=0; $x<$width; $x++)
+            for ($y=0; $y<$height; $y++) {
                 $Vx=$x-$X;
                 $Vy=$y-$Y;
                 $Vn=sqrt($Vx*$Vx+$Vy*$Vy);
@@ -83,7 +86,7 @@ class CaptchaGenerator {
         return ob_get_clean();
     }
 
-    function getCol($image, $x, $y)
+    protected function getCol($image, $x, $y)
     {
         $L = imagesx($image);
         $H = imagesy($image);
@@ -92,7 +95,7 @@ class CaptchaGenerator {
         else return imagecolorat($image, $x, $y);
     }
 
-    function getRGB($col) {
+    protected function getRGB($col) {
         return array(
             (int)($col >> 16) & 0xff,
             (int)($col >> 8) & 0xff,
