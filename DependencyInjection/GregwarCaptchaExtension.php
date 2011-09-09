@@ -12,12 +12,19 @@ class GregwarCaptchaExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
+
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $container->setParameter('gregwar_captcha.image.height', $config['image']['height']);
+        $container->setParameter('gregwar_captcha.image.width', $config['image']['width']);
         $resources = $container->getParameter('twig.form.resources');
-        $resources[] = 'GregwarCaptchaBundle::captcha.html.twig';
-        $container->setParameter('twig.form.resources', $resources);
+        $container->setParameter('twig.form.resources',array_merge(array('GregwarCaptchaBundle::captcha.html.twig'), $resources));
+        
     }
+    
 }
 
