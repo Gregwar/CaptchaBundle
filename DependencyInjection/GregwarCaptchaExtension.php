@@ -19,8 +19,10 @@ class GregwarCaptchaExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('gregwar_captcha.image.height', $config['image']['height']);
-        $container->setParameter('gregwar_captcha.image.width', $config['image']['width']);
+        $container->setParameter('gregwar_captcha.length', $config['length']);
+        $container->setParameter('gregwar_captcha.height', $config['height']);
+        $container->setParameter('gregwar_captcha.width', $config['width']);
+
         $resources = $container->getParameter('twig.form.resources');
         $container->setParameter('twig.form.resources',array_merge(array('GregwarCaptchaBundle::captcha.html.twig'), $resources));
         

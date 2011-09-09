@@ -3,6 +3,6 @@ services:
     # captcha type
     captcha.type:
         class: Gregwar\CaptchaBundle\Type\CaptchaType
-        arguments: [@session, %gregwar_captcha.image.width%, %gregwar_captcha.image.height%]
+        arguments: [@session, %gregwar_captcha.width%, %gregwar_captcha.height%, %gregwar_captcha.length%]
         tags:
             - { name: form.type, alias: captcha }

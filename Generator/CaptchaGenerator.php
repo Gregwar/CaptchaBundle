@@ -41,7 +41,7 @@ class CaptchaGenerator {
         }
 
         // Write CAPTCHA text
-        $size = $width/5.0;
+        $size = $width/strlen($this->value);
         $font = __DIR__.'/Font/captcha.ttf';
         $box = imagettfbbox($size, 0, $font, $this->value);
         $txt_width = $box[2] - $box[0];

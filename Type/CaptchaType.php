@@ -33,6 +33,12 @@ class CaptchaType extends AbstractType
      */
     protected $height;
 
+    /**
+     * The code length
+     * @var integer
+     */
+    protected $length;
+
     /** 
      * The session
      * @var Symfony\Component\HttpFoundation\Session
@@ -42,12 +48,12 @@ class CaptchaType extends AbstractType
     private $key = 'captcha';
 
 
-    public function __construct(Session $session, $width, $height)
+    public function __construct(Session $session, $width, $height, $length)
     {
         $this->session = $session;
         $this->width = $width;
         $this->height = $height;
-        
+        $this->length = $length;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -70,12 +76,18 @@ class CaptchaType extends AbstractType
     {
         if (isset($options['width'])) {
             $this->width = $options['width'];
+        }
+        if (isset($options['height'])) {
             $this->height = $options['height'];
+        }
+        if (isset($options['length'])) {
+            $this->length = $options['length'];
         }
 
         return array(
             'width' => $this->width,
-            'height' => $this->height
+            'height' => $this->height,
+            'length' => $this->length
         );
     }
 
@@ -95,7 +107,7 @@ class CaptchaType extends AbstractType
         $value = '';
         $chars = str_split($charset);
 
-        for ($i=0; $i<5; $i++) {
+        for ($i=0; $i<$this->length; $i++) {
             $value.= $chars[array_rand($chars)];
         }
 
