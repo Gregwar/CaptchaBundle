@@ -92,6 +92,32 @@ You can use the "captcha" type in your forms this way:
 Note that the generated image will be embeded in the HTML document, to avoid dealing
 with route and subrequests.
 
+You can define the following type option :
+
+* **width**: the width of the captcha image (default=120)
+* **height**: the height of the captcha image (default=40)
+* **length**: the length of the captcha (number of chars, default 5)
+
+Example :
+
+```php
+<?php
+    // ...
+    $builder->add('captcha', 'captcha', array(
+        'width' => 200,
+        'height' => 50,
+        'length' => 6
+    ));
+```
+
+You can also set these options for your whole application using the `gregwar_captcha`
+configuration entry in your `config.yml` file:
+
+    gregwar_captcha:
+        width: 200
+        height: 50
+        length: 6
+
 Form theming
 ============
 
