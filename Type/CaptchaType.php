@@ -87,7 +87,8 @@ class CaptchaType extends AbstractType
         return array(
             'width' => $this->width,
             'height' => $this->height,
-            'length' => $this->length
+            'length' => $this->length,
+            'property_path' => false,
         );
     }
 
