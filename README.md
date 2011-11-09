@@ -103,6 +103,8 @@ You can define the following type option :
 * **as_file**: if set to true an image file will be created instead of embedding to please IE6/7 (default=false)
 * **image_folder**: name of folder for captcha images relative to public web folder in case **as_file** ist set to true (default="captcha")
 * **web_path**: absolute path to public web folder (default="%kernel.root_dir%/../web")
+* **gc_freq**: frequency of garbage collection in fractions of 1 (default=100)
+* **expiration**: maximum lifetime of captcha image files in minutes (default=60)
 
 Example :
 
@@ -142,8 +144,8 @@ The default rendering is:
 
 Image creation
 ==============
-If you choose to use real images instead of embedded the widget will execute a garbage collection
-randomly and delete images that are older than 10 minutes.
+If you choose to use image files instead of embedding the widget will execute a garbage collection
+randomly and delete images that exceed the configured lifetime.
 
 License
 =======
