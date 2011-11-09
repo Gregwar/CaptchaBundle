@@ -25,6 +25,8 @@ class GregwarCaptchaExtension extends Extension
         $container->setParameter('gregwar_captcha.as_file', $config['as_file']);
         $container->setParameter('gregwar_captcha.image_folder', $config['image_folder']);
         $container->setParameter('gregwar_captcha.web_path', $config['web_path']);
+        $container->setParameter('gregwar_captcha.gc_freq', $config['gc_freq']);
+        $container->setParameter('gregwar_captcha.expiration', $config['expiration']);
 
         $resources = $container->getParameter('twig.form.resources');
         $container->setParameter('twig.form.resources',array_merge(array('GregwarCaptchaBundle::captcha.html.twig'), $resources));

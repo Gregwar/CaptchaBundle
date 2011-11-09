@@ -25,6 +25,8 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('as_file')->defaultValue(false)->end()
                 ->scalarNode('image_folder')->defaultValue('captcha')->end()
                 ->scalarNode('web_path')->defaultValue('%kernel.root_dir%/../web')->end()
+                ->scalarNode('gc_freq')->defaultValue(100)->end()
+                ->scalarNode('expiration')->defaultValue(60)->end()
             ->end()
         ;
         return $treeBuilder;

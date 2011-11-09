@@ -59,6 +59,18 @@ class CaptchaType extends AbstractType
     protected $webPath;
 
     /**
+     * Frequence of garbage collection in fractions of 1
+     * @var int
+     */
+    public $gcFreq;
+
+    /**
+     * Maximum age of images in minutes
+     * @var int
+     */
+    public $expiration;
+
+    /**
      * The session
      * @var Symfony\Component\HttpFoundation\Session
      */
@@ -67,7 +79,7 @@ class CaptchaType extends AbstractType
     private $key = 'captcha';
 
 
-    public function __construct(Session $session, $width, $height, $length, $asFile, $imageFolder, $webPath)
+    public function __construct(Session $session, $width, $height, $length, $asFile, $imageFolder, $webPath, $gcFreq, $expiration)
     {
         $this->session = $session;
         $this->width = $width;
@@ -76,6 +88,8 @@ class CaptchaType extends AbstractType
         $this->asFile = $asFile;
         $this->imageFolder = $imageFolder;
         $this->webPath = $webPath;
+        $this->gcFreq = $gcFreq;
+        $this->expiration = $expiration;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -87,7 +101,7 @@ class CaptchaType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form)
     {
-        $generator = new CaptchaGenerator($this->generateCaptchaValue(), $this->imageFolder, $this->webPath);
+        $generator = new CaptchaGenerator($this->generateCaptchaValue(), $this->imageFolder, $this->webPath, $this->gcFreq, $this->expiration);
 
         if ($this->asFile) {
             $view->set('captcha_code', $generator->getFile($this->width, $this->height));
