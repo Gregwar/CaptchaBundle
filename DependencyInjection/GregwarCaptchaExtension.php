@@ -22,11 +22,14 @@ class GregwarCaptchaExtension extends Extension
         $container->setParameter('gregwar_captcha.length', $config['length']);
         $container->setParameter('gregwar_captcha.height', $config['height']);
         $container->setParameter('gregwar_captcha.width', $config['width']);
+        $container->setParameter('gregwar_captcha.as_file', $config['as_file']);
+        $container->setParameter('gregwar_captcha.image_folder', $config['image_folder']);
+        $container->setParameter('gregwar_captcha.web_path', $config['web_path']);
 
         $resources = $container->getParameter('twig.form.resources');
         $container->setParameter('twig.form.resources',array_merge(array('GregwarCaptchaBundle::captcha.html.twig'), $resources));
-        
+
     }
-    
+
 }
 

@@ -15,13 +15,16 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('gregwar_captcha', 'array');
-        
+
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('length')->defaultValue(5)->end()
                 ->scalarNode('width')->defaultValue(120)->end()
                 ->scalarNode('height')->defaultValue(40)->end()
+                ->scalarNode('as_file')->defaultValue(false)->end()
+                ->scalarNode('image_folder')->defaultValue('captcha')->end()
+                ->scalarNode('web_path')->defaultValue('%kernel.root_dir%/../web')->end()
             ->end()
         ;
         return $treeBuilder;
