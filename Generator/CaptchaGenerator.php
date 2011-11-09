@@ -2,27 +2,68 @@
 
 namespace Gregwar\CaptchaBundle\Generator;
 
+use Symfony\Component\Finder\Finder;
+
 /**
  * Generates a CAPTCHA image
  */
 class CaptchaGenerator {
 
+    public $imageFolder;
+    public $webPath;
     public $value;
 
-    public function __construct($value)
+    public function __construct($value, $imageFolder, $webPath)
     {
         $this->value = $value;
+        $this->imageFolder = $imageFolder;
+        $this->webPath = $webPath;
     }
 
     public function getCode($width = 120, $height = 40)
     {
         return 'data:image/jpeg;base64,'.base64_encode($this->generate($width, $height));
     }
-    
+
+    /**
+     * Creates a captcha image with provided dimensions
+     * and randomly executes a garbage collection
+     *
+     * @param int $width
+     * @param int $height
+     * @return string Web path to the created image
+     */
+    public function getFile($width = 120, $height = 40)
+    {
+        if (rand(0, 10) == 5) {
+            $this->garbageCollection();
+        }
+
+        return $this->generate($width, $height, true);
+    }
+
+    /**
+     * Deletes all images in the configured folder
+     * that are older than 10 minutes
+     *
+     * @return void
+     */
+    public function garbageCollection()
+    {
+        $finder = new Finder();
+        $finder->in($this->webPath . '/' . $this->imageFolder)
+               ->date('since 10 minutes ago');
+
+        foreach($finder->files() as $file)
+        {
+            @unlink($file->getPathname());
+        }
+    }
+
     /**
      * Generate the image
      */
-    public function generate($width, $height)
+    public function generate($width, $height, $createFile = false)
     {
         $i = imagecreatetruecolor($width,$height);
 
@@ -73,7 +114,7 @@ class CaptchaGenerator {
                 }
                 $nY = $nY+$Scale*sin($Phase + $nX*0.2);
 
-                $p = $this->bilinearInterpolate($nX-floor($nX), $nY-floor($nY), 
+                $p = $this->bilinearInterpolate($nX-floor($nX), $nY-floor($nY),
                     $this->getCol($i,floor($nX),floor($nY)),
                     $this->getCol($i,ceil($nX),floor($nY)),
                     $this->getCol($i,floor($nX),ceil($nY)),
@@ -87,9 +128,16 @@ class CaptchaGenerator {
             }
 
         // Renders it
-        ob_start();
-        imagejpeg($out, null, 15);
-        return ob_get_clean();
+        if (!$createFile) {
+            ob_start();
+            imagejpeg($out, null, 15);
+            return ob_get_clean();
+        } else {
+            $filename = md5(uniqid()) . '.jpg';
+            $filepath = $this->webPath . '/' . $this->imageFolder . '/' . $filename;
+            imagejpeg($out, $filepath, 15);
+            return '/' . $this->imageFolder . '/' . $filename;
+        }
     }
 
     protected function getCol($image, $x, $y)
