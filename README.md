@@ -100,6 +100,9 @@ You can define the following type option :
 * **width**: the width of the captcha image (default=120)
 * **height**: the height of the captcha image (default=40)
 * **length**: the length of the captcha (number of chars, default 5)
+* **as_file**: if set to true an image file will be created instead of embedding to please IE6/7 (default=false)
+* **image_folder**: name of folder for captcha images relative to public web folder in case **as_file** ist set to true (default="captcha")
+* **web_path**: absolute path to public web folder (default="%kernel.root_dir%/../web")
 
 Example :
 
@@ -109,7 +112,7 @@ Example :
     $builder->add('captcha', 'captcha', array(
         'width' => 200,
         'height' => 50,
-        'length' => 6
+        'length' => 6,
     ));
 ```
 
@@ -136,6 +139,11 @@ The default rendering is:
 {% spaceless %}
 {% endblock %}
 ```
+
+Image creation
+==============
+If you choose to use real images instead of embedded the widget will execute a garbage collection
+randomly and delete images that are older than 10 minutes.
 
 License
 =======

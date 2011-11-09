@@ -39,21 +39,43 @@ class CaptchaType extends AbstractType
      */
     protected $length;
 
-    /** 
+    /**
+     * Generate image or data
+     * @var boolean
+     */
+    protected $asFile;
+
+    /**
+     * Folder to save captcha images in,
+     * relative to public web folder
+     * @var string
+     */
+    protected $imageFolder;
+
+    /**
+     * Public web folder
+     * @var string
+     */
+    protected $webPath;
+
+    /**
      * The session
      * @var Symfony\Component\HttpFoundation\Session
      */
     protected $session;
-    
+
     private $key = 'captcha';
 
 
-    public function __construct(Session $session, $width, $height, $length)
+    public function __construct(Session $session, $width, $height, $length, $asFile, $imageFolder, $webPath)
     {
         $this->session = $session;
         $this->width = $width;
         $this->height = $height;
         $this->length = $length;
+        $this->asFile = $asFile;
+        $this->imageFolder = $imageFolder;
+        $this->webPath = $webPath;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -65,14 +87,18 @@ class CaptchaType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form)
     {
-        $generator = new CaptchaGenerator($this->generateCaptchaValue());
+        $generator = new CaptchaGenerator($this->generateCaptchaValue(), $this->imageFolder, $this->webPath);
 
-        $view->set('captcha_code', $generator->getCode($this->width, $this->height));
+        if ($this->asFile) {
+            $view->set('captcha_code', $generator->getFile($this->width, $this->height));
+        } else {
+            $view->set('captcha_code', $generator->getCode($this->width, $this->height));
+        }
         $view->set('captcha_width', $this->width);
         $view->set('captcha_height', $this->height);
     }
 
-    public function getDefaultOptions(array $options = array()) 
+    public function getDefaultOptions(array $options = array())
     {
         if (isset($options['width'])) {
             $this->width = $options['width'];
@@ -83,11 +109,15 @@ class CaptchaType extends AbstractType
         if (isset($options['length'])) {
             $this->length = $options['length'];
         }
+        if (isset($options['as_file'])) {
+            $this->asFile = $options['as_file'];
+        }
 
         return array(
             'width' => $this->width,
             'height' => $this->height,
             'length' => $this->length,
+            'as_file' => $this->asFile,
             'property_path' => false,
         );
     }
