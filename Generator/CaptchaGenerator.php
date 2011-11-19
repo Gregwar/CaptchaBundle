@@ -9,15 +9,43 @@ use Symfony\Component\Finder\Finder;
  */
 class CaptchaGenerator {
 
+    /**
+     * Name of folder for captcha images
+     * @var string
+     */
     public $imageFolder;
+
+    /**
+     * Absolute path to public web folder
+     * @var string
+     */
     public $webPath;
+
+    /**
+     * Frequence of garbage collection in fractions of 1
+     * @var int
+     */
+    public $gcFreq;
+
+    /**
+     * Maximum age of images in minutes
+     * @var int
+     */
+    public $expiration;
+
+    /**
+     * The captcha code
+     * @var string
+     */
     public $value;
 
-    public function __construct($value, $imageFolder, $webPath)
+    public function __construct($value, $imageFolder, $webPath, $gcFreq, $expiration)
     {
         $this->value = $value;
         $this->imageFolder = $imageFolder;
         $this->webPath = $webPath;
+        $this->gcFreq = intval($gcFreq);
+        $this->expiration = intval($expiration);
     }
 
     public function getCode($width = 120, $height = 40)
@@ -35,7 +63,7 @@ class CaptchaGenerator {
      */
     public function getFile($width = 120, $height = 40)
     {
-        if (rand(0, 10) == 5) {
+        if (mt_rand(1, $this->gcFreq) == 1) {
             $this->garbageCollection();
         }
 
@@ -51,12 +79,13 @@ class CaptchaGenerator {
     public function garbageCollection()
     {
         $finder = new Finder();
+        $criteria = sprintf('>= now - %s minutes', $this->expiration);
         $finder->in($this->webPath . '/' . $this->imageFolder)
-               ->date('since 10 minutes ago');
+               ->date($criteria);
 
         foreach($finder->files() as $file)
         {
-            @unlink($file->getPathname());
+            unlink($file->getPathname());
         }
     }
 
@@ -133,6 +162,10 @@ class CaptchaGenerator {
             imagejpeg($out, null, 15);
             return ob_get_clean();
         } else {
+            // Check if folder exists and create it if not
+            if (!file_exists($this->webPath . '/' . $this->imageFolder)) {
+                mkdir($this->webPath . '/' . $this->imageFolder, 0755);
+            }
             $filename = md5(uniqid()) . '.jpg';
             $filepath = $this->webPath . '/' . $this->imageFolder . '/' . $filename;
             imagejpeg($out, $filepath, 15);
