@@ -38,9 +38,9 @@ class CaptchaValidator implements FormValidatorInterface
         if (!($code && $excepted_code && is_string($code) && is_string($excepted_code)
             && $this->niceize($code) == $this->niceize($excepted_code))) {
             $form->addError(new FormError('Bad code value'));
+        } else {
+            $this->session->remove($this->key);
         }
-
-        $this->session->remove($this->key);
     }
 
     /**
