@@ -149,8 +149,8 @@ class CaptchaType extends AbstractType
 
     private function generateCaptchaValue()
     {
-        $value = $this->session->get($this->key);
-        if (null == $value || 0 == strlen($value)) {
+        if ($this->session->has($this->key)) {
+            $value = $this->session->get($this->key);
             $charset = 'abcdefhjkmnprstuvwxyz23456789';
             $chars = str_split($charset);
 
