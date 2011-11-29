@@ -94,6 +94,7 @@ class CaptchaType extends AbstractType
 
     public function buildForm(FormBuilder $builder, array $options)
     {
+        $this->key = $builder->getForm()->getName();
         $builder->addValidator(
             new CaptchaValidator($this->session, $this->key)
         );
@@ -148,15 +149,19 @@ class CaptchaType extends AbstractType
 
     private function generateCaptchaValue()
     {
-        $charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
-        $value = '';
-        $chars = str_split($charset);
+        if (!$this->session->has($this->key)) {
+            $value = '';
+            $charset = 'abcdefhjkmnprstuvwxyz23456789';
+            $chars = str_split($charset);
 
-        for ($i=0; $i<$this->length; $i++) {
-            $value.= $chars[array_rand($chars)];
+            for ($i=0; $i<$this->length; $i++) {
+                $value.= $chars[array_rand($chars)];
+            }
+
+            $this->session->set($this->key, $value);
+        } else {
+            $value = $this->session->get($this->key);
         }
-
-        $this->session->set($this->key, $value);
 
         return $value;
     }
