@@ -79,7 +79,7 @@ class CaptchaGenerator {
     public function garbageCollection()
     {
         $finder = new Finder();
-        $criteria = sprintf('>= now - %s minutes', $this->expiration);
+        $criteria = sprintf('<= now - %s minutes', $this->expiration);
         $finder->in($this->webPath . '/' . $this->imageFolder)
                ->date($criteria);
 
