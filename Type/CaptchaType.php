@@ -74,13 +74,19 @@ class CaptchaType extends AbstractType
      * Frequence of garbage collection in fractions of 1
      * @var int
      */
-    public $gcFreq;
+    protected $gcFreq;
+
+    /**
+     * Captcha font
+     * @var string
+     */
+    protected $font;
 
     /**
      * Maximum age of images in minutes
      * @var int
      */
-    public $expiration;
+    protected $expiration;
 
     /**
      * The session
@@ -109,6 +115,7 @@ class CaptchaType extends AbstractType
         $this->webPath = $config['web_path'];
         $this->gcFreq = $config['gc_freq'];
         $this->expiration = $config['expiration'];
+        $this->font = $config['font'];
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -121,7 +128,7 @@ class CaptchaType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form)
     {
-        $generator = new CaptchaGenerator($this->generateCaptchaValue(), $this->imageFolder, $this->webPath, $this->gcFreq, $this->expiration);
+        $generator = new CaptchaGenerator($this->generateCaptchaValue(), $this->imageFolder, $this->webPath, $this->gcFreq, $this->expiration, $this->font);
 
         if ($this->asFile) {
             $view->set('captcha_code', $generator->getFile($this->width, $this->height));

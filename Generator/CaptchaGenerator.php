@@ -28,6 +28,12 @@ class CaptchaGenerator {
     public $gcFreq;
 
     /**
+     * Captcha Font
+     * @var string
+     */
+    public $font;
+
+    /**
      * Maximum age of images in minutes
      * @var int
      */
@@ -39,15 +45,19 @@ class CaptchaGenerator {
      */
     public $value;
 
-    public function __construct($value, $imageFolder, $webPath, $gcFreq, $expiration)
+    public function __construct($value, $imageFolder, $webPath, $gcFreq, $expiration, $font)
     {
         $this->value = $value;
         $this->imageFolder = $imageFolder;
         $this->webPath = $webPath;
         $this->gcFreq = intval($gcFreq);
         $this->expiration = intval($expiration);
+        $this->font = $font;
     }
 
+    /**
+     * Get the captcha embeded code
+     */
     public function getCode($width = 120, $height = 40)
     {
         return 'data:image/jpeg;base64,'.base64_encode($this->generate($width, $height));
@@ -112,7 +122,7 @@ class CaptchaGenerator {
 
         // Write CAPTCHA text
         $size = $width/strlen($this->value);
-        $font = __DIR__.'/Font/captcha.ttf';
+        $font = $this->font;
         $box = imagettfbbox($size, 0, $font, $this->value);
         $txt_width = $box[2] - $box[0];
         $txt_height = $box[1] - $box[7];
