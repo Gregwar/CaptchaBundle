@@ -46,6 +46,12 @@ class CaptchaType extends AbstractType
     protected $asFile;
 
     /**
+     * Keep value between two requests ?
+     * @var boolean
+     */
+    protected $keepValue;
+
+    /**
      * Charset used
      * @var string
      */
@@ -96,8 +102,9 @@ class CaptchaType extends AbstractType
         $this->width = $config['width'];
         $this->height = $config['height'];
         $this->length = $config['length'];
-        $this->asFile = $config['as_file'];
         $this->charset = $config['charset'];
+        $this->keepValue = $config['keep_value'];
+        $this->asFile = $config['as_file'];
         $this->imageFolder = $config['image_folder'];
         $this->webPath = $config['web_path'];
         $this->gcFreq = $config['gc_freq'];
@@ -161,7 +168,7 @@ class CaptchaType extends AbstractType
 
     private function generateCaptchaValue()
     {
-        if (!$this->session->has($this->key)) {
+        if (!$this->keepValue || !$this->session->has($this->key)) {
             $value = '';
             $chars = str_split($this->charset);
 
