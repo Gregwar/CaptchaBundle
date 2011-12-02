@@ -76,20 +76,25 @@ class CaptchaType extends AbstractType
      */
     protected $session;
 
+    /**
+     * Session key
+     * @var String
+     */
     private $key = 'captcha';
 
 
-    public function __construct(Session $session, $width, $height, $length, $asFile, $imageFolder, $webPath, $gcFreq, $expiration)
+    public function __construct(Session $session, $config)
     {
         $this->session = $session;
-        $this->width = $width;
-        $this->height = $height;
-        $this->length = $length;
-        $this->asFile = $asFile;
-        $this->imageFolder = $imageFolder;
-        $this->webPath = $webPath;
-        $this->gcFreq = $gcFreq;
-        $this->expiration = $expiration;
+
+        $this->width = $config['width'];
+        $this->height = $config['height'];
+        $this->length = $config['length'];
+        $this->asFile = $config['as_file'];
+        $this->imageFolder = $config['image_folder'];
+        $this->webPath = $config['web_path'];
+        $this->gcFreq = $config['gc_freq'];
+        $this->expiration = $config['expiration'];
     }
 
     public function buildForm(FormBuilder $builder, array $options)
