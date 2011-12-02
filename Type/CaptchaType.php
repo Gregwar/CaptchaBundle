@@ -46,6 +46,12 @@ class CaptchaType extends AbstractType
     protected $asFile;
 
     /**
+     * Charset used
+     * @var string
+     */
+    protected $charset;
+
+    /**
      * Folder to save captcha images in,
      * relative to public web folder
      * @var string
@@ -78,7 +84,7 @@ class CaptchaType extends AbstractType
 
     /**
      * Session key
-     * @var String
+     * @var string
      */
     private $key = 'captcha';
 
@@ -91,6 +97,7 @@ class CaptchaType extends AbstractType
         $this->height = $config['height'];
         $this->length = $config['length'];
         $this->asFile = $config['as_file'];
+        $this->charset = $config['charset'];
         $this->imageFolder = $config['image_folder'];
         $this->webPath = $config['web_path'];
         $this->gcFreq = $config['gc_freq'];
@@ -156,8 +163,7 @@ class CaptchaType extends AbstractType
     {
         if (!$this->session->has($this->key)) {
             $value = '';
-            $charset = 'abcdefhjkmnprstuvwxyz23456789';
-            $chars = str_split($charset);
+            $chars = str_split($this->charset);
 
             for ($i=0; $i<$this->length; $i++) {
                 $value.= $chars[array_rand($chars)];
