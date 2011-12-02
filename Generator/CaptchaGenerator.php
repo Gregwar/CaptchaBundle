@@ -40,12 +40,25 @@ class CaptchaGenerator {
     public $expiration;
 
     /**
+     * Random fingerprint
+     * Useful to be able to regenerate exactly the same image
+     * @var array
+     */
+    public $fingerprint;
+
+    /**
+     * Should fingerprint be used ?
+     * @var boolean
+     */
+    public $use_fingerprint;
+
+    /**
      * The captcha code
      * @var string
      */
     public $value;
 
-    public function __construct($value, $imageFolder, $webPath, $gcFreq, $expiration, $font)
+    public function __construct($value, $imageFolder, $webPath, $gcFreq, $expiration, $font, $fingerprint)
     {
         $this->value = $value;
         $this->imageFolder = $imageFolder;
@@ -53,6 +66,8 @@ class CaptchaGenerator {
         $this->gcFreq = intval($gcFreq);
         $this->expiration = intval($expiration);
         $this->font = $font;
+        $this->fingerprint = $fingerprint;
+        $this->use_fingerprint = (bool)$fingerprint;
     }
 
     /**
@@ -81,6 +96,34 @@ class CaptchaGenerator {
     }
 
     /**
+     * Returns a random number or the next number in the
+     * fingerprint
+     */
+    public function rand($min, $max) 
+    {
+        if (!is_array($this->fingerprint)) {
+            $this->fingerprint = array();
+        }
+
+        if ($this->use_fingerprint) {
+            $value = current($this->fingerprint);
+            next($this->fingerprint);
+        } else {
+            $value = mt_rand($min, $max);
+            $this->fingerprint[] = $value;
+        }
+        return $value;
+    }
+
+    /**
+     * Get the CAPTCHA fingerprint
+     */
+    public function getFingerprint()
+    {
+        return $this->fingerprint;
+    }
+
+    /**
      * Deletes all images in the configured folder
      * that are older than 10 minutes
      *
@@ -106,17 +149,17 @@ class CaptchaGenerator {
     {
         $i = imagecreatetruecolor($width,$height);
 
-        $col = imagecolorallocate($i, mt_rand(0,110), mt_rand(0,110), mt_rand(0,110));
+        $col = imagecolorallocate($i, $this->rand(0,110), $this->rand(0,110), $this->rand(0,110));
 
         imagefill($i, 0, 0, 0xFFFFFF);
 
         // Draw random lines
         for ($t=0; $t<10; $t++) {
-            $tcol = imagecolorallocate($i, 100+mt_rand(0,150), 100+mt_rand(0,150), 100+mt_rand(0,150));
-            $Xa = mt_rand(0, $width);
-            $Ya = mt_rand(0, $height);
-            $Xb = mt_rand(0, $width);
-            $Yb = mt_rand(0, $height);
+            $tcol = imagecolorallocate($i, 100+$this->rand(0,150), 100+$this->rand(0,150), 100+$this->rand(0,150));
+            $Xa = $this->rand(0, $width);
+            $Ya = $this->rand(0, $height);
+            $Xb = $this->rand(0, $width);
+            $Yb = $this->rand(0, $height);
             imageline($i, $Xa, $Ya, $Xb, $Yb, $tcol);
         }
 
@@ -130,11 +173,11 @@ class CaptchaGenerator {
         imagettftext($i, $size, 0, ($width-$txt_width)/2, ($height-$txt_height)/2+$size, $col, $font, $this->value);
 
         // Distort the image
-        $X = mt_rand(0, $width);
-        $Y = mt_rand(0, $height);
-        $Phase=mt_rand(0,10);
-        $Scale = 1.3 + mt_rand(0,10000)/30000;
-        $Amp=1+mt_rand(0,1000)/1000;
+        $X = $this->rand(0, $width);
+        $Y = $this->rand(0, $height);
+        $Phase=$this->rand(0,10);
+        $Scale = 1.3 + $this->rand(0,10000)/30000;
+        $Amp=1+$this->rand(0,1000)/1000;
         $out = imagecreatetruecolor($width, $height);
 
         for ($x=0; $x<$width; $x++)

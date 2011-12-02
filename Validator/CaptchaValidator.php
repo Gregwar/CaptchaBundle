@@ -41,6 +41,10 @@ class CaptchaValidator implements FormValidatorInterface
         }
 
         $this->session->remove($this->key);
+
+        if ($this->session->has($this->key.'_fingerprint')) {
+            $this->session->remove($this->key.'_fingerprint');
+        }
     }
 
     /**

@@ -128,7 +128,13 @@ class CaptchaType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form)
     {
-        $generator = new CaptchaGenerator($this->generateCaptchaValue(), $this->imageFolder, $this->webPath, $this->gcFreq, $this->expiration, $this->font);
+        $fingerprint = null;
+        
+        if ($this->session->has($this->key.'_fingerprint')) {
+            $fingerprint = $this->session->get($this->key.'_fingerprint');
+        }
+
+        $generator = new CaptchaGenerator($this->generateCaptchaValue(), $this->imageFolder, $this->webPath, $this->gcFreq, $this->expiration, $this->font, $fingerprint);
 
         if ($this->asFile) {
             $view->set('captcha_code', $generator->getFile($this->width, $this->height));
@@ -137,6 +143,10 @@ class CaptchaType extends AbstractType
         }
         $view->set('captcha_width', $this->width);
         $view->set('captcha_height', $this->height);
+
+        if ($this->keepValue) {
+            $this->session->set($this->key.'_fingerprint', $generator->getFingerprint());
+        }
     }
 
     public function getDefaultOptions(array $options = array())
