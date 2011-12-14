@@ -63,6 +63,6 @@ class CaptchaValidator implements FormValidatorInterface
      */
     private function niceize($code) 
     {
-        return strtr($code, 'oil', '01l');
+        return strtr(strtolower($code), 'oil', '01l');
     }
 }
