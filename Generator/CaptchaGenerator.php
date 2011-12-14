@@ -58,7 +58,13 @@ class CaptchaGenerator {
      */
     public $value;
 
-    public function __construct($value, $imageFolder, $webPath, $gcFreq, $expiration, $font, $fingerprint)
+    /**
+     * Captcha quality
+     * @var int
+     */
+    public $quality;
+
+    public function __construct($value, $imageFolder, $webPath, $gcFreq, $expiration, $font, $fingerprint, $quality)
     {
         $this->value = $value;
         $this->imageFolder = $imageFolder;
@@ -68,6 +74,7 @@ class CaptchaGenerator {
         $this->font = $font;
         $this->fingerprint = $fingerprint;
         $this->use_fingerprint = (bool)$fingerprint;
+        $this->quality = intval($quality);
     }
 
     /**
@@ -212,7 +219,7 @@ class CaptchaGenerator {
         // Renders it
         if (!$createFile) {
             ob_start();
-            imagejpeg($out, null, 15);
+            imagejpeg($out, null, $this->quality);
             return ob_get_clean();
         } else {
             // Check if folder exists and create it if not

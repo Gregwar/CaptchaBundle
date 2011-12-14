@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('web_path')->defaultValue('%kernel.root_dir%/../web')->end()
                 ->scalarNode('gc_freq')->defaultValue(100)->end()
                 ->scalarNode('expiration')->defaultValue(60)->end()
+                ->scalarNode('quality')->defaultValue(15)->end()
             ->end()
         ;
         return $treeBuilder;

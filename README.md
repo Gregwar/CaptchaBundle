@@ -100,6 +100,7 @@ You can define the following type option :
 * **width**: the width of the captcha image (default=120)
 * **height**: the height of the captcha image (default=40)
 * **length**: the length of the captcha (number of chars, default 5)
+* **quality**: jpeg quality of captchas (default=15)
 * **charset**: the charset used for code generation (default=abcdefhjkmnprstuvwxyz23456789)
 * **font**: the font to use (default=Generator/Font/captcha.ttf)
 * **keep_value**: the value will be the same until the form is posted, even if the page is refreshed (default=true)
