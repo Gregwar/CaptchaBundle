@@ -13,6 +13,7 @@ use Symfony\Component\Form\Exception\FormException;
 
 use Gregwar\CaptchaBundle\Validator\CaptchaValidator;
 use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
+use Gregwar\CaptchaBundle\DataTransformer\EmptyTransformer;
 
 /**
  * Captcha type
@@ -121,6 +122,7 @@ class CaptchaType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $this->key = $builder->getForm()->getName();
+
         $builder->addValidator(
             new CaptchaValidator($this->session, $this->key)
         );
@@ -129,7 +131,7 @@ class CaptchaType extends AbstractType
     public function buildView(FormView $view, FormInterface $form)
     {
         $fingerprint = null;
-        
+
         if ($this->session->has($this->key.'_fingerprint')) {
             $fingerprint = $this->session->get($this->key.'_fingerprint');
         }
@@ -147,6 +149,8 @@ class CaptchaType extends AbstractType
         if ($this->keepValue) {
             $this->session->set($this->key.'_fingerprint', $generator->getFingerprint());
         }
+        
+        $view->set('value', '');
     }
 
     public function getDefaultOptions(array $options = array())
