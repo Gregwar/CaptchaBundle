@@ -4,6 +4,10 @@ Gregwar's CaptchaBundle
 The `GregwarCaptchaBundle` adds support for a "captcha" form type for the
 Symfony2 form component.
 
+Important note: the master of this repository is containing current development
+in order to work with Symfony 2.1. If you are using Symfony 2.0 please checkout
+the 2.0 branch.
+
 Installation
 ============
 
