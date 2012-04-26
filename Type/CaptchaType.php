@@ -2,7 +2,7 @@
 
 namespace Gregwar\CaptchaBundle\Type;
 
-use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Symfony\Component\Form\FormView;
