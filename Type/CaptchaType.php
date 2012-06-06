@@ -81,7 +81,7 @@ class CaptchaType extends AbstractType
         $view->set('value', '');
     }
 
-    public function getDefaultOptions(array $options = array())
+    public function getDefaultOptions()
     {
         $this->options = array_replace($this->options, $options);
         $this->options['property_path'] = false;
