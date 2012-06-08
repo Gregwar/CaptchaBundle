@@ -3,7 +3,7 @@
 namespace Gregwar\CaptchaBundle\Validator;
 
 use Symfony\Component\Form\FormValidatorInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormError;
 
