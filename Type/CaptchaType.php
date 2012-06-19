@@ -8,8 +8,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\Exception\FormException;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormViewInterface;
 
 use Gregwar\CaptchaBundle\Validator\CaptchaValidator;
 use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
@@ -27,7 +29,7 @@ class CaptchaType extends AbstractType
      * @var array
      */
     private $options = array();
-
+    
     /**
      * Session key
      * @var string
@@ -40,7 +42,7 @@ class CaptchaType extends AbstractType
         $this->options = $config;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->key = $builder->getForm()->getName();
 
@@ -49,47 +51,48 @@ class CaptchaType extends AbstractType
         );
     }
 
-    public function buildView(FormView $view, FormInterface $form)
+    public function buildView(FormViewInterface $view, FormInterface $form, array $options)
     {
         $fingerprint = null;
 
-        if ($this->options['keep_value'] && $this->session->has($this->key.'_fingerprint')) {
+        if ($options['keep_value'] && $this->session->has($this->key.'_fingerprint')) {
             $fingerprint = $this->session->get($this->key.'_fingerprint');
         }
 
         $generator = new CaptchaGenerator($this->generateCaptchaValue(), 
-                                          $this->options['image_folder'], 
-                                          $this->options['web_path'], 
-                                          $this->options['gc_freq'], 
-                                          $this->options['expiration'], 
-                                          $this->options['font'], 
+                                          $options['image_folder'], 
+                                          $options['web_path'], 
+                                          $options['gc_freq'], 
+                                          $options['expiration'], 
+                                          $options['font'], 
                                           $fingerprint, 
-                                          $this->options['quality']);
+                                          $options['quality']);
 
-        if ($this->options['as_file']) {
-            $view->set('captcha_code', $generator->getFile($this->options['width'], $this->options['height']));
+        if ($options['as_file']) {
+            $captchaCode = $generator->getFile($options['width'], $options['height']);
         } else {
-            $view->set('captcha_code', $generator->getCode($this->options['width'], $this->options['height']));
+            $captchaCode = $generator->getCode($options['width'], $options['height']);
         }
-        $view->set('captcha_width', $this->options['width']);
-        $view->set('captcha_height', $this->options['height']);
 
-        if ($this->options['keep_value']) {
+        if ($options['keep_value']) {
             $this->session->set($this->key.'_fingerprint', $generator->getFingerprint());
         }
         
-        $view->set('value', '');
+        $view->addVars(array(
+            'captcha_width'     => $options['width'],
+            'captcha_height'    => $options['height'],
+            'captcha_code'      => $captchaCode,
+            'value'             => '',
+        ));
     }
 
-    public function getDefaultOptions()
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $this->options = array_replace($this->options, $options);
-        $this->options['property_path'] = false;
-
-        return $this->options;
+        $this->options['property_path'] = false;        
+        $resolver->setDefaults($this->options);
     }
 
-    public function getParent(array $options)
+    public function getParent()
     {
         return 'text';
     }
