@@ -44,7 +44,19 @@ $ git submodule add git://github.com/Gregwar/CaptchaBundle.git vendor/bundles/Gr
 $ git submodule update --init
 ```
 
+***Using Composer***
+
+Add the following to the "require" section of your `composer.json` file:
+
+```
+    "gregwar/captcha-bundle": "1.0.0"
+```
+
+And update your dependencies
+
 ### Step 2: Configure the Autoloader
+
+If you use composer, you can skip this step.
 
 Now you will need to add the `Gregwar` namespace to your autoloader:
 
