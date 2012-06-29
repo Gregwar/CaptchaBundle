@@ -29,7 +29,7 @@ class CaptchaType extends AbstractType
      * @var array
      */
     private $options = array();
-    
+
     /**
      * Session key
      * @var string
@@ -47,7 +47,7 @@ class CaptchaType extends AbstractType
         $this->key = $builder->getForm()->getName();
 
         $builder->addValidator(
-            new CaptchaValidator($this->session, $this->key)
+            new CaptchaValidator($this->session, $this->key, $options['invalid_message'])
         );
     }
 
@@ -59,13 +59,13 @@ class CaptchaType extends AbstractType
             $fingerprint = $this->session->get($this->key.'_fingerprint');
         }
 
-        $generator = new CaptchaGenerator($this->generateCaptchaValue(), 
-                                          $options['image_folder'], 
-                                          $options['web_path'], 
-                                          $options['gc_freq'], 
-                                          $options['expiration'], 
-                                          $options['font'], 
-                                          $fingerprint, 
+        $generator = new CaptchaGenerator($this->generateCaptchaValue(),
+                                          $options['image_folder'],
+                                          $options['web_path'],
+                                          $options['gc_freq'],
+                                          $options['expiration'],
+                                          $options['font'],
+                                          $fingerprint,
                                           $options['quality']);
 
         if ($options['as_file']) {
@@ -77,7 +77,7 @@ class CaptchaType extends AbstractType
         if ($options['keep_value']) {
             $this->session->set($this->key.'_fingerprint', $generator->getFingerprint());
         }
-        
+
         $view->addVars(array(
             'captcha_width'     => $options['width'],
             'captcha_height'    => $options['height'],
@@ -88,7 +88,7 @@ class CaptchaType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $this->options['property_path'] = false;        
+        $this->options['property_path'] = false;
         $resolver->setDefaults($this->options);
     }
 

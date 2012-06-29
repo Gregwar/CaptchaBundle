@@ -24,10 +24,16 @@ class CaptchaValidator implements FormValidatorInterface
      */
     private $key;
 
-    public function __construct(Session $session, $key)
+    /**
+     * Error message text for non-matching submissions
+     */
+    private $invalidMessage;
+
+    public function __construct(Session $session, $key, $invalidMessage)
     {
         $this->session = $session;
         $this->key = $key;
+        $this->invalidMessage = $invalidMessage;
     }
 
     public function validate(FormInterface $form)
@@ -37,7 +43,7 @@ class CaptchaValidator implements FormValidatorInterface
 
         if (!($code && $excepted_code && is_string($code) && is_string($excepted_code)
             && $this->niceize($code) == $this->niceize($excepted_code))) {
-            $form->addError(new FormError('Bad code value'));
+            $form->addError(new FormError($this->invalidMessage));
         }
 
         $this->session->remove($this->key);
@@ -61,7 +67,7 @@ class CaptchaValidator implements FormValidatorInterface
     /**
      * Process the codes
      */
-    private function niceize($code) 
+    private function niceize($code)
     {
         return strtr(strtolower($code), 'oil', '01l');
     }
