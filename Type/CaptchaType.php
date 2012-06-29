@@ -45,7 +45,7 @@ class CaptchaType extends AbstractType
         $this->key = $builder->getForm()->getName();
 
         $builder->addValidator(
-            new CaptchaValidator($this->session, $this->key)
+            new CaptchaValidator($this->session, $this->key, $options['invalid_message'])
         );
     }
 
@@ -77,16 +77,31 @@ class CaptchaType extends AbstractType
         if ($this->options['keep_value']) {
             $this->session->set($this->key.'_fingerprint', $generator->getFingerprint());
         }
+<<<<<<< HEAD
         
         $view->set('value', '');
+=======
+
+        $view->addVars(array(
+            'captcha_width'     => $options['width'],
+            'captcha_height'    => $options['height'],
+            'captcha_code'      => $captchaCode,
+            'value'             => '',
+        ));
+>>>>>>> 8d54bfd... Add invalid_message configuration option
     }
 
     public function getDefaultOptions(array $options = array())
     {
+<<<<<<< HEAD
         $this->options = array_replace($this->options, $options);
         $this->options['property_path'] = false;
 
         return $this->options;
+=======
+        $this->options['property_path'] = false;
+        $resolver->setDefaults($this->options);
+>>>>>>> 8d54bfd... Add invalid_message configuration option
     }
 
     public function getParent(array $options)
