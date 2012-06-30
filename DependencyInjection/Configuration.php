@@ -32,6 +32,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('expiration')->defaultValue(60)->end()
                 ->scalarNode('quality')->defaultValue(15)->end()
                 ->scalarNode('invalid_message')->defaultValue('Bad code value')->end()
+                ->scalarNode('bypass_code')->defaultValue(null)->end()
             ->end()
         ;
         return $treeBuilder;
