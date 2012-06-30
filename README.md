@@ -127,6 +127,7 @@ You can define the following type option :
 * **gc_freq**: frequency of garbage collection in fractions of 1 (default=100)
 * **expiration**: maximum lifetime of captcha image files in minutes (default=60)
 * **invalid_message**: error message displayed when an non-matching code is submitted (default="Bad code value")
+* **bypass_code**: code that will always validate the captcha (default=null)
 
 Example :
 
