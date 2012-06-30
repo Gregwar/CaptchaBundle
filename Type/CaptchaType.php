@@ -47,7 +47,10 @@ class CaptchaType extends AbstractType
         $this->key = $builder->getForm()->getName();
 
         $builder->addValidator(
-            new CaptchaValidator($this->session, $this->key, $options['invalid_message'])
+            new CaptchaValidator($this->session,
+                                 $this->key,
+                                 $options['invalid_message'],
+                                 $options['bypass_code'])
         );
     }
 

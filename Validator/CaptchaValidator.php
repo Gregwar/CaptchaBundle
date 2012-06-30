@@ -29,20 +29,26 @@ class CaptchaValidator implements FormValidatorInterface
      */
     private $invalidMessage;
 
-    public function __construct(Session $session, $key, $invalidMessage)
+    /**
+     * Configuration parameter used to bypass a required code match
+     */
+    private $bypassCode;
+
+    public function __construct(Session $session, $key, $invalidMessage, $bypassCode)
     {
         $this->session = $session;
         $this->key = $key;
         $this->invalidMessage = $invalidMessage;
+        $this->bypassCode = $bypassCode;
     }
 
     public function validate(FormInterface $form)
     {
         $code = $form->getData();
-        $excepted_code = $this->getExceptedCode();
+        $expectedCode = $this->getExpectedCode();
 
-        if (!($code && $excepted_code && is_string($code) && is_string($excepted_code)
-            && $this->niceize($code) == $this->niceize($excepted_code))) {
+        if (!($code && is_string($code)
+            && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
             $form->addError(new FormError($this->invalidMessage));
         }
 
@@ -54,9 +60,9 @@ class CaptchaValidator implements FormValidatorInterface
     }
 
     /**
-     * Retrieve the excepted CAPTCHA code
+     * Retrieve the expected CAPTCHA code
      */
-    private function getExceptedCode()
+    private function getExpectedCode()
     {
         if ($this->session->has($this->key)) {
             return $this->session->get($this->key);
@@ -70,5 +76,13 @@ class CaptchaValidator implements FormValidatorInterface
     private function niceize($code)
     {
         return strtr(strtolower($code), 'oil', '01l');
+    }
+
+    /**
+     * Run a match comparison on the provided code and the expected code
+     */
+    private function compare($code, $expectedCode)
+    {
+        return ($expectedCode && is_string($expectedCode) && $this->niceize($code) == $this->niceize($expectedCode));
     }
 }
