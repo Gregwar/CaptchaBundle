@@ -25,7 +25,7 @@ Add the following lines to your `deps` file:
 
 ```
     [GregwarCaptchaBundle]
-        git=git://github.com/Gregwar/CaptchaBundle.git
+        git=http://github.com/Gregwar/CaptchaBundle.git
         target=/bundles/Gregwar/CaptchaBundle
         version=origin/2.0 <- add this if you are using Symfony 2.0
 ```
