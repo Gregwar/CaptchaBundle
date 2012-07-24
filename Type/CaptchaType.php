@@ -54,7 +54,7 @@ class CaptchaType extends AbstractType
         );
     }
 
-    public function buildView(FormViewInterface $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $fingerprint = null;
 
@@ -81,12 +81,10 @@ class CaptchaType extends AbstractType
             $this->session->set($this->key.'_fingerprint', $generator->getFingerprint());
         }
 
-        $view->addVars(array(
-            'captcha_width'     => $options['width'],
-            'captcha_height'    => $options['height'],
-            'captcha_code'      => $captchaCode,
-            'value'             => '',
-        ));
+        $view->vars['captcha_width'] = $options['width'];
+        $view->vars['captcha_height'] = $options['height'];
+        $view->vars['captcha_code'] = $captchaCode;
+        $view->vars['value'] = '';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
