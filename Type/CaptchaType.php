@@ -81,12 +81,16 @@ class CaptchaType extends AbstractType
             $this->session->set($this->key.'_fingerprint', $generator->getFingerprint());
         }
 
-        $view->addVars(array(
+        $fieldVars = array(
             'captcha_width'     => $options['width'],
             'captcha_height'    => $options['height'],
             'captcha_code'      => $captchaCode,
             'value'             => '',
-        ));
+        );
+
+        foreach($fieldVars as $name => $value){
+            $view->set($name,$value);    
+        }
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
