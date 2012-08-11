@@ -65,7 +65,7 @@ Now you will need to add the `Gregwar` namespace to your autoloader:
 <?php
 // app/autoload.php
 
-$loader->registerNamspaces(array(
+$loader->registerNamespaces(array(
     // ...
     'Gregwar' => __DIR__.'/../vendor/bundles',
 ));
