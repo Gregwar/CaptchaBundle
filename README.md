@@ -50,7 +50,7 @@ $ git submodule update --init
 Add the following to the "require" section of your `composer.json` file:
 
 ```
-    "gregwar/captcha-bundle": "1.0.0"
+    "gregwar/captcha-bundle": "dev-master"
 ```
 
 And update your dependencies
