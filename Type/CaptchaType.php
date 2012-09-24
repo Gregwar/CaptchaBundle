@@ -54,7 +54,7 @@ class CaptchaType extends AbstractType
         );
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormViewInterface $view, FormInterface $form, array $options)
     {
         $fingerprint = null;
 
@@ -89,7 +89,7 @@ class CaptchaType extends AbstractType
         );
 
         foreach($fieldVars as $name => $value){
-            $view->set($name,$value);    
+            $view->setVar($name,$value);    
         }
     }
 
