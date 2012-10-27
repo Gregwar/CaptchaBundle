@@ -161,7 +161,7 @@ The default rendering is:
 {% spaceless %}
     <img src="{{ captcha_code }}" title="captcha" width="{{ captcha_width }}" height="{{ captcha_height }}" />
     {{ form_widget(form) }}
-{% spaceless %}
+{% endspaceless %}
 {% endblock %}
 ```
 
