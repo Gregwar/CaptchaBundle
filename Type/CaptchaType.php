@@ -2,20 +2,16 @@
 
 namespace Gregwar\CaptchaBundle\Type;
 
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Exception\FormException;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Form\FormViewInterface;
+use Symfony\Component\Form\FormEvents;
 
 use Gregwar\CaptchaBundle\Validator\CaptchaValidator;
 use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
-use Gregwar\CaptchaBundle\DataTransformer\EmptyTransformer;
 
 /**
  * Captcha type
@@ -24,6 +20,16 @@ use Gregwar\CaptchaBundle\DataTransformer\EmptyTransformer;
  */
 class CaptchaType extends AbstractType
 {
+    /**
+     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     */
+    protected $session;
+
+    /**
+     * @var \Gregwar\CaptchaBundle\Generator\CaptchaGenerator
+     */
+    protected $generator;
+
     /**
      * Options
      * @var array
@@ -36,94 +42,67 @@ class CaptchaType extends AbstractType
      */
     private $key = 'captcha';
 
-    public function __construct(Session $session, $config)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Gregwar\CaptchaBundle\Generator\CaptchaGenerator $generator
+     * @param array $options
+     */
+    public function __construct(SessionInterface $session, CaptchaGenerator $generator, $options)
     {
-        $this->session = $session;
-        $this->options = $config;
+        $this->session      = $session;
+        $this->generator    = $generator;
+        $this->options      = $options;
     }
 
+    /**
+     * @param \Symfony\Component\Form\FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->key = $builder->getForm()->getName();
 
-        $builder->addValidator(
-            new CaptchaValidator($this->session,
-                                 $this->key,
-                                 $options['invalid_message'],
-                                 $options['bypass_code'])
-        );
+        $validator = new CaptchaValidator($this->session, $this->key, $options['invalid_message'], $options['bypass_code']);
+        $builder->addEventListener(FormEvents::POST_BIND, array($validator, 'validate'));
     }
 
+    /**
+     * @param \Symfony\Component\Form\FormView $view
+     * @param \Symfony\Component\Form\FormInterface $form
+     * @param array $options
+     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $fingerprint = null;
-
-        if ($options['keep_value'] && $this->session->has($this->key.'_fingerprint')) {
-            $fingerprint = $this->session->get($this->key.'_fingerprint');
-        }
-
-        $generator = new CaptchaGenerator($this->generateCaptchaValue(),
-                                          $options['image_folder'],
-                                          $options['web_path'],
-                                          $options['gc_freq'],
-                                          $options['expiration'],
-                                          $options['font'],
-                                          $fingerprint,
-                                          $options['quality']);
-
-        if ($options['as_file']) {
-            $captchaCode = $generator->getFile($options['width'], $options['height']);
-        } else {
-            $captchaCode = $generator->getCode($options['width'], $options['height']);
-        }
-
-        if ($options['keep_value']) {
-            $this->session->set($this->key.'_fingerprint', $generator->getFingerprint());
-        }
-
-        $fieldVars = array(
+        $view->vars = array_merge($view->vars, array(
             'captcha_width'     => $options['width'],
             'captcha_height'    => $options['height'],
-            'captcha_code'      => $captchaCode,
+            'captcha_code'      => $this->generator->getCaptchaCode($this->key, $options),
             'value'             => '',
-        );
-
-        foreach($fieldVars as $name => $value){
-            $view->set($name,$value);    
-        }
+        ));
     }
 
+    /**
+     * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $this->options['property_path'] = false;
         $resolver->setDefaults($this->options);
     }
 
+    /**
+     * @return string
+     */
     public function getParent()
     {
         return 'text';
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'captcha';
-    }
-
-    private function generateCaptchaValue()
-    {
-        if (!$this->options['keep_value'] || !$this->session->has($this->key)) {
-            $value = '';
-            $chars = str_split($this->options['charset']);
-
-            for ($i=0; $i<$this->options['length']; $i++) {
-                $value.= $chars[array_rand($chars)];
-            }
-
-            $this->session->set($this->key, $value);
-        } else {
-            $value = $this->session->get($this->key);
-        }
-
-        return $value;
     }
 }
