@@ -9,6 +9,7 @@ class Configuration implements ConfigurationInterface
 {
     /**
      * Generates the configuration tree.
+     *
      * @return TreeBuilder
      */
     public function getConfigTreeBuilder()
@@ -26,6 +27,8 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('keep_value')->defaultValue(true)->end()
                 ->scalarNode('charset')->defaultValue('abcdefhjkmnprstuvwxyz23456789')->end()
                 ->scalarNode('as_file')->defaultValue(false)->end()
+                ->scalarNode('as_url')->defaultValue(false)->end()
+                ->scalarNode('url')->defaultValue('/generate-captcha')->end()
                 ->scalarNode('image_folder')->defaultValue('captcha')->end()
                 ->scalarNode('web_path')->defaultValue('%kernel.root_dir%/../web')->end()
                 ->scalarNode('gc_freq')->defaultValue(100)->end()

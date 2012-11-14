@@ -3,159 +3,126 @@
 namespace Gregwar\CaptchaBundle\Generator;
 
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Generates a CAPTCHA image
  */
-class CaptchaGenerator {
+class CaptchaGenerator
+{
+    /**
+     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     */
+    protected $session;
 
     /**
      * Name of folder for captcha images
      * @var string
      */
-    public $imageFolder;
+    protected $imageFolder;
 
     /**
      * Absolute path to public web folder
      * @var string
      */
-    public $webPath;
+    protected $webPath;
 
     /**
-     * Frequence of garbage collection in fractions of 1
+     * Frequency of garbage collection in fractions of 1
      * @var int
      */
-    public $gcFreq;
-
-    /**
-     * Captcha Font
-     * @var string
-     */
-    public $font;
+    protected $gcFreq;
 
     /**
      * Maximum age of images in minutes
      * @var int
      */
-    public $expiration;
+    protected $expiration;
 
     /**
-     * Random fingerprint
-     * Useful to be able to regenerate exactly the same image
-     * @var array
+     * The fingerprint used to generate the image details across requests
+     * @var array|null
      */
-    public $fingerprint;
+    protected $fingerprint;
 
     /**
-     * Should fingerprint be used ?
-     * @var boolean
+     * Whether this instance should use the fingerprint
+     * @var bool
      */
-    public $use_fingerprint;
+    protected $useFingerprint;
 
     /**
-     * The captcha code
+     * The key used to store the value to the session
      * @var string
      */
-    public $value;
+    protected $key = 'captcha';
 
     /**
-     * Captcha quality
-     * @var int
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param string $imageFolder
+     * @param string $webPath
+     * @param int $gcFreq
+     * @param int $expiration
+     * @param string $url
      */
-    public $quality;
-
-    public function __construct($value, $imageFolder, $webPath, $gcFreq, $expiration, $font, $fingerprint, $quality)
+    public function __construct(SessionInterface $session, $imageFolder, $webPath, $gcFreq, $expiration, $url)
     {
-        $this->value = $value;
-        $this->imageFolder = $imageFolder;
-        $this->webPath = $webPath;
-        $this->gcFreq = intval($gcFreq);
-        $this->expiration = intval($expiration);
-        $this->font = $font;
-        $this->fingerprint = $fingerprint;
-        $this->use_fingerprint = (bool)$fingerprint;
-        $this->quality = intval($quality);
+        $this->session          = $session;
+        $this->imageFolder      = $imageFolder;
+        $this->webPath          = $webPath;
+        $this->gcFreq           = $gcFreq;
+        $this->expiration       = $expiration;
+        $this->url              = $url;
     }
 
     /**
-     * Get the captcha embeded code
-     */
-    public function getCode($width = 120, $height = 40)
-    {
-        return 'data:image/jpeg;base64,'.base64_encode($this->generate($width, $height));
-    }
-
-    /**
-     * Creates a captcha image with provided dimensions
-     * and randomly executes a garbage collection
+     * Get the captcha URL, stream, or filename that will go in the image's src attribute
      *
-     * @param int $width
-     * @param int $height
-     * @return string Web path to the created image
-     */
-    public function getFile($width = 120, $height = 40)
-    {
-        if (mt_rand(1, $this->gcFreq) == 1) {
-            $this->garbageCollection();
-        }
-
-        return $this->generate($width, $height, true);
-    }
-
-    /**
-     * Returns a random number or the next number in the
-     * fingerprint
-     */
-    public function rand($min, $max) 
-    {
-        if (!is_array($this->fingerprint)) {
-            $this->fingerprint = array();
-        }
-
-        if ($this->use_fingerprint) {
-            $value = current($this->fingerprint);
-            next($this->fingerprint);
-        } else {
-            $value = mt_rand($min, $max);
-            $this->fingerprint[] = $value;
-        }
-        return $value;
-    }
-
-    /**
-     * Get the CAPTCHA fingerprint
-     */
-    public function getFingerprint()
-    {
-        return $this->fingerprint;
-    }
-
-    /**
-     * Deletes all images in the configured folder
-     * that are older than 10 minutes
+     * @param $key
+     * @param array $options
      *
-     * @return void
+     * @return array
      */
-    public function garbageCollection()
+    public function getCaptchaCode($key, array $options)
     {
-        $finder = new Finder();
-        $criteria = sprintf('<= now - %s minutes', $this->expiration);
-        $finder->in($this->webPath . '/' . $this->imageFolder)
-               ->date($criteria);
+        $this->key = $key;
 
-        foreach($finder->files() as $file)
-        {
-            unlink($file->getPathname());
+        // Randomly execute garbage collection and returns the image filename
+        if ($options['as_file']) {
+            if (mt_rand(1, $this->gcFreq) == 1) {
+                $this->garbageCollection();
+            }
+
+            return $this->generate($options);
         }
+
+        // Returns the configured URL for image generation
+        if ($options['as_url']) {
+            return $this->url;
+        }
+
+        return 'data:image/jpeg;base64,' . base64_encode($this->generate($options));
     }
 
     /**
      * Generate the image
      */
-    public function generate($width, $height, $createFile = false)
+    public function generate(array $options)
     {
-        $i = imagecreatetruecolor($width,$height);
+        $width  = $options['width'];
+        $height = $options['height'];
 
+        if ($options['keep_value'] && $this->session->has($this->key.'_fingerprint')) {
+            $this->fingerprint = $this->session->get($this->key.'_fingerprint');
+            $this->useFingerprint = true;
+        } else {
+            $this->fingerprint = null;
+            $this->useFingerprint = false;
+        }
+
+        $captchaValue = $this->getCaptchaValue($options['keep_value'], $options['charset'], $options['length']);
+
+        $i = imagecreatetruecolor($width,$height);
         $col = imagecolorallocate($i, $this->rand(0,110), $this->rand(0,110), $this->rand(0,110));
 
         imagefill($i, 0, 0, 0xFFFFFF);
@@ -171,13 +138,13 @@ class CaptchaGenerator {
         }
 
         // Write CAPTCHA text
-        $size = $width/strlen($this->value);
-        $font = $this->font;
-        $box = imagettfbbox($size, 0, $font, $this->value);
+        $size = $width/strlen($captchaValue);
+        $font = $options['font'];
+        $box = imagettfbbox($size, 0, $font, $captchaValue);
         $txt_width = $box[2] - $box[0];
         $txt_height = $box[1] - $box[7];
 
-        imagettftext($i, $size, 0, ($width-$txt_width)/2, ($height-$txt_height)/2+$size, $col, $font, $this->value);
+        imagettftext($i, $size, 0, ($width-$txt_width)/2, ($height-$txt_height)/2+$size, $col, $font, $captchaValue);
 
         // Distort the image
         $X = $this->rand(0, $width);
@@ -187,7 +154,7 @@ class CaptchaGenerator {
         $Amp=1+$this->rand(0,1000)/1000;
         $out = imagecreatetruecolor($width, $height);
 
-        for ($x=0; $x<$width; $x++)
+        for ($x=0; $x<$width; $x++) {
             for ($y=0; $y<$height; $y++) {
                 $Vx=$x-$X;
                 $Vy=$y-$Y;
@@ -215,42 +182,99 @@ class CaptchaGenerator {
 
                 imagesetpixel($out, $x, $y, $p);
             }
+        }
+
+        if ($options['keep_value']) {
+            $this->session->set($this->key.'_fingerprint', $this->fingerprint);
+        }
 
         // Renders it
-        if (!$createFile) {
+        if (!$options['as_file']) {
             ob_start();
-            imagejpeg($out, null, $this->quality);
+            imagejpeg($out, null, $options['quality']);
+
             return ob_get_clean();
-        } else {
-            // Check if folder exists and create it if not
-            if (!file_exists($this->webPath . '/' . $this->imageFolder)) {
-                mkdir($this->webPath . '/' . $this->imageFolder, 0755);
-            }
-            $filename = md5(uniqid()) . '.jpg';
-            $filepath = $this->webPath . '/' . $this->imageFolder . '/' . $filename;
-            imagejpeg($out, $filepath, 15);
-            return '/' . $this->imageFolder . '/' . $filename;
+        }
+
+        // Check if folder exists and create it if not
+        if (!file_exists($this->webPath . '/' . $this->imageFolder)) {
+            mkdir($this->webPath . '/' . $this->imageFolder, 0755);
+        }
+        
+        $filename = md5(uniqid()) . '.jpg';
+        $filepath = $this->webPath . '/' . $this->imageFolder . '/' . $filename;
+        imagejpeg($out, $filepath, 15);
+
+        return '/' . $this->imageFolder . '/' . $filename;
+    }
+
+    /**
+     * Generate a new captcha value or pull the existing one from the session
+     *
+     * @param bool $keepValue
+     * @param string $charset
+     * @param int $length
+     *
+     * @return mixed|string
+     */
+    protected function getCaptchaValue($keepValue, $charset, $length)
+    {
+        if ($keepValue && $this->session->has($this->key)) {
+            return $this->session->get($this->key);
+        }
+
+        $value = '';
+        $chars = str_split($charset);
+
+        for ($i=0; $i < $length; $i++) {
+            $value .= $chars[array_rand($chars)];
+        }
+
+        $this->session->set($this->key, $value);
+
+        return $value;
+    }
+
+    /**
+     * Deletes all images in the configured folder
+     * that are older than the configured number of minutes
+     *
+     * @return void
+     */
+    protected function garbageCollection()
+    {
+        $finder = new Finder();
+        $criteria = sprintf('<= now - %s minutes', $this->expiration);
+        $finder->in($this->webPath . '/' . $this->imageFolder)
+            ->date($criteria);
+
+        foreach($finder->files() as $file) {
+            unlink($file->getPathname());
         }
     }
 
-    protected function getCol($image, $x, $y)
+    /**
+     * Returns a random number or the next number in the
+     * fingerprint
+     */
+    protected function rand($min, $max)
     {
-        $L = imagesx($image);
-        $H = imagesy($image);
-        if ($x<0 || $x>=$L || $y<0 || $y>=$H)
-            return 0xFFFFFF;
-        else return imagecolorat($image, $x, $y);
+        if (!is_array($this->fingerprint)) {
+            $this->fingerprint = array();
+        }
+
+        if ($this->useFingerprint) {
+            $value = current($this->fingerprint);
+            next($this->fingerprint);
+        } else {
+            $value = mt_rand($min, $max);
+            $this->fingerprint[] = $value;
+        }
+
+        return $value;
     }
 
-    protected function getRGB($col) {
-        return array(
-            (int)($col >> 16) & 0xff,
-            (int)($col >> 8) & 0xff,
-            (int)($col) & 0xff,
-        );
-    }
-
-    function bilinearInterpolate($x, $y, $nw, $ne, $sw, $se)
+    protected function bilinearInterpolate($x, $y, $nw, $ne, $sw, $se)
     {
         list($r0, $g0, $b0) = $this->getRGB($nw);
         list($r1, $g1, $b1) = $this->getRGB($ne);
@@ -273,6 +297,25 @@ class CaptchaGenerator {
         $b = (int)($cy * $m0 + $y * $m1);
 
         return ($r << 16) | ($g << 8) | $b;
+    }
+
+    protected function getCol($image, $x, $y)
+    {
+        $L = imagesx($image);
+        $H = imagesy($image);
+        if ($x<0 || $x>=$L || $y<0 || $y>=$H) {
+            return 0xFFFFFF;
+        }
+
+        return imagecolorat($image, $x, $y);
+    }
+
+    protected function getRGB($col) {
+        return array(
+            (int)($col >> 16) & 0xff,
+            (int)($col >> 8) & 0xff,
+            (int)($col) & 0xff,
+        );
     }
 }
 

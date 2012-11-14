@@ -2,20 +2,19 @@
 
 namespace Gregwar\CaptchaBundle\Validator;
 
-use Symfony\Component\Form\FormValidatorInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormEvent;
 
 /**
  * Captcha validator
  *
  * @author Gregwar <g.passault@gmail.com>
  */
-class CaptchaValidator implements FormValidatorInterface
+class CaptchaValidator
 {
     /**
-     * Session
+     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
      */
     private $session;
 
@@ -34,16 +33,27 @@ class CaptchaValidator implements FormValidatorInterface
      */
     private $bypassCode;
 
-    public function __construct(Session $session, $key, $invalidMessage, $bypassCode)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param string $key
+     * @param string $invalidMessage
+     * @param string|null $bypassCode
+     */
+    public function __construct(SessionInterface $session, $key, $invalidMessage, $bypassCode)
     {
-        $this->session = $session;
-        $this->key = $key;
-        $this->invalidMessage = $invalidMessage;
-        $this->bypassCode = $bypassCode;
+        $this->session          = $session;
+        $this->key              = $key;
+        $this->invalidMessage   = $invalidMessage;
+        $this->bypassCode       = $bypassCode;
     }
 
-    public function validate(FormInterface $form)
+    /**
+     * @param FormEvent $event
+     */
+    public function validate(FormEvent $event)
     {
+        $form = $form = $event->getForm();
+
         $code = $form->getData();
         $expectedCode = $this->getExpectedCode();
 
@@ -54,34 +64,46 @@ class CaptchaValidator implements FormValidatorInterface
 
         $this->session->remove($this->key);
 
-        if ($this->session->has($this->key.'_fingerprint')) {
-            $this->session->remove($this->key.'_fingerprint');
+        if ($this->session->has($this->key . '_fingerprint')) {
+            $this->session->remove($this->key . '_fingerprint');
         }
     }
 
     /**
      * Retrieve the expected CAPTCHA code
+     *
+     * @return mixed|null
      */
-    private function getExpectedCode()
+    protected function getExpectedCode()
     {
         if ($this->session->has($this->key)) {
             return $this->session->get($this->key);
         }
+
         return null;
     }
 
     /**
      * Process the codes
+     *
+     * @param $code
+     *
+     * @return string
      */
-    private function niceize($code)
+    protected function niceize($code)
     {
         return strtr(strtolower($code), 'oil', '01l');
     }
 
     /**
      * Run a match comparison on the provided code and the expected code
+     *
+     * @param $code
+     * @param $expectedCode
+     *
+     * @return bool
      */
-    private function compare($code, $expectedCode)
+    protected function compare($code, $expectedCode)
     {
         return ($expectedCode && is_string($expectedCode) && $this->niceize($code) == $this->niceize($expectedCode));
     }
