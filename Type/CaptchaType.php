@@ -37,12 +37,6 @@ class CaptchaType extends AbstractType
     private $options = array();
 
     /**
-     * Session key
-     * @var string
-     */
-    private $key = 'captcha';
-
-    /**
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param \Gregwar\CaptchaBundle\Generator\CaptchaGenerator $generator
      * @param array $options
@@ -60,9 +54,13 @@ class CaptchaType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->key = $builder->getForm()->getName();
+        $validator = new CaptchaValidator(
+            $this->session,
+            $builder->getForm()->getName(),
+            $options['invalid_message'],
+            $options['bypass_code']
+        );
 
-        $validator = new CaptchaValidator($this->session, $this->key, $options['invalid_message'], $options['bypass_code']);
         $builder->addEventListener(FormEvents::POST_BIND, array($validator, 'validate'));
     }
 
@@ -76,7 +74,7 @@ class CaptchaType extends AbstractType
         $view->vars = array_merge($view->vars, array(
             'captcha_width'     => $options['width'],
             'captcha_height'    => $options['height'],
-            'captcha_code'      => $this->generator->getCaptchaCode($this->key, $options),
+            'captcha_code'      => $this->generator->getCaptchaCode($form->getName(), $options),
             'value'             => '',
         ));
     }
