@@ -15,7 +15,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('gregwar_captcha', 'array');
+        $rootNode = $treeBuilder->root('gregwar_captcha');
 
         $rootNode
             ->addDefaultsIfNotSet()
@@ -28,7 +28,6 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('charset')->defaultValue('abcdefhjkmnprstuvwxyz23456789')->end()
                 ->scalarNode('as_file')->defaultValue(false)->end()
                 ->scalarNode('as_url')->defaultValue(false)->end()
-                ->scalarNode('url')->defaultValue('/generate-captcha')->end()
                 ->scalarNode('image_folder')->defaultValue('captcha')->end()
                 ->scalarNode('web_path')->defaultValue('%kernel.root_dir%/../web')->end()
                 ->scalarNode('gc_freq')->defaultValue(100)->end()
@@ -36,8 +35,10 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('quality')->defaultValue(15)->end()
                 ->scalarNode('invalid_message')->defaultValue('Bad code value')->end()
                 ->scalarNode('bypass_code')->defaultValue(null)->end()
+                ->arrayNode('valid_keys')->defaultValue(array('captcha'))->prototype('scalar')->end()
             ->end()
         ;
+
         return $treeBuilder;
     }
 }

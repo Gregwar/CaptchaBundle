@@ -4,6 +4,7 @@ namespace Gregwar\CaptchaBundle\Generator;
 
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Generates a CAPTCHA image
@@ -14,6 +15,11 @@ class CaptchaGenerator
      * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
      */
     protected $session;
+
+    /**
+     * @var \Symfony\Component\Routing\RouterInterface
+     */
+    protected $router;
 
     /**
      * Name of folder for captcha images
@@ -52,27 +58,21 @@ class CaptchaGenerator
     protected $useFingerprint;
 
     /**
-     * The key used to store the value to the session
-     * @var string
-     */
-    protected $key = 'captcha';
-
-    /**
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Symfony\Component\Routing\RouterInterface $router
      * @param string $imageFolder
      * @param string $webPath
      * @param int $gcFreq
      * @param int $expiration
-     * @param string $url
      */
-    public function __construct(SessionInterface $session, $imageFolder, $webPath, $gcFreq, $expiration, $url)
+    public function __construct(SessionInterface $session, RouterInterface $router, $imageFolder, $webPath, $gcFreq, $expiration)
     {
         $this->session          = $session;
+        $this->router           = $router;
         $this->imageFolder      = $imageFolder;
         $this->webPath          = $webPath;
         $this->gcFreq           = $gcFreq;
         $this->expiration       = $expiration;
-        $this->url              = $url;
     }
 
     /**
@@ -85,42 +85,40 @@ class CaptchaGenerator
      */
     public function getCaptchaCode($key, array $options)
     {
-        $this->key = $key;
-
         // Randomly execute garbage collection and returns the image filename
         if ($options['as_file']) {
             if (mt_rand(1, $this->gcFreq) == 1) {
                 $this->garbageCollection();
             }
 
-            return $this->generate($options);
+            return $this->generate($key, $options);
         }
 
         // Returns the configured URL for image generation
         if ($options['as_url']) {
-            return $this->url;
+            return $this->router->generate('gregwar_captcha.generate_captcha', array('key' => $key));
         }
 
-        return 'data:image/jpeg;base64,' . base64_encode($this->generate($options));
+        return 'data:image/jpeg;base64,' . base64_encode($this->generate($key, $options));
     }
 
     /**
      * Generate the image
      */
-    public function generate(array $options)
+    public function generate($key, array $options)
     {
         $width  = $options['width'];
         $height = $options['height'];
 
-        if ($options['keep_value'] && $this->session->has($this->key.'_fingerprint')) {
-            $this->fingerprint = $this->session->get($this->key.'_fingerprint');
+        if ($options['keep_value'] && $this->session->has($key . '_fingerprint')) {
+            $this->fingerprint = $this->session->get($key . '_fingerprint');
             $this->useFingerprint = true;
         } else {
             $this->fingerprint = null;
             $this->useFingerprint = false;
         }
 
-        $captchaValue = $this->getCaptchaValue($options['keep_value'], $options['charset'], $options['length']);
+        $captchaValue = $this->getCaptchaValue($key, $options['keep_value'], $options['charset'], $options['length']);
 
         $i = imagecreatetruecolor($width,$height);
         $col = imagecolorallocate($i, $this->rand(0,110), $this->rand(0,110), $this->rand(0,110));
@@ -185,7 +183,7 @@ class CaptchaGenerator
         }
 
         if ($options['keep_value']) {
-            $this->session->set($this->key.'_fingerprint', $this->fingerprint);
+            $this->session->set($key . '_fingerprint', $this->fingerprint);
         }
 
         // Renders it
@@ -211,16 +209,17 @@ class CaptchaGenerator
     /**
      * Generate a new captcha value or pull the existing one from the session
      *
+     * @param string $key
      * @param bool $keepValue
      * @param string $charset
      * @param int $length
      *
      * @return mixed|string
      */
-    protected function getCaptchaValue($keepValue, $charset, $length)
+    protected function getCaptchaValue($key, $keepValue, $charset, $length)
     {
-        if ($keepValue && $this->session->has($this->key)) {
-            return $this->session->get($this->key);
+        if ($keepValue && $this->session->has($key)) {
+            return $this->session->get($key);
         }
 
         $value = '';
@@ -230,7 +229,7 @@ class CaptchaGenerator
             $value .= $chars[array_rand($chars)];
         }
 
-        $this->session->set($this->key, $value);
+        $this->session->set($key, $value);
 
         return $value;
     }
