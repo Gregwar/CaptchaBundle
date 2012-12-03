@@ -136,46 +136,45 @@ class CaptchaGenerator
         }
 
         // Write CAPTCHA text
-        $size = $width/strlen($captchaValue);
-        $font = $options['font'];
-        $box = imagettfbbox($size, 0, $font, $captchaValue);
-        $txt_width = $box[2] - $box[0];
-        $txt_height = $box[1] - $box[7];
+        $size       = $width / strlen($captchaValue);
+        $font       = $options['font'];
+        $box        = imagettfbbox($size, 0, $font, $captchaValue);
+        $textWidth  = $box[2] - $box[0];
+        $textHeight = $box[1] - $box[7];
 
-        imagettftext($i, $size, 0, ($width-$txt_width)/2, ($height-$txt_height)/2+$size, $col, $font, $captchaValue);
+        imagettftext($i, $size, 0, ($width - $textWidth) / 2, ($height - $textHeight) / 2 + $size, $col, $font, $captchaValue);
 
         // Distort the image
-        $X = $this->rand(0, $width);
-        $Y = $this->rand(0, $height);
-        $Phase=$this->rand(0,10);
-        $Scale = 1.3 + $this->rand(0,10000)/30000;
-        $Amp=1+$this->rand(0,1000)/1000;
-        $out = imagecreatetruecolor($width, $height);
+        $X     = $this->rand(0, $width);
+        $Y     = $this->rand(0, $height);
+        $phase = $this->rand(0, 10);
+        $scale = 1.3 + $this->rand(0, 10000) / 30000;
+        $out   = imagecreatetruecolor($width, $height);
 
-        for ($x=0; $x<$width; $x++) {
-            for ($y=0; $y<$height; $y++) {
-                $Vx=$x-$X;
-                $Vy=$y-$Y;
-                $Vn=sqrt($Vx*$Vx+$Vy*$Vy);
+        for ($x = 0; $x < $width; $x++) {
+            for ($y = 0; $y < $height; $y++) {
+                $Vx = $x - $X;
+                $Vy = $y - $Y;
+                $Vn = sqrt($Vx * $Vx + $Vy * $Vy);
 
-                if ($Vn!=0) {
-                    $Vn2=$Vn+4*sin($Vn/8);
-                    $nX=$X+($Vx*$Vn2/$Vn);
-                    $nY=$Y+($Vy*$Vn2/$Vn);
+                if ($Vn != 0) {
+                    $Vn2 = $Vn + 4 * sin($Vn / 8);
+                    $nX  = $X + ($Vx * $Vn2 / $Vn);
+                    $nY  = $Y + ($Vy * $Vn2 / $Vn);
                 } else {
-                    $nX=$X;
-                    $nY=$Y;
+                    $nX = $X;
+                    $nY = $Y;
                 }
-                $nY = $nY+$Scale*sin($Phase + $nX*0.2);
+                $nY = $nY + $scale * sin($phase + $nX * 0.2);
 
-                $p = $this->bilinearInterpolate($nX-floor($nX), $nY-floor($nY),
-                    $this->getCol($i,floor($nX),floor($nY)),
-                    $this->getCol($i,ceil($nX),floor($nY)),
-                    $this->getCol($i,floor($nX),ceil($nY)),
-                    $this->getCol($i,ceil($nX),ceil($nY)));
+                $p = $this->bilinearInterpolate($nX - floor($nX), $nY - floor($nY),
+                    $this->getCol($i, floor($nX), floor($nY)),
+                    $this->getCol($i, ceil($nX), floor($nY)),
+                    $this->getCol($i, floor($nX), ceil($nY)),
+                    $this->getCol($i, ceil($nX), ceil($nY)));
 
-                if ($p==0) {
-                    $p=0xFFFFFF;
+                if ($p == 0) {
+                    $p = 0xFFFFFF;
                 }
 
                 imagesetpixel($out, $x, $y, $p);
@@ -302,7 +301,7 @@ class CaptchaGenerator
     {
         $L = imagesx($image);
         $H = imagesy($image);
-        if ($x<0 || $x>=$L || $y<0 || $y>=$H) {
+        if ($x < 0 || $x >= $L || $y < 0 || $y >= $H) {
             return 0xFFFFFF;
         }
 

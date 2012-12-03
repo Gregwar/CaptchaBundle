@@ -57,8 +57,7 @@ class CaptchaValidator
         $code = $form->getData();
         $expectedCode = $this->getExpectedCode();
 
-        if (!($code && is_string($code)
-            && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
+        if (!($code && is_string($code) && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
             $form->addError(new FormError($this->invalidMessage));
         }
 
