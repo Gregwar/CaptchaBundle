@@ -118,7 +118,6 @@ You can define the following configuration options globally:
 * **web_path**: absolute path to public web folder (default="%kernel.root_dir%/../web")
 * **gc_freq**: frequency of garbage collection in fractions of 1 (default=100)
 * **expiration**: maximum lifetime of captcha image files in minutes (default=60)
-* **url**: the url to use when **as_url** is set to true (default=/generate-captcha)
 
 You can define the following configuration options globally or on the CaptchaType itself:
 
@@ -160,6 +159,12 @@ To use a URL to generate a captcha image, you must add the bundle's routing conf
 
     gregwar_captcha_routing:
         resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
+
+This will use the bundle's route of "/generate-captcha/{key}" to handle the generation. If this route conflicts with an application route, you can prefix the bundle's routes when you import:
+
+    gregwar_captcha_routing:
+        resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
+        prefix: /_gcb
 
 Form Theming
 ============
