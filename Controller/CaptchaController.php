@@ -31,7 +31,10 @@ class CaptchaController extends Controller
         /* @var \Gregwar\CaptchaBundle\Generator\CaptchaGenerator $generator */
         $generator = $this->container->get('gregwar_captcha.generator');
 
-        return new Response($generator->generate($key, $options));
+        $response = new Response($generator->generate($key, $options));
+        $response->headers->set('Content-type', 'image/jpeg');
+
+        return $response;
     }
 }
 
