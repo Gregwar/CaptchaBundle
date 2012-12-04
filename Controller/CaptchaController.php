@@ -36,7 +36,7 @@ class CaptchaController extends Controller
         }
 
         if (!$isOk) {
-            return $this->createNotFoundException('Unable to generate a captcha via a URL without the proper configuration.');
+            throw $this->createNotFoundException('Unable to generate a captcha via an URL with this session key.');
         }
 
         /* @var \Gregwar\CaptchaBundle\Generator\CaptchaGenerator $generator */
