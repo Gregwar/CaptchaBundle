@@ -5,6 +5,9 @@ namespace Gregwar\CaptchaBundle\Generator;
 use Symfony\Component\Finder\Finder;
 
 /**
+ * Handles actions related to captcha image files including saving and garbage collection
+ *
+ * @author Gregwar <g.passault@gmail.com>
  * @author Jeremy Livingston <jeremy@quizzle.com>
  */
 class ImageFileHandler

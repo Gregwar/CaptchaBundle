@@ -7,7 +7,10 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Generates a CAPTCHA image
+ * Uses configuration parameters to call the services that generate captcha images
+ *
+ * @author Gregwar <g.passault@gmail.com>
+ * @author Jeremy Livingston <jeremy.j.livingston@gmail.com>
  */
 class CaptchaGenerator
 {
