@@ -1,0 +1,3 @@
+gregwar_captcha.generate_captcha:
+    pattern:        /generate-captcha/{key}
+    defaults:       { _controller: GregwarCaptchaBundle:Captcha:generateCaptcha }

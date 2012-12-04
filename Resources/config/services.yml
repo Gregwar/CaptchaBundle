@@ -3,6 +3,19 @@ services:
     # captcha type
     captcha.type:
         class: Gregwar\CaptchaBundle\Type\CaptchaType
-        arguments: [ "@session", %gregwar_captcha.config% ]
+        arguments:
+            - @session
+            - @gregwar_captcha.generator
+            - %gregwar_captcha.config%
         tags:
             - { name: form.type, alias: captcha }
+
+    gregwar_captcha.generator:
+        class: Gregwar\CaptchaBundle\Generator\CaptchaGenerator
+        arguments:
+            - @session
+            - @router
+            - %gregwar_captcha.config.image_folder%
+            - %gregwar_captcha.config.web_path%
+            - %gregwar_captcha.config.gc_freq%
+            - %gregwar_captcha.config.expiration%

@@ -106,13 +106,20 @@ You can use the "captcha" type in your forms this way:
     // ...
 ```
 
-Note that the generated image will be embeded in the HTML document, to avoid dealing
-with route and subrequests.
+Note that the generated image will, by default, be embedded in the HTML document
+to avoid dealing with route and subrequests.
 
 Options
 =======
 
-You can define the following type option :
+You can define the following configuration options globally:
+
+* **image_folder**: name of folder for captcha images relative to public web folder in case **as_file** is set to true (default="captcha")
+* **web_path**: absolute path to public web folder (default="%kernel.root_dir%/../web")
+* **gc_freq**: frequency of garbage collection in fractions of 1 (default=100)
+* **expiration**: maximum lifetime of captcha image files in minutes (default=60)
+
+You can define the following configuration options globally or on the CaptchaType itself:
 
 * **width**: the width of the captcha image (default=120)
 * **height**: the height of the captcha image (default=40)
@@ -122,12 +129,10 @@ You can define the following type option :
 * **font**: the font to use (default=Generator/Font/captcha.ttf)
 * **keep_value**: the value will be the same until the form is posted, even if the page is refreshed (default=true)
 * **as_file**: if set to true an image file will be created instead of embedding to please IE6/7 (default=false)
-* **image_folder**: name of folder for captcha images relative to public web folder in case **as_file** ist set to true (default="captcha")
-* **web_path**: absolute path to public web folder (default="%kernel.root_dir%/../web")
-* **gc_freq**: frequency of garbage collection in fractions of 1 (default=100)
-* **expiration**: maximum lifetime of captcha image files in minutes (default=60)
+* **as_url**: if set to true, a URL will be used in the image tag and will handle captcha generation. This can be used in a multiple-server environment and support IE6/7 (default=false)
 * **invalid_message**: error message displayed when an non-matching code is submitted (default="Bad code value")
 * **bypass_code**: code that will always validate the captcha (default=null)
+* **valid_keys**: names that are able to be used for a captcha form type (default=[captcha])
 
 Example :
 
@@ -149,10 +154,28 @@ configuration entry in your `config.yml` file:
         height: 50
         length: 6
 
-Form theming
+As URL
+============
+To use a URL to generate a captcha image, you must add the bundle's routing configuration to your app/routing.yml file:
+
+    gregwar_captcha_routing:
+        resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
+
+This will use the bundle's route of "/generate-captcha/{key}" to handle the generation. If this route conflicts with an application route, you can prefix the bundle's routes when you import:
+
+    gregwar_captcha_routing:
+        resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
+        prefix: /_gcb
+
+If you are using multiple captchas or assigning names other than the default "captcha", you will need to whitelist your captcha names in the "valid_keys" configuration:
+
+    gregwar_captcha:
+        valid_keys: [registration_captcha, confirmation_captcha]
+
+Form Theming
 ============
 
-The widget support the standard symfony theming, see the [documentation](http://symfony.com/doc/current/book/forms.html#form-theming) for details on how to accomplish this.
+The widget support the standard Symfony theming, see the [documentation](http://symfony.com/doc/current/book/forms.html#form-theming) for details on how to accomplish this.
 
 The default rendering is:
 
