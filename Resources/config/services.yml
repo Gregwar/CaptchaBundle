@@ -1,6 +1,4 @@
-
 services:
-    # captcha type
     captcha.type:
         class: Gregwar\CaptchaBundle\Type\CaptchaType
         arguments:
@@ -15,8 +13,17 @@ services:
         arguments:
             - @session
             - @router
+            - @gregwar_captcha.image_builder
+            - @gregwar_captcha.image_file_handler
+            - %gregwar_captcha.config.whitelist_key%
+
+    gregwar_captcha.image_file_handler:
+        class: Gregwar\CaptchaBundle\Generator\ImageFileHandler
+        arguments:
             - %gregwar_captcha.config.image_folder%
             - %gregwar_captcha.config.web_path%
             - %gregwar_captcha.config.gc_freq%
             - %gregwar_captcha.config.expiration%
-            - %gregwar_captcha.config.whitelist_key%
+
+    gregwar_captcha.image_builder:
+        class: Gregwar\CaptchaBundle\Generator\ImageBuilder
