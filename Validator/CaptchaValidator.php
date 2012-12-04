@@ -34,17 +34,24 @@ class CaptchaValidator
     private $bypassCode;
 
     /**
+     * Number of form that the user can submit without captcha
+     * @var int
+     */
+    private $humanity;
+
+    /**
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param string $key
      * @param string $invalidMessage
      * @param string|null $bypassCode
      */
-    public function __construct(SessionInterface $session, $key, $invalidMessage, $bypassCode)
+    public function __construct(SessionInterface $session, $key, $invalidMessage, $bypassCode, $humanity)
     {
         $this->session          = $session;
         $this->key              = $key;
         $this->invalidMessage   = $invalidMessage;
         $this->bypassCode       = $bypassCode;
+        $this->humanity         = $humanity;
     }
 
     /**
@@ -53,12 +60,26 @@ class CaptchaValidator
     public function validate(FormEvent $event)
     {
         $form = $form = $event->getForm();
+        $humanityKey = $this->key . '_humanity';
 
         $code = $form->getData();
         $expectedCode = $this->getExpectedCode();
 
+        if ($this->humanity > 0) {
+            if ($this->session->get($humanityKey, 0) > 0) {
+                $this->session->set($humanityKey, $this->session->get($humanityKey, 0)-1);
+                return;
+            } else {
+                $this->session->remove($humanityKey);
+            }
+        }
+
         if (!($code && is_string($code) && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
             $form->addError(new FormError($this->invalidMessage));
+        } else {
+            if ($this->humanity > 0) {
+                $this->session->set($humanityKey, $this->humanity);
+            }
         }
 
         $this->session->remove($this->key);

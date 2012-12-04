@@ -1,7 +1,11 @@
 {% block captcha_widget %}
+{% if is_human %}
+-
+{% else %}
 {% spaceless %}
     <img src="{{ captcha_code }}" alt="" title="captcha" width="{{ captcha_width }}" height="{{ captcha_height }}" />
     {{ form_widget(form) }}
 {% endspaceless %}
+{% endif %}
 {% endblock %}
 

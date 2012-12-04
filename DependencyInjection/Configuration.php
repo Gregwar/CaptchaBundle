@@ -36,6 +36,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('invalid_message')->defaultValue('Bad code value')->end()
                 ->scalarNode('bypass_code')->defaultValue(null)->end()
                 ->scalarNode('whitelist_key')->defaultValue('captcha_whitelist_key')->end()
+                ->scalarNode('humanity')->defaultValue(0)->end()
             ->end()
         ;
 

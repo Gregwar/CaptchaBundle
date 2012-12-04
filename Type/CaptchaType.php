@@ -66,7 +66,8 @@ class CaptchaType extends AbstractType
             $this->session,
             $this->key,
             $options['invalid_message'],
-            $options['bypass_code']
+            $options['bypass_code'],
+            $options['humanity']
         );
 
         $builder->addEventListener(FormEvents::POST_BIND, array($validator, 'validate'));
@@ -79,11 +80,21 @@ class CaptchaType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        $isHuman = false;
+
+        if ($options['humanity'] > 0) {
+            $humanityKey = $this->key.'_humanity';
+            if ($this->session->get($humanityKey, 0) > 0) {
+                $isHuman = true;
+            }
+        }
+
         $view->vars = array_merge($view->vars, array(
             'captcha_width'     => $options['width'],
             'captcha_height'    => $options['height'],
             'captcha_code'      => $this->generator->getCaptchaCode($this->key, $options),
             'value'             => '',
+            'is_human'          => $isHuman
         ));
     }
 
