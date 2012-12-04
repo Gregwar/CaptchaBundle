@@ -31,9 +31,14 @@ class CaptchaGenerator
     protected $router;
 
     /**
-     * @var ImageBuilder
+     * @var CaptchaBuilder
      */
     protected $builder;
+
+    /**
+     * @var PhraseBuilder
+     */
+    protected $phraseBuilder;
 
     /**
      * @var ImageFileHandler
@@ -43,15 +48,16 @@ class CaptchaGenerator
     /**
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param \Symfony\Component\Routing\RouterInterface $router
-     * @param ImageBuilder $builder
+     * @param CaptchaBuilder $builder
      * @param ImageFileHandler $imageFileHandler
      * @param string $whitelistKey
      */
-    public function __construct(SessionInterface $session, RouterInterface $router, ImageBuilder $builder, ImageFileHandler $imageFileHandler, $whitelistKey)
+    public function __construct(SessionInterface $session, RouterInterface $router, CaptchaBuilder $builder, PhraseBuilder $phraseBuilder, ImageFileHandler $imageFileHandler, $whitelistKey)
     {
         $this->session          = $session;
         $this->router           = $router;
         $this->builder          = $builder;
+        $this->phraseBuilder    = $phraseBuilder;
         $this->imageFileHandler = $imageFileHandler;
         $this->whitelistKey     = $whitelistKey;
     }
@@ -131,13 +137,7 @@ class CaptchaGenerator
             return $this->session->get($key);
         }
 
-        $phrase = '';
-        $chars = str_split($options['charset']);
-
-        for ($i = 0; $i < $options['length']; $i++) {
-            $phrase .= $chars[array_rand($chars)];
-        }
-
+        $phrase = $this->phraseBuilder->build($options['length'], $options['charset']);
         $this->session->set($key, $phrase);
 
         return $phrase;

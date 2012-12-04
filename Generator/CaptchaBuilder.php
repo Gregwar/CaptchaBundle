@@ -11,7 +11,7 @@ use Symfony\Component\Finder\Finder;
  * @author Gregwar <g.passault@gmail.com>
  * @author Jeremy Livingston <jeremy.j.livingston@gmail.com>
  */
-class ImageBuilder
+class CaptchaBuilder
 {
     /**
      * @var array

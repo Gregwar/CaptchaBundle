@@ -13,7 +13,8 @@ services:
         arguments:
             - @session
             - @router
-            - @gregwar_captcha.image_builder
+            - @gregwar_captcha.captcha_builder
+            - @gregwar_captcha.phrase_builder
             - @gregwar_captcha.image_file_handler
             - %gregwar_captcha.config.whitelist_key%
 
@@ -25,5 +26,8 @@ services:
             - %gregwar_captcha.config.gc_freq%
             - %gregwar_captcha.config.expiration%
 
-    gregwar_captcha.image_builder:
-        class: Gregwar\CaptchaBundle\Generator\ImageBuilder
+    gregwar_captcha.captcha_builder:
+        class: Gregwar\CaptchaBundle\Generator\CaptchaBuilder
+
+    gregwar_captcha.phrase_builder:
+        class: Gregwar\CaptchaBundle\Generator\PhraseBuilder
