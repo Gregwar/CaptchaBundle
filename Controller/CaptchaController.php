@@ -24,7 +24,18 @@ class CaptchaController extends Controller
     public function generateCaptchaAction(Request $request, $key)
     {
         $options = $this->container->getParameter('gregwar_captcha.config');
-        if (!$options['as_url'] || !in_array($key, $options['valid_keys'])) {
+        $session = $this->get('session');
+        $whitelistKey = $options['whitelist_key'];
+        $isOk = false;
+
+        if ($options['as_url'] && $session->has($whitelistKey)) {
+            $keys = $session->get($whitelistKey);
+            if (is_array($keys) && in_array($key, $keys)) {
+                $isOk = true;
+            }
+        }
+
+        if (!$isOk) {
             return $this->createNotFoundException('Unable to generate a captcha via a URL without the proper configuration.');
         }
 

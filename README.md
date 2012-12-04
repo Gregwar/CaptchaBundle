@@ -132,7 +132,7 @@ You can define the following configuration options globally or on the CaptchaTyp
 * **as_url**: if set to true, a URL will be used in the image tag and will handle captcha generation. This can be used in a multiple-server environment and support IE6/7 (default=false)
 * **invalid_message**: error message displayed when an non-matching code is submitted (default="Bad code value")
 * **bypass_code**: code that will always validate the captcha (default=null)
-* **valid_keys**: names that are able to be used for a captcha form type (default=[captcha])
+* **whitelist_key**: the session key to use for keep the session keys that can be used for captcha storage, when using as_url (default=captcha_whitelist_key)
 
 Example :
 
@@ -167,10 +167,7 @@ This will use the bundle's route of "/generate-captcha/{key}" to handle the gene
         resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
         prefix: /_gcb
 
-If you are using multiple captchas or assigning names other than the default "captcha", you will need to whitelist your captcha names in the "valid_keys" configuration:
-
-    gregwar_captcha:
-        valid_keys: [registration_captcha, confirmation_captcha]
+Since the session key is transported in the URL, it's also added in another session array, under the `whitelist_key` key, for security reasons
 
 Form Theming
 ============

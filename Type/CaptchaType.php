@@ -26,6 +26,12 @@ class CaptchaType extends AbstractType
     protected $session;
 
     /**
+     * The session key
+     * @var string
+     */
+    protected $key = null;
+
+    /**
      * @var \Gregwar\CaptchaBundle\Generator\CaptchaGenerator
      */
     protected $generator;
@@ -54,9 +60,11 @@ class CaptchaType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->key = 'gcb_'.$builder->getForm()->getName();
+
         $validator = new CaptchaValidator(
             $this->session,
-            $builder->getForm()->getName(),
+            $this->key,
             $options['invalid_message'],
             $options['bypass_code']
         );
@@ -74,7 +82,7 @@ class CaptchaType extends AbstractType
         $view->vars = array_merge($view->vars, array(
             'captcha_width'     => $options['width'],
             'captcha_height'    => $options['height'],
-            'captcha_code'      => $this->generator->getCaptchaCode($form->getName(), $options),
+            'captcha_code'      => $this->generator->getCaptchaCode($this->key, $options),
             'value'             => '',
         ));
     }

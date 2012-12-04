@@ -35,7 +35,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('quality')->defaultValue(15)->end()
                 ->scalarNode('invalid_message')->defaultValue('Bad code value')->end()
                 ->scalarNode('bypass_code')->defaultValue(null)->end()
-                ->arrayNode('valid_keys')->defaultValue(array('captcha'))->prototype('scalar')->end()
+                ->scalarNode('whitelist_key')->defaultValue('captcha_whitelist_key')->end()
             ->end()
         ;
 

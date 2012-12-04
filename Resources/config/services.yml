@@ -19,3 +19,4 @@ services:
             - %gregwar_captcha.config.web_path%
             - %gregwar_captcha.config.gc_freq%
             - %gregwar_captcha.config.expiration%
+            - %gregwar_captcha.config.whitelist_key%

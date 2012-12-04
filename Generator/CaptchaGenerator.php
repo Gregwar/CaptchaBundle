@@ -17,6 +17,12 @@ class CaptchaGenerator
     protected $session;
 
     /**
+     * Name of the whitelist key
+     * @var string
+     */
+    protected $whitelistKey;
+
+    /**
      * @var \Symfony\Component\Routing\RouterInterface
      */
     protected $router;
@@ -65,7 +71,7 @@ class CaptchaGenerator
      * @param int $gcFreq
      * @param int $expiration
      */
-    public function __construct(SessionInterface $session, RouterInterface $router, $imageFolder, $webPath, $gcFreq, $expiration)
+    public function __construct(SessionInterface $session, RouterInterface $router, $imageFolder, $webPath, $gcFreq, $expiration, $whitelistKey)
     {
         $this->session          = $session;
         $this->router           = $router;
@@ -73,6 +79,7 @@ class CaptchaGenerator
         $this->webPath          = $webPath;
         $this->gcFreq           = $gcFreq;
         $this->expiration       = $expiration;
+        $this->whitelistKey     = $whitelistKey;
     }
 
     /**
@@ -96,6 +103,11 @@ class CaptchaGenerator
 
         // Returns the configured URL for image generation
         if ($options['as_url']) {
+            $keys = $this->session->get($this->whitelistKey, array());
+            if (!in_array($key, $keys)) {
+                $keys[] = $key;
+            }
+            $this->session->set($this->whitelistKey, $keys);
             return $this->router->generate('gregwar_captcha.generate_captcha', array('key' => $key));
         }
 
