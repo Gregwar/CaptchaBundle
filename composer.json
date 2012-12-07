@@ -3,7 +3,7 @@
     "type": "captcha-bundle",
     "description": "Captcha bundle",
     "keywords": ["symfony2", "captcha", "bot", "visual", "code", "security", "spam"],
-    "homepage": "https://github.com/Gregwar/ImageBundle",
+    "homepage": "https://github.com/Gregwar/CaptchaBundle",
     "license": "MIT",
     "authors": [
         {
