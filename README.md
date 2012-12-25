@@ -130,7 +130,7 @@ You can define the following configuration options globally or on the CaptchaTyp
 * **keep_value**: the value will be the same until the form is posted, even if the page is refreshed (default=true)
 * **as_file**: if set to true an image file will be created instead of embedding to please IE6/7 (default=false)
 * **as_url**: if set to true, a URL will be used in the image tag and will handle captcha generation. This can be used in a multiple-server environment and support IE6/7 (default=false)
-* **invalid_message**: error message displayed when an non-matching code is submitted (default="Bad code value")
+* **invalid_message**: error message displayed when an non-matching code is submitted (default="Bad code value", see the translation section for more information)
 * **bypass_code**: code that will always validate the captcha (default=null)
 * **whitelist_key**: the session key to use for keep the session keys that can be used for captcha storage, when using as_url (default=captcha_whitelist_key)
 * **humanity**: number of extra forms that the user can submit after a correct validation, if set to a value different of 0, only 1 over (1+humanity) forms will contain a CAPTCHA (default=0, i.e each form will contain the CAPTCHA)
@@ -154,6 +154,11 @@ configuration entry in your `config.yml` file:
         width: 200
         height: 50
         length: 6
+
+Translation
+===========
+
+The messages are using the translator, you can either change the `invalid_message` option or translate it. Any contribution about the language is welcome !
 
 As URL
 ============
