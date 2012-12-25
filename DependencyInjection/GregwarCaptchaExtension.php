@@ -33,6 +33,10 @@ class GregwarCaptchaExtension extends Extension
         $container->setParameter('gregwar_captcha.config.expiration', $config['expiration']);
         $container->setParameter('gregwar_captcha.config.whitelist_key', $config['whitelist_key']);
 
+        if ($config['reload'] && !$config['as_url']) {
+            throw new \InvalidArgumentException('GregwarCaptcha: The reload option cannot be set without as_url, see the README for more information');
+        }
+
         $resources = $container->getParameter('twig.form.resources');
         $container->setParameter('twig.form.resources', array_merge(array('GregwarCaptchaBundle::captcha.html.twig'), $resources));
     }

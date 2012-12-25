@@ -28,6 +28,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('charset')->defaultValue('abcdefhjkmnprstuvwxyz23456789')->end()
                 ->scalarNode('as_file')->defaultValue(false)->end()
                 ->scalarNode('as_url')->defaultValue(false)->end()
+                ->scalarNode('reload')->defaultValue(false)->end()
                 ->scalarNode('image_folder')->defaultValue('captcha')->end()
                 ->scalarNode('web_path')->defaultValue('%kernel.root_dir%/../web')->end()
                 ->scalarNode('gc_freq')->defaultValue(100)->end()

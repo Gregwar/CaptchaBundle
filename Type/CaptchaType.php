@@ -92,6 +92,8 @@ class CaptchaType extends AbstractType
         $view->vars = array_merge($view->vars, array(
             'captcha_width'     => $options['width'],
             'captcha_height'    => $options['height'],
+            'reload'            => $options['reload'],
+            'id'                => uniqid('captcha_'),
             'captcha_code'      => $this->generator->getCaptchaCode($this->key, $options),
             'value'             => '',
             'is_human'          => $isHuman

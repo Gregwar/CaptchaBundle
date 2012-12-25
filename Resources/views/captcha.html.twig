@@ -3,7 +3,16 @@
 -
 {% else %}
 {% spaceless %}
-    <img src="{{ captcha_code }}" alt="" title="captcha" width="{{ captcha_width }}" height="{{ captcha_height }}" />
+    <img id="{{ id }}" src="{{ captcha_code }}" alt="" title="captcha" width="{{ captcha_width }}" height="{{ captcha_height }}" />
+    {% if reload %}
+    <script type="text/javascript">
+        function reload_{{ id }}() {
+            var img = document.getElementById('{{ id }}');
+            img.src = '{{ captcha_code }}?n=' + (new Date()).getTime();
+        }
+    </script>
+    <a class="captcha_reload" href="javascript:reload_{{ id }}();">{{ 'Renew'|trans({}, 'gregwar_captcha') }}</a>
+    {% endif %}
     {{ form_widget(form) }}
 {% endspaceless %}
 {% endif %}
