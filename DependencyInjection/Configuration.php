@@ -24,7 +24,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('width')->defaultValue(120)->end()
                 ->scalarNode('height')->defaultValue(40)->end()
                 ->scalarNode('font')->defaultValue(__DIR__.'/../Generator/Font/captcha.ttf')->end()
-                ->scalarNode('keep_value')->defaultValue(true)->end()
+                ->scalarNode('keep_value')->defaultValue(false)->end()
                 ->scalarNode('charset')->defaultValue('abcdefhjkmnprstuvwxyz23456789')->end()
                 ->scalarNode('as_file')->defaultValue(false)->end()
                 ->scalarNode('as_url')->defaultValue(false)->end()
