@@ -2,10 +2,6 @@
 
 namespace Gregwar\CaptchaBundle\Generator;
 
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\RouterInterface;
-
 /**
  * Generates random phrase
  *
