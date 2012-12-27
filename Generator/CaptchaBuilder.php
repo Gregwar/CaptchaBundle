@@ -2,8 +2,6 @@
 
 namespace Gregwar\CaptchaBundle\Generator;
 
-use Symfony\Component\Finder\Finder;
-
 /**
  * Builds a new captcha image
  * Uses the fingerprint parameter, if one is passed, to generate the same image
