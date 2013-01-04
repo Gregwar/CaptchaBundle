@@ -3,15 +3,15 @@
 -
 {% else %}
 {% spaceless %}
-    <img id="{{ id }}" src="{{ captcha_code }}" alt="" title="captcha" width="{{ captcha_width }}" height="{{ captcha_height }}" />
+    <img id="{{ image_id }}" src="{{ captcha_code }}" alt="" title="captcha" width="{{ captcha_width }}" height="{{ captcha_height }}" />
     {% if reload %}
     <script type="text/javascript">
-        function reload_{{ id }}() {
-            var img = document.getElementById('{{ id }}');
+        function reload_{{ image_id }}() {
+            var img = document.getElementById('{{ image_id }}');
             img.src = '{{ captcha_code }}?n=' + (new Date()).getTime();
         }
     </script>
-    <a class="captcha_reload" href="javascript:reload_{{ id }}();">{{ 'Renew'|trans({}, 'gregwar_captcha') }}</a>
+    <a class="captcha_reload" href="javascript:reload_{{ image_id }}();">{{ 'Renew'|trans({}, 'gregwar_captcha') }}</a>
     {% endif %}
     {{ form_widget(form) }}
 {% endspaceless %}
