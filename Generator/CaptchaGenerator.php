@@ -2,6 +2,7 @@
 
 namespace Gregwar\CaptchaBundle\Generator;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -14,6 +15,11 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class CaptchaGenerator
 {
+    /**
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    protected $container;
+    
     /**
      * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
      */
@@ -52,8 +58,9 @@ class CaptchaGenerator
      * @param ImageFileHandler $imageFileHandler
      * @param string $whitelistKey
      */
-    public function __construct(SessionInterface $session, RouterInterface $router, CaptchaBuilder $builder, PhraseBuilder $phraseBuilder, ImageFileHandler $imageFileHandler, $whitelistKey)
+    public function __construct(ContainerInterface $container, SessionInterface $session, RouterInterface $router, CaptchaBuilder $builder, PhraseBuilder $phraseBuilder, ImageFileHandler $imageFileHandler, $whitelistKey)
     {
+        $this->container        = $container;
         $this->session          = $session;
         $this->router           = $router;
         $this->builder          = $builder;
@@ -86,6 +93,16 @@ class CaptchaGenerator
                 $keys[] = $key;
             }
             $this->session->set($this->whitelistKey, $keys);
+            
+            // assign all config to session
+            foreach ($this->container->getParameter('gregwar_captcha.config') as $k => $v) {
+                if (array_key_exists($k, $options)) {
+                    $this->session->set($k, $options[$k]);
+                } else {
+                    $this->session->set($k, $v);
+                }
+            }
+            
             return $this->router->generate('gregwar_captcha.generate_captcha', array('key' => $key));
         }
 
