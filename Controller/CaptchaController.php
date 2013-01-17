@@ -27,8 +27,9 @@ class CaptchaController extends Controller
         $session = $this->get('session');
         $whitelistKey = $options['whitelist_key'];
         $isOk = false;
+        $sessionoptions = $session->get('captcha_options', $options);
 
-        if ($session->has('as_url') && $session->has($whitelistKey)) {
+        if (array_key_exists('as_url', $sessionoptions) && $session->has($whitelistKey)) {
             $keys = $session->get($whitelistKey);
             if (is_array($keys) && in_array($key, $keys)) {
                 $isOk = true;
@@ -42,7 +43,7 @@ class CaptchaController extends Controller
         /* @var \Gregwar\CaptchaBundle\Generator\CaptchaGenerator $generator */
         $generator = $this->container->get('gregwar_captcha.generator');
 
-        $response = new Response($generator->generate($key, $session->all()));
+        $response = new Response($generator->generate($key, $sessionoptions));
         $response->headers->set('Content-type', 'image/jpeg');
 
         return $response;

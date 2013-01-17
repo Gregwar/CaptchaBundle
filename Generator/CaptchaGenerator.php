@@ -95,13 +95,15 @@ class CaptchaGenerator
             $this->session->set($this->whitelistKey, $keys);
             
             // assign all config to session
+            $sessionoptions = array();
             foreach ($this->container->getParameter('gregwar_captcha.config') as $k => $v) {
                 if (array_key_exists($k, $options)) {
-                    $this->session->set($k, $options[$k]);
+                    $sessionoptions[$k] = $options[$k];
                 } else {
-                    $this->session->set($k, $v);
+                    $sessionoptions[$k] = $v;
                 }
             }
+            $this->session->set('captcha_options', $sessionoptions);
             
             return $this->router->generate('gregwar_captcha.generate_captcha', array('key' => $key));
         }
