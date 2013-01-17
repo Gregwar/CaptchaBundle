@@ -11,6 +11,7 @@ services:
     gregwar_captcha.generator:
         class: Gregwar\CaptchaBundle\Generator\CaptchaGenerator
         arguments:
+            - @service_container
             - @session
             - @router
             - @gregwar_captcha.captcha_builder
