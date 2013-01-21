@@ -105,6 +105,8 @@ class CaptchaGenerator
     {
         $fingerprint = $this->getFingerprint($key, $options);
 
+        $this->builder->setDistortion($options['distortion']);
+
         $content = $this->builder->build(
             $options['width'],
             $options['height'],

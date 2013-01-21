@@ -135,6 +135,7 @@ You can define the following configuration options globally or on the CaptchaTyp
 * **whitelist_key**: the session key to use for keep the session keys that can be used for captcha storage, when using as_url (default=captcha_whitelist_key)
 * **reload**: adds a link to reload the code
 * **humanity**: number of extra forms that the user can submit after a correct validation, if set to a value different of 0, only 1 over (1+humanity) forms will contain a CAPTCHA (default=0, i.e each form will contain the CAPTCHA)
+* **distortion**: enable or disable the distortion on the image (default=true, enabled)
 
 Example :
 
