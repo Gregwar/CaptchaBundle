@@ -89,15 +89,32 @@ class CaptchaType extends AbstractType
             }
         }
 
+        if ($options['as_url']) {
+            $key = $this->key;
+            $keys = $this->session->get($options['whitelist_key'], array());
+            if (!in_array($key, $keys)) {
+                $keys[] = $key;
+            }
+            $this->session->set($options['whitelist_key'], $keys);
+            $options['session_key'] = $this->key;
+        }
+
         $view->vars = array_merge($view->vars, array(
             'captcha_width'     => $options['width'],
             'captcha_height'    => $options['height'],
             'reload'            => $options['reload'],
             'image_id'                => uniqid('captcha_'),
-            'captcha_code'      => $this->generator->getCaptchaCode($this->key, $options),
+            'captcha_code'      => $this->generator->getCaptchaCode($options),
             'value'             => '',
             'is_human'          => $isHuman
         ));
+
+        $persistOptions = array();
+        foreach (array('phrase', 'width', 'height', 'distortion', 'quality') as $key) {
+            $persistOptions[$key] = $options[$key];
+        }
+
+        $this->session->set($this->key, $persistOptions);
     }
 
     /**

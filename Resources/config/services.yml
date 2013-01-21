@@ -11,12 +11,10 @@ services:
     gregwar_captcha.generator:
         class: Gregwar\CaptchaBundle\Generator\CaptchaGenerator
         arguments:
-            - @session
             - @router
             - @gregwar_captcha.captcha_builder
             - @gregwar_captcha.phrase_builder
             - @gregwar_captcha.image_file_handler
-            - %gregwar_captcha.config.whitelist_key%
 
     gregwar_captcha.image_file_handler:
         class: Gregwar\CaptchaBundle\Generator\ImageFileHandler
