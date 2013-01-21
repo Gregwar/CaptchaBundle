@@ -42,7 +42,15 @@ class CaptchaController extends Controller
         /* @var \Gregwar\CaptchaBundle\Generator\CaptchaGenerator $generator */
         $generator = $this->container->get('gregwar_captcha.generator');
 
-        $response = new Response($generator->generate($key, $options));
+        $persistedOptions = $session->get($key, array());
+        $options = array_merge($options, $persistedOptions);
+
+        $phrase = $generator->getPhrase($options);
+        $generator->setPhrase($phrase);
+        $persistedOptions['phrase'] = $phrase;
+        $session->set($key, $persistedOptions);
+
+        $response = new Response($generator->generate($options));
         $response->headers->set('Content-type', 'image/jpeg');
 
         return $response;

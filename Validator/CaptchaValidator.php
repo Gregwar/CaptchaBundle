@@ -60,17 +60,15 @@ class CaptchaValidator
     public function validate(FormEvent $event)
     {
         $form = $form = $event->getForm();
-        $humanityKey = $this->key . '_humanity';
 
         $code = $form->getData();
         $expectedCode = $this->getExpectedCode();
 
         if ($this->humanity > 0) {
-            if ($this->session->get($humanityKey, 0) > 0) {
-                $this->session->set($humanityKey, $this->session->get($humanityKey, 0)-1);
+            $humanity = $this->getHumanity();
+            if ($humanity > 0) {
+                $this->updateHumanity($humanity-1);
                 return;
-            } else {
-                $this->session->remove($humanityKey);
             }
         }
 
@@ -78,7 +76,7 @@ class CaptchaValidator
             $form->addError(new FormError($this->invalidMessage));
         } else {
             if ($this->humanity > 0) {
-                $this->session->set($humanityKey, $this->humanity);
+                $this->updateHumanity($this->humanity);
             }
         }
 
@@ -96,8 +94,34 @@ class CaptchaValidator
      */
     protected function getExpectedCode()
     {
-        if ($this->session->has($this->key)) {
-            return $this->session->get($this->key);
+        $options = $this->session->get($this->key, array());
+
+        if (is_array($options) && isset($options['phrase'])) {
+            return $options['phrase'];
+        }
+
+        return null;
+    }
+
+    /**
+     * Retreive the humanity
+     *
+     * @return mixed|null
+     */
+    protected function getHumanity()
+    {
+        return $this->session->get($this->key . '_humanity', 0);
+    }
+
+    /**
+     * Updates the humanity
+     */
+    protected function updateHumanity($newValue)
+    {
+        if ($newValue > 0) {
+            $this->session->set($this->key . '_humanity', $newValue);
+        } else {
+            $this->session->remove($this->key . '_humanity');
         }
 
         return null;

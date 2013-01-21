@@ -18,17 +18,6 @@ use Gregwar\Captcha\PhraseBuilderInterface;
 class CaptchaGenerator
 {
     /**
-     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
-     */
-    protected $session;
-
-    /**
-     * Name of the whitelist key
-     * @var string
-     */
-    protected $whitelistKey;
-
-    /**
      * @var \Symfony\Component\Routing\RouterInterface
      */
     protected $router;
@@ -49,20 +38,16 @@ class CaptchaGenerator
     protected $imageFileHandler;
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param \Symfony\Component\Routing\RouterInterface $router
      * @param CaptchaBuilderInterface $builder
      * @param ImageFileHandlerInterface $imageFileHandler
-     * @param string $whitelistKey
      */
-    public function __construct(SessionInterface $session, RouterInterface $router, CaptchaBuilderInterface $builder, PhraseBuilderInterface $phraseBuilder, ImageFileHandler $imageFileHandler, $whitelistKey)
+    public function __construct(RouterInterface $router, CaptchaBuilderInterface $builder, PhraseBuilderInterface $phraseBuilder, ImageFileHandler $imageFileHandler)
     {
-        $this->session          = $session;
         $this->router           = $router;
         $this->builder          = $builder;
         $this->phraseBuilder    = $phraseBuilder;
-        $this->imageFileHandler = $imageFileHandler;
-        $this->whitelistKey     = $whitelistKey;
+        $this->imageFileHandler = $imageFileHandler;    
     }
 
     /**
@@ -73,26 +58,31 @@ class CaptchaGenerator
      *
      * @return array
      */
-    public function getCaptchaCode($key, array $options)
+    public function getCaptchaCode(array &$options)
     {
+        $this->builder->setPhrase($this->getPhrase($options));
+
         // Randomly execute garbage collection and returns the image filename
         if ($options['as_file']) {
             $this->imageFileHandler->collectGarbage();
 
-            return $this->generate($key, $options);
+            return $this->generate($options);
         }
 
         // Returns the image generation URL
         if ($options['as_url']) {
-            $keys = $this->session->get($this->whitelistKey, array());
-            if (!in_array($key, $keys)) {
-                $keys[] = $key;
-            }
-            $this->session->set($this->whitelistKey, $keys);
-            return $this->router->generate('gregwar_captcha.generate_captcha', array('key' => $key));
+            return $this->router->generate('gregwar_captcha.generate_captcha', array('key' => $options['session_key']));
         }
 
-        return 'data:image/jpeg;base64,' . base64_encode($this->generate($key, $options));
+        return 'data:image/jpeg;base64,' . base64_encode($this->generate($options));
+    }
+
+    /**
+     * Sets the phrase to the builder
+     */
+    public function setPhrase($phrase)
+    {
+        $this->builder->setPhrase($phrase);
     }
 
     /**
@@ -101,11 +91,11 @@ class CaptchaGenerator
      *
      * @return string
      */
-    public function generate($key, array $options)
+    public function generate(array &$options)
     {
-        $fingerprint = $this->getFingerprint($key, $options);
-
         $this->builder->setDistortion($options['distortion']);
+
+        $fingerprint = isset($options['fingerprint']) ? $options['fingerprint'] : null;
 
         $content = $this->builder->build(
             $options['width'],
@@ -115,7 +105,7 @@ class CaptchaGenerator
         )->getGd();
 
         if ($options['keep_value']) {
-            $this->session->set($key . '_fingerprint', $this->builder->getFingerprint());
+            $options['fingerprint'] = $this->builder->getFingerprint();
         }
 
         if (!$options['as_file']) {
@@ -134,33 +124,17 @@ class CaptchaGenerator
      *
      * @return string
      */
-    protected function getPhrase($key, array $options)
+    public function getPhrase(array &$options)
     {
         // Get the phrase that we'll use for this image
-        if ($options['keep_value'] && $this->session->has($key)) {
-            return $this->session->get($key);
+        if ($options['keep_value'] && isset($options['phrase'])) {
+            $phrase = $options['phrase'];
+        } else {
+            $phrase = $this->phraseBuilder->build($options['length'], $options['charset']);
+            $options['phrase'] = $phrase;
         }
-
-        $phrase = $this->phraseBuilder->build($options['length'], $options['charset']);
-        $this->session->set($key, $phrase);
-        $this->captchaBuilder->setPhrase($phrase);
-
+        
         return $phrase;
-    }
-
-    /**
-     * @param string $key
-     * @param array $options
-     *
-     * @return array|null
-     */
-    protected function getFingerprint($key, array $options)
-    {
-        if ($options['keep_value'] && $this->session->has($key . '_fingerprint')) {
-            return $this->session->get($key . '_fingerprint');
-        }
-
-        return null;
     }
 }
 
