@@ -27,7 +27,7 @@ services:
             - %gregwar_captcha.config.expiration%
 
     gregwar_captcha.captcha_builder:
-        class: Gregwar\CaptchaBundle\Generator\CaptchaBuilder
+        class: Gregwar\Captcha\CaptchaBuilder
 
     gregwar_captcha.phrase_builder:
-        class: Gregwar\CaptchaBundle\Generator\PhraseBuilder
+        class: Gregwar\Captcha\PhraseBuilder

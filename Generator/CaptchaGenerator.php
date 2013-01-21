@@ -6,6 +6,9 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
+use Gregwar\Captcha\CaptchaBuilderInterface;
+use Gregwar\Captcha\PhraseBuilderInterface;
+
 /**
  * Uses configuration parameters to call the services that generate captcha images
  *
@@ -48,11 +51,11 @@ class CaptchaGenerator
     /**
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param \Symfony\Component\Routing\RouterInterface $router
-     * @param CaptchaBuilder $builder
-     * @param ImageFileHandler $imageFileHandler
+     * @param CaptchaBuilderInterface $builder
+     * @param ImageFileHandlerInterface $imageFileHandler
      * @param string $whitelistKey
      */
-    public function __construct(SessionInterface $session, RouterInterface $router, CaptchaBuilder $builder, PhraseBuilder $phraseBuilder, ImageFileHandler $imageFileHandler, $whitelistKey)
+    public function __construct(SessionInterface $session, RouterInterface $router, CaptchaBuilderInterface $builder, PhraseBuilderInterface $phraseBuilder, ImageFileHandler $imageFileHandler, $whitelistKey)
     {
         $this->session          = $session;
         $this->router           = $router;
@@ -106,9 +109,8 @@ class CaptchaGenerator
             $options['width'],
             $options['height'],
             $options['font'],
-            $this->getPhrase($key, $options),
             $fingerprint
-        );
+        )->getGd();
 
         if ($options['keep_value']) {
             $this->session->set($key . '_fingerprint', $this->builder->getFingerprint());
@@ -139,6 +141,7 @@ class CaptchaGenerator
 
         $phrase = $this->phraseBuilder->build($options['length'], $options['charset']);
         $this->session->set($key, $phrase);
+        $this->captchaBuilder->setPhrase($phrase);
 
         return $phrase;
     }
