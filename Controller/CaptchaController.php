@@ -28,7 +28,7 @@ class CaptchaController extends Controller
         $whitelistKey = $options['whitelist_key'];
         $isOk = false;
 
-        if ($options['as_url'] && $session->has($whitelistKey)) {
+        if ($session->has($whitelistKey)) {
             $keys = $session->get($whitelistKey);
             if (is_array($keys) && in_array($key, $keys)) {
                 $isOk = true;
