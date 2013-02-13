@@ -103,7 +103,7 @@ class CaptchaType extends AbstractType
             'captcha_width'     => $options['width'],
             'captcha_height'    => $options['height'],
             'reload'            => $options['reload'],
-            'image_id'                => uniqid('captcha_'),
+            'image_id'          => uniqid('captcha_'),
             'captcha_code'      => $this->generator->getCaptchaCode($options),
             'value'             => '',
             'is_human'          => $isHuman
@@ -122,7 +122,7 @@ class CaptchaType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $this->options['property_path'] = false;
+        $this->options['mapped'] = false;
         $resolver->setDefaults($this->options);
     }
 
