@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Translation\TranslatorInterface;
 
 use Gregwar\CaptchaBundle\Validator\CaptchaValidator;
 use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
@@ -37,6 +38,11 @@ class CaptchaType extends AbstractType
     protected $generator;
 
     /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
      * Options
      * @var array
      */
@@ -47,10 +53,11 @@ class CaptchaType extends AbstractType
      * @param \Gregwar\CaptchaBundle\Generator\CaptchaGenerator $generator
      * @param array $options
      */
-    public function __construct(SessionInterface $session, CaptchaGenerator $generator, $options)
+    public function __construct(SessionInterface $session, CaptchaGenerator $generator, TranslatorInterface $translator, $options)
     {
         $this->session      = $session;
         $this->generator    = $generator;
+        $this->translator = $translator;
         $this->options      = $options;
     }
 
@@ -63,6 +70,7 @@ class CaptchaType extends AbstractType
         $this->key = 'gcb_'.$builder->getForm()->getName();
 
         $validator = new CaptchaValidator(
+            $this->translator,
             $this->session,
             $this->key,
             $options['invalid_message'],

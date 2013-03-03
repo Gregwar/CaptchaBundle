@@ -4,6 +4,7 @@ services:
         arguments:
             - @session
             - @gregwar_captcha.generator
+            - @translator
             - %gregwar_captcha.config%
         tags:
             - { name: form.type, alias: captcha }

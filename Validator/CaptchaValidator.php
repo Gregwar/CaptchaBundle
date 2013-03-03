@@ -5,6 +5,7 @@ namespace Gregwar\CaptchaBundle\Validator;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Captcha validator
@@ -40,13 +41,20 @@ class CaptchaValidator
     private $humanity;
 
     /**
+     * Translator
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param string $key
      * @param string $invalidMessage
      * @param string|null $bypassCode
      */
-    public function __construct(SessionInterface $session, $key, $invalidMessage, $bypassCode, $humanity)
+    public function __construct(TranslatorInterface $translator, SessionInterface $session, $key, $invalidMessage, $bypassCode, $humanity)
     {
+        $this->translator       = $translator;
         $this->session          = $session;
         $this->key              = $key;
         $this->invalidMessage   = $invalidMessage;
@@ -73,7 +81,7 @@ class CaptchaValidator
         }
 
         if (!($code && is_string($code) && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
-            $form->addError(new FormError($this->invalidMessage));
+            $form->addError(new FormError($this->translator->trans($this->invalidMessage, array(), 'validators')));
         } else {
             if ($this->humanity > 0) {
                 $this->updateHumanity($this->humanity);
