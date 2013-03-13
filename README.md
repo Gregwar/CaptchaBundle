@@ -136,6 +136,8 @@ You can define the following configuration options globally or on the CaptchaTyp
 * **reload**: adds a link to reload the code
 * **humanity**: number of extra forms that the user can submit after a correct validation, if set to a value different of 0, only 1 over (1+humanity) forms will contain a CAPTCHA (default=0, i.e each form will contain the CAPTCHA)
 * **distortion**: enable or disable the distortion on the image (default=true, enabled)
+* **max_front_lines**, **max_behind_lines**: the maximum number of lines to draw on top/behind the image. `0` will draw no lines; `null` will use the default algorithm (the
+number of lines depends on the size of the image). (default=null)
 
 Example :
 

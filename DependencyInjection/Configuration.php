@@ -39,6 +39,8 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('whitelist_key')->defaultValue('captcha_whitelist_key')->end()
                 ->scalarNode('humanity')->defaultValue(0)->end()
                 ->scalarNode('distortion')->defaultValue(true)->end()
+                ->scalarNode('max_front_lines')->defaultValue(null)->end()
+                ->scalarNode('max_behind_lines')->defaultValue(null)->end()
             ->end()
         ;
 
