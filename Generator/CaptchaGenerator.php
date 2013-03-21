@@ -95,6 +95,9 @@ class CaptchaGenerator
     {
         $this->builder->setDistortion($options['distortion']);
 
+        $this->builder->setMaxFrontLines($options['max_front_lines']);
+        $this->builder->setMaxBehindLines($options['max_behind_lines']);
+
         $fingerprint = isset($options['fingerprint']) ? $options['fingerprint'] : null;
 
         $content = $this->builder->build(
