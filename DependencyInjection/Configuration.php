@@ -39,6 +39,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('whitelist_key')->defaultValue('captcha_whitelist_key')->end()
                 ->scalarNode('humanity')->defaultValue(0)->end()
                 ->scalarNode('distortion')->defaultValue(true)->end()
+                ->arrayNode('backgroundColor')->prototype('scalar')->end()
             ->end()
         ;
 
