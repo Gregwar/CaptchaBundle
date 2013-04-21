@@ -41,7 +41,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('distortion')->defaultValue(true)->end()
                 ->scalarNode('max_front_lines')->defaultValue(null)->end()
                 ->scalarNode('max_behind_lines')->defaultValue(null)->end()
-                ->arrayNode('backgroundColor')->prototype('scalar')->end()
+                ->arrayNode('background_color')->prototype('scalar')->end()
             ->end()
         ;
 

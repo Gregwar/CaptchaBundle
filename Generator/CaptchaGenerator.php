@@ -98,12 +98,12 @@ class CaptchaGenerator
         $this->builder->setMaxFrontLines($options['max_front_lines']);
         $this->builder->setMaxBehindLines($options['max_behind_lines']);
 
-        if ($options['backgroundColor'] != array()) {
-            if (count($options['backgroundColor'])!=3) {
-                throw new \RuntimeException('backgroundColor should be an array of r, g and b');
+        if ($options['background_color'] != array()) {
+            if (count($options['background_color'])!=3) {
+                throw new \RuntimeException('background_color should be an array of r, g and b');
             }
 
-            $color = $options['backgroundColor'];
+            $color = $options['background_color'];
             $this->builder->setBackgroundColor($color[0], $color[1], $color[2]);
         }
 
