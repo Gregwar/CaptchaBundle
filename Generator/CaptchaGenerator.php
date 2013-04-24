@@ -107,6 +107,8 @@ class CaptchaGenerator
             $this->builder->setBackgroundColor($color[0], $color[1], $color[2]);
         }
 
+        $this->builder->setInterpolation($options['interpolation']);
+
         $fingerprint = isset($options['fingerprint']) ? $options['fingerprint'] : null;
 
         $content = $this->builder->build(

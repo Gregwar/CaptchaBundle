@@ -139,6 +139,7 @@ You can define the following configuration options globally or on the CaptchaTyp
 * **max_front_lines**, **max_behind_lines**: the maximum number of lines to draw on top/behind the image. `0` will draw no lines; `null` will use the default algorithm (the
 number of lines depends on the size of the image). (default=null)
 * **background_color**: sets the background color, if you want to force it, this should be an array of r,g &b, for instance [255, 255, 255] will force the background to be white
+* **interpolation**: enable or disable the interpolation on the captcha
 
 Example :
 
