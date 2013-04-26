@@ -95,6 +95,12 @@ class CaptchaGenerator
     {
         $this->builder->setDistortion($options['distortion']);
 
+        if(isset($options['text_color']))
+            $this->builder->setTextColor($options['text_color']);
+        
+        if(isset($options['background_color']))
+            $this->builder->setBackgroundColor($options['background_color']);
+
         $fingerprint = isset($options['fingerprint']) ? $options['fingerprint'] : null;
 
         $content = $this->builder->build(
