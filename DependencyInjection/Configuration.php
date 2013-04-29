@@ -43,6 +43,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('max_behind_lines')->defaultValue(null)->end()
                 ->scalarNode('interpolation')->defaultValue(true)->end()
                 ->arrayNode('background_color')->prototype('scalar')->end()
+                ->arrayNode('text_color')->prototype('scalar')->end()
             ->end()
         ;
 
