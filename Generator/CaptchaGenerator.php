@@ -101,7 +101,7 @@ class CaptchaGenerator
 
         if (isset($options['text_color'])) {
             if (count($options['text_color']) !== 3) {
-		throw new \RuntimeException('text_color should be an array of r, g and b');
+                throw new \RuntimeException('text_color should be an array of r, g and b');
             }
 
             $color = $options['text_color'];
