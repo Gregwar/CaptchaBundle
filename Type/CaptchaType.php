@@ -90,6 +90,10 @@ class CaptchaType extends AbstractType
     {
         $isHuman = false;
 
+        if ($options['reload'] && !$options['as_url']) {
+            throw new \InvalidArgumentException('GregwarCaptcha: The reload option cannot be set without as_url, see the README for more information');
+        }
+
         if ($options['humanity'] > 0) {
             $humanityKey = $this->key.'_humanity';
             if ($this->session->get($humanityKey, 0) > 0) {
