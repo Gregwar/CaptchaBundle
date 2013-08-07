@@ -98,8 +98,7 @@ class CaptchaGenerator
         $this->builder->setMaxFrontLines($options['max_front_lines']);
         $this->builder->setMaxBehindLines($options['max_behind_lines']);
 
-
-        if (isset($options['text_color'])) {
+        if (isset($options['text_color']) && $options['text_color']) {
             if (count($options['text_color']) !== 3) {
                 throw new \RuntimeException('text_color should be an array of r, g and b');
             }
@@ -108,7 +107,7 @@ class CaptchaGenerator
             $this->builder->setTextColor($color[0], $color[1], $color[2]);
         }
 
-        if (isset($options['background_color'])) {
+        if (isset($options['background_color']) && $options['background_color']) {
             if (count($options['background_color']) !== 3) {
                 throw new \RuntimeException('background_color should be an array of r, g and b');
             }
