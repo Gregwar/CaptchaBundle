@@ -126,7 +126,7 @@ You can define the following configuration options globally or on the CaptchaTyp
 * **length**: the length of the captcha (number of chars, default 5)
 * **quality**: jpeg quality of captchas (default=15)
 * **charset**: the charset used for code generation (default=abcdefhjkmnprstuvwxyz23456789)
-* **font**: the font to use (default=Generator/Font/captcha.ttf)
+* **font**: the font to use (default is random among some pre-provided fonts), this should be an absolute path
 * **keep_value**: the value will be the same until the form is posted, even if the page is refreshed (default=true)
 * **as_file**: if set to true an image file will be created instead of embedding to please IE6/7 (default=false)
 * **as_url**: if set to true, a URL will be used in the image tag and will handle captcha generation. This can be used in a multiple-server environment and support IE6/7 (default=false)
