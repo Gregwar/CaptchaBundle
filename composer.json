@@ -16,9 +16,15 @@
             "email": "jeremy.j.livingston@gmail.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:ChessCom/Captcha"
+        }
+    ],
     "require": {
         "php": ">=5.3.0",
-        "gregwar/captcha": "v1.0.8"
+        "gregwar/captcha": "dev-master"
     },
     "autoload": {
         "psr-0": {
