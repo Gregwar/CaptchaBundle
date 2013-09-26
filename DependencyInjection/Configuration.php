@@ -44,6 +44,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('interpolation')->defaultValue(true)->end()
                 ->arrayNode('text_color')->prototype('scalar')->end()->end()
                 ->arrayNode('background_color')->prototype('scalar')->end()->end()
+                ->arrayNode('background_images')->prototype('scalar')->end()->end()
             ->end()
         ;
 
