@@ -123,6 +123,9 @@ class CaptchaGenerator
         // set background images
         $this->builder->setBackgroundImages($options['background_images']);
 
+        // set ignore all effects
+        $this->builder->setIgnoreAllEffects($options['ignore_all_effects']);
+
         $content = $this->builder->build(
             $options['width'],
             $options['height'],
