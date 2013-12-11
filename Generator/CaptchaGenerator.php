@@ -132,6 +132,9 @@ class CaptchaGenerator
         }
 
         if (!$options['as_file']) {
+        	// Clean output buffer to prevent corrupted images
+        	ob_clean();
+        	
             ob_start();
             imagejpeg($content, null, $options['quality']);
 
