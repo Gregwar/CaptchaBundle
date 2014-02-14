@@ -123,6 +123,8 @@ You can define the following configuration options globally or on the CaptchaTyp
 
 * **width**: the width of the captcha image (default=120)
 * **height**: the height of the captcha image (default=40)
+* **disabled**: disable globally the CAPTCHAs (can be useful in dev environment), it will
+  still appear but won't be editable and won't be checked
 * **length**: the length of the captcha (number of chars, default 5)
 * **quality**: jpeg quality of captchas (default=15)
 * **charset**: the charset used for code generation (default=abcdefhjkmnprstuvwxyz23456789)
