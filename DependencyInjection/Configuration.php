@@ -45,6 +45,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('text_color')->prototype('scalar')->end()->end()
                 ->arrayNode('background_color')->prototype('scalar')->end()->end()
                 ->arrayNode('background_images')->prototype('scalar')->end()->end()
+                ->scalarNode('disabled')->defaultValue(false)->end()
                 ->scalarNode('ignore_all_effects')->defaultValue(false)->end()
             ->end()
         ;
