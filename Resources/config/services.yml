@@ -7,7 +7,7 @@ parameters:
     
 services:
     captcha.type:
-        class: %gregwar_captcha.captch_type.class%
+        class: %gregwar_captcha.captcha_type.class%
         arguments:
             - @session
             - @gregwar_captcha.generator
@@ -17,7 +17,7 @@ services:
             - { name: form.type, alias: captcha }
 
     gregwar_captcha.generator:
-        class: %gregwar_captcha.captch_generator.class%
+        class: %gregwar_captcha.captcha_generator.class%
         arguments:
             - @router
             - @gregwar_captcha.captcha_builder
@@ -25,7 +25,7 @@ services:
             - @gregwar_captcha.image_file_handler
 
     gregwar_captcha.image_file_handler:
-        class: %gregwar_captch.image_file_handler.class%
+        class: %gregwar_captcha.image_file_handler.class%
         arguments:
             - %gregwar_captcha.config.image_folder%
             - %gregwar_captcha.config.web_path%
