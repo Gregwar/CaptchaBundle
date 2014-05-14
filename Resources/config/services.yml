@@ -1,6 +1,13 @@
+parameters:
+    gregwar_captcha.captcha_type.class: Gregwar\CaptchaBundle\Type\CaptchaType
+    gregwar_captcha.captcha_generator.class: Gregwar\CaptchaBundle\Generator\CaptchaGenerator
+    gregwar_captcha.image_file_handler.class: Gregwar\CaptchaBundle\Generator\ImageFileHandler
+    gregwar_captcha.captcha_builder.class: Gregwar\Captcha\CaptchaBuilder
+    gregwar_captcha.phrase_builder.class: Gregwar\Captcha\PhraseBuilder
+    
 services:
     captcha.type:
-        class: Gregwar\CaptchaBundle\Type\CaptchaType
+        class: %gregwar_captcha.captch_type.class%
         arguments:
             - @session
             - @gregwar_captcha.generator
@@ -10,7 +17,7 @@ services:
             - { name: form.type, alias: captcha }
 
     gregwar_captcha.generator:
-        class: Gregwar\CaptchaBundle\Generator\CaptchaGenerator
+        class: %gregwar_captcha.captch_generator.class%
         arguments:
             - @router
             - @gregwar_captcha.captcha_builder
@@ -18,7 +25,7 @@ services:
             - @gregwar_captcha.image_file_handler
 
     gregwar_captcha.image_file_handler:
-        class: Gregwar\CaptchaBundle\Generator\ImageFileHandler
+        class: %gregwar_captch.image_file_handler.class%
         arguments:
             - %gregwar_captcha.config.image_folder%
             - %gregwar_captcha.config.web_path%
@@ -26,7 +33,7 @@ services:
             - %gregwar_captcha.config.expiration%
 
     gregwar_captcha.captcha_builder:
-        class: Gregwar\Captcha\CaptchaBuilder
+        class: %gregwar_captcha.captcha_builder.class%
 
     gregwar_captcha.phrase_builder:
-        class: Gregwar\Captcha\PhraseBuilder
+        class: %gregwar_captcha.phrase_builder.class%
