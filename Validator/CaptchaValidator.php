@@ -67,7 +67,7 @@ class CaptchaValidator
      */
     public function validate(FormEvent $event)
     {
-        $form = $form = $event->getForm();
+        $form = $event->getForm();
 
         $code = $form->getData();
         $expectedCode = $this->getExpectedCode();
