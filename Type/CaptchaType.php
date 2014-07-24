@@ -27,12 +27,6 @@ class CaptchaType extends AbstractType
     protected $session;
 
     /**
-     * The session key
-     * @var string
-     */
-    protected $key = null;
-
-    /**
      * @var \Gregwar\CaptchaBundle\Generator\CaptchaGenerator
      */
     protected $generator;
@@ -67,12 +61,10 @@ class CaptchaType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->key = 'gcb_'.$builder->getForm()->getName();
-
         $validator = new CaptchaValidator(
             $this->translator,
             $this->session,
-            $this->key,
+            sprintf('gcp_%s', $builder->getForm()->getName()),
             $options['invalid_message'],
             $options['bypass_code'],
             $options['humanity']
@@ -94,21 +86,22 @@ class CaptchaType extends AbstractType
             throw new \InvalidArgumentException('GregwarCaptcha: The reload option cannot be set without as_url, see the README for more information');
         }
 
+        $key = sprintf('gcp_%s', $form->getName());
+
         if ($options['humanity'] > 0) {
-            $humanityKey = $this->key.'_humanity';
+            $humanityKey = sprintf('%s_humanity', $key);
             if ($this->session->get($humanityKey, 0) > 0) {
                 $isHuman = true;
             }
         }
 
         if ($options['as_url']) {
-            $key = $this->key;
             $keys = $this->session->get($options['whitelist_key'], array());
             if (!in_array($key, $keys)) {
                 $keys[] = $key;
             }
             $this->session->set($options['whitelist_key'], $keys);
-            $options['session_key'] = $this->key;
+            $options['session_key'] = $key;
         }
 
         $view->vars = array_merge($view->vars, array(
@@ -126,7 +119,7 @@ class CaptchaType extends AbstractType
             $persistOptions[$key] = $options[$key];
         }
 
-        $this->session->set($this->key, $persistOptions);
+        $this->session->set($key, $persistOptions);
     }
 
     /**
