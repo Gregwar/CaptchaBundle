@@ -80,16 +80,15 @@ class CaptchaType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $isHuman = false;
-
         if ($options['reload'] && !$options['as_url']) {
             throw new \InvalidArgumentException('GregwarCaptcha: The reload option cannot be set without as_url, see the README for more information');
         }
 
-        $key = sprintf('gcp_%s', $form->getName());
+        $sessionKey = sprintf('gcp_%s', $form->getName());
+        $isHuman    = false;
 
         if ($options['humanity'] > 0) {
-            $humanityKey = sprintf('%s_humanity', $key);
+            $humanityKey = sprintf('%s_humanity', $sessionKey);
             if ($this->session->get($humanityKey, 0) > 0) {
                 $isHuman = true;
             }
@@ -97,11 +96,11 @@ class CaptchaType extends AbstractType
 
         if ($options['as_url']) {
             $keys = $this->session->get($options['whitelist_key'], array());
-            if (!in_array($key, $keys)) {
-                $keys[] = $key;
+            if (!in_array($sessionKey, $keys)) {
+                $keys[] = $sessionKey;
             }
             $this->session->set($options['whitelist_key'], $keys);
-            $options['session_key'] = $key;
+            $options['session_key'] = $sessionKey;
         }
 
         $view->vars = array_merge($view->vars, array(
@@ -119,7 +118,7 @@ class CaptchaType extends AbstractType
             $persistOptions[$key] = $options[$key];
         }
 
-        $this->session->set($key, $persistOptions);
+        $this->session->set($sessionKey, $persistOptions);
     }
 
     /**
