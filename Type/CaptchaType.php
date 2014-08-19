@@ -22,12 +22,12 @@ use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
 class CaptchaType extends AbstractType
 {
     /**
-     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     * @var SessionInterface
      */
     protected $session;
 
     /**
-     * @var \Gregwar\CaptchaBundle\Generator\CaptchaGenerator
+     * @var CaptchaGenerator
      */
     protected $generator;
 
@@ -43,9 +43,10 @@ class CaptchaType extends AbstractType
     private $options = array();
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param \Gregwar\CaptchaBundle\Generator\CaptchaGenerator $generator
-     * @param array $options
+     * @param SessionInterface    $session
+     * @param CaptchaGenerator    $generator
+     * @param TranslatorInterface $translator
+     * @param array               $options
      */
     public function __construct(SessionInterface $session, CaptchaGenerator $generator, TranslatorInterface $translator, $options)
     {
@@ -56,8 +57,7 @@ class CaptchaType extends AbstractType
     }
 
     /**
-     * @param \Symfony\Component\Form\FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -74,9 +74,7 @@ class CaptchaType extends AbstractType
     }
 
     /**
-     * @param \Symfony\Component\Form\FormView $view
-     * @param \Symfony\Component\Form\FormInterface $form
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
@@ -122,7 +120,7 @@ class CaptchaType extends AbstractType
     }
 
     /**
-     * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
+     * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
