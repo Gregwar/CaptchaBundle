@@ -54,6 +54,7 @@ class CaptchaController extends Controller
         $response = new Response($generator->generate($options));
         $response->headers->set('Content-type', 'image/jpeg');
         $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Cache-Control','no-cache');
 
         return $response;
     }
