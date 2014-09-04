@@ -22,18 +22,12 @@ use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
 class CaptchaType extends AbstractType
 {
     /**
-     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     * @var SessionInterface
      */
     protected $session;
 
     /**
-     * The session key
-     * @var string
-     */
-    protected $key = null;
-
-    /**
-     * @var \Gregwar\CaptchaBundle\Generator\CaptchaGenerator
+     * @var CaptchaGenerator
      */
     protected $generator;
 
@@ -49,9 +43,10 @@ class CaptchaType extends AbstractType
     private $options = array();
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param \Gregwar\CaptchaBundle\Generator\CaptchaGenerator $generator
-     * @param array $options
+     * @param SessionInterface    $session
+     * @param CaptchaGenerator    $generator
+     * @param TranslatorInterface $translator
+     * @param array               $options
      */
     public function __construct(SessionInterface $session, CaptchaGenerator $generator, TranslatorInterface $translator, $options)
     {
@@ -62,17 +57,14 @@ class CaptchaType extends AbstractType
     }
 
     /**
-     * @param \Symfony\Component\Form\FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->key = 'gcb_'.$builder->getForm()->getName();
-
         $validator = new CaptchaValidator(
             $this->translator,
             $this->session,
-            $this->key,
+            sprintf('gcb_%s', $builder->getForm()->getName()),
             $options['invalid_message'],
             $options['bypass_code'],
             $options['humanity']
@@ -82,33 +74,31 @@ class CaptchaType extends AbstractType
     }
 
     /**
-     * @param \Symfony\Component\Form\FormView $view
-     * @param \Symfony\Component\Form\FormInterface $form
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $isHuman = false;
-
         if ($options['reload'] && !$options['as_url']) {
             throw new \InvalidArgumentException('GregwarCaptcha: The reload option cannot be set without as_url, see the README for more information');
         }
 
+        $sessionKey = sprintf('gcb_%s', $form->getName());
+        $isHuman    = false;
+
         if ($options['humanity'] > 0) {
-            $humanityKey = $this->key.'_humanity';
+            $humanityKey = sprintf('%s_humanity', $sessionKey);
             if ($this->session->get($humanityKey, 0) > 0) {
                 $isHuman = true;
             }
         }
 
         if ($options['as_url']) {
-            $key = $this->key;
             $keys = $this->session->get($options['whitelist_key'], array());
-            if (!in_array($key, $keys)) {
-                $keys[] = $key;
+            if (!in_array($sessionKey, $keys)) {
+                $keys[] = $sessionKey;
             }
             $this->session->set($options['whitelist_key'], $keys);
-            $options['session_key'] = $this->key;
+            $options['session_key'] = $sessionKey;
         }
 
         $view->vars = array_merge($view->vars, array(
@@ -122,15 +112,15 @@ class CaptchaType extends AbstractType
         ));
 
         $persistOptions = array();
-        foreach (array('phrase', 'width', 'height', 'distortion', 'length', 'quality') as $key) {
+        foreach (array('phrase', 'width', 'height', 'distortion', 'length', 'quality', 'background_color', 'text_color') as $key) {
             $persistOptions[$key] = $options[$key];
         }
 
-        $this->session->set($this->key, $persistOptions);
+        $this->session->set($sessionKey, $persistOptions);
     }
 
     /**
-     * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
+     * {@inheritdoc}
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {

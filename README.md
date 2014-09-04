@@ -126,7 +126,7 @@ You can define the following configuration options globally or on the CaptchaTyp
 * **disabled**: disable globally the CAPTCHAs (can be useful in dev environment), it will
   still appear but won't be editable and won't be checked
 * **length**: the length of the captcha (number of chars, default 5)
-* **quality**: jpeg quality of captchas (default=15)
+* **quality**: jpeg quality of captchas (default=30)
 * **charset**: the charset used for code generation (default=abcdefhjkmnprstuvwxyz23456789)
 * **font**: the font to use (default is random among some pre-provided fonts), this should be an absolute path
 * **keep_value**: the value will be the same until the form is posted, even if the page is refreshed (default=true)

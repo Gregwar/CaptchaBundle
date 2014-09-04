@@ -15,7 +15,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CaptchaValidator
 {
     /**
-     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     * @var SessionInterface
      */
     private $session;
 
@@ -47,10 +47,12 @@ class CaptchaValidator
     private $translator;
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param string $key
-     * @param string $invalidMessage
-     * @param string|null $bypassCode
+     * @param TranslatorInterface $translator
+     * @param SessionInterface    $session
+     * @param string              $key
+     * @param string              $invalidMessage
+     * @param string              $bypassCode
+     * @param int                 $humanity
      */
     public function __construct(TranslatorInterface $translator, SessionInterface $session, $key, $invalidMessage, $bypassCode, $humanity)
     {
@@ -67,7 +69,7 @@ class CaptchaValidator
      */
     public function validate(FormEvent $event)
     {
-        $form = $form = $event->getForm();
+        $form = $event->getForm();
 
         $code = $form->getData();
         $expectedCode = $this->getExpectedCode();
@@ -112,7 +114,7 @@ class CaptchaValidator
     }
 
     /**
-     * Retreive the humanity
+     * Retrieve the humanity
      *
      * @return mixed|null
      */
