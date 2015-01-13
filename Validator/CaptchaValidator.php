@@ -60,7 +60,7 @@ class CaptchaValidator
         $this->session          = $session;
         $this->key              = $key;
         $this->invalidMessage   = $invalidMessage;
-        $this->bypassCode       = $bypassCode;
+        $this->bypassCode       = (string)$bypassCode;
         $this->humanity         = $humanity;
     }
 
