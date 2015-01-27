@@ -15,7 +15,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CaptchaValidator
 {
     /**
-     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     * @var SessionInterface
      */
     private $session;
 
@@ -47,10 +47,12 @@ class CaptchaValidator
     private $translator;
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param string $key
-     * @param string $invalidMessage
-     * @param string|null $bypassCode
+     * @param TranslatorInterface $translator
+     * @param SessionInterface    $session
+     * @param string              $key
+     * @param string              $invalidMessage
+     * @param string              $bypassCode
+     * @param int                 $humanity
      */
     public function __construct(TranslatorInterface $translator, SessionInterface $session, $key, $invalidMessage, $bypassCode, $humanity)
     {
@@ -58,7 +60,7 @@ class CaptchaValidator
         $this->session          = $session;
         $this->key              = $key;
         $this->invalidMessage   = $invalidMessage;
-        $this->bypassCode       = $bypassCode;
+        $this->bypassCode       = (string)$bypassCode;
         $this->humanity         = $humanity;
     }
 
@@ -67,7 +69,7 @@ class CaptchaValidator
      */
     public function validate(FormEvent $event)
     {
-        $form = $form = $event->getForm();
+        $form = $event->getForm();
 
         $code = $form->getData();
         $expectedCode = $this->getExpectedCode();
@@ -80,7 +82,7 @@ class CaptchaValidator
             }
         }
 
-        if (!($code && is_string($code) && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
+        if (!($code !== null && is_string($code) && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
             $form->addError(new FormError($this->translator->trans($this->invalidMessage, array(), 'validators')));
         } else {
             if ($this->humanity > 0) {
@@ -112,7 +114,7 @@ class CaptchaValidator
     }
 
     /**
-     * Retreive the humanity
+     * Retrieve the humanity
      *
      * @return mixed|null
      */
@@ -157,6 +159,6 @@ class CaptchaValidator
      */
     protected function compare($code, $expectedCode)
     {
-        return ($expectedCode && is_string($expectedCode) && $this->niceize($code) == $this->niceize($expectedCode));
+        return ($expectedCode !== null && is_string($expectedCode) && $this->niceize($code) == $this->niceize($expectedCode));
     }
 }
