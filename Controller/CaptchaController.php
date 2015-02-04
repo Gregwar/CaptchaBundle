@@ -2,8 +2,8 @@
 
 namespace Gregwar\CaptchaBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -36,8 +36,9 @@ class CaptchaController extends Controller
             }
         }
 
+
         if (!$isOk) {
-            throw $this->createNotFoundException('Unable to generate a captcha via an URL with this session key.');
+            return $this->error($options);
         }
 
         /* @var \Gregwar\CaptchaBundle\Generator\CaptchaGenerator $generator */
@@ -54,7 +55,29 @@ class CaptchaController extends Controller
         $response = new Response($generator->generate($options));
         $response->headers->set('Content-type', 'image/jpeg');
         $response->headers->set('Pragma', 'no-cache');
-        $response->headers->set('Cache-Control','no-cache');
+        $response->headers->set('Cache-Control', 'no-cache');
+
+        return $response;
+    }
+
+    /**
+     * Returns an empty image with status code 428 Precondition Required
+     *
+     * @param array $options
+     *
+     * @return Response
+     */
+    protected function error($options)
+    {
+        /* @var \Gregwar\CaptchaBundle\Generator\CaptchaGenerator $generator */
+        $generator = $this->container->get('gregwar_captcha.generator');
+        $generator->setPhrase('');
+
+        $response = new Response($generator->generate($options));
+        $response->setStatusCode(428);
+        $response->headers->set('Content-type', 'image/jpeg');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Cache-Control', 'no-cache');
 
         return $response;
     }
