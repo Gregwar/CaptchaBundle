@@ -2,7 +2,8 @@
 
 namespace Gregwar\CaptchaBundle\Generator;
 
-use Symfony\Component\Finder\Finder;
+use Gregwar\Captcha\CaptchaBuilder;
+use Gregwar\Captcha\PhraseBuilder;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -18,7 +19,7 @@ use Gregwar\Captcha\PhraseBuilderInterface;
 class CaptchaGenerator
 {
     /**
-     * @var \Symfony\Component\Routing\RouterInterface
+     * @var RouterInterface
      */
     protected $router;
 
@@ -38,12 +39,17 @@ class CaptchaGenerator
     protected $imageFileHandler;
 
     /**
-     * @param \Symfony\Component\Routing\RouterInterface $router
+     * @param RouterInterface $router
      * @param CaptchaBuilderInterface $builder
-     * @param ImageFileHandlerInterface $imageFileHandler
+     * @param PhraseBuilderInterface $phraseBuilder
+     * @param ImageFileHandler $imageFileHandler
      */
-    public function __construct(RouterInterface $router, CaptchaBuilderInterface $builder, PhraseBuilderInterface $phraseBuilder, ImageFileHandler $imageFileHandler)
-    {
+    public function __construct(
+        RouterInterface $router,
+        CaptchaBuilderInterface $builder,
+        PhraseBuilderInterface $phraseBuilder,
+        ImageFileHandler $imageFileHandler
+    ) {
         $this->router           = $router;
         $this->builder          = $builder;
         $this->phraseBuilder    = $phraseBuilder;
@@ -53,7 +59,6 @@ class CaptchaGenerator
     /**
      * Get the captcha URL, stream, or filename that will go in the image's src attribute
      *
-     * @param $key
      * @param array $options
      *
      * @return array
@@ -86,7 +91,6 @@ class CaptchaGenerator
     }
 
     /**
-     * @param string $key
      * @param array $options
      *
      * @return string
@@ -142,7 +146,6 @@ class CaptchaGenerator
     }
 
     /**
-     * @param string $key
      * @param array $options
      *
      * @return string
