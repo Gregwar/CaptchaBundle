@@ -36,7 +36,6 @@ class CaptchaController extends Controller
             }
         }
 
-
         if (!$isOk) {
             return $this->error($options);
         }
