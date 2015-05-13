@@ -18,14 +18,13 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "gregwar/captcha": "~1.0.11",
+        "gregwar/captcha": "~1.1",
         "symfony/framework-bundle": "~2.1",
         "symfony/form": "~2.1"
     },
     "autoload": {
-        "psr-0": {
-            "Gregwar\\CaptchaBundle": ""
+        "psr-4": {
+            "Gregwar\\CaptchaBundle\\": "/"
         }
-    },
-    "target-dir": "Gregwar/CaptchaBundle"
+    }
 }

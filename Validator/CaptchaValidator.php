@@ -60,7 +60,7 @@ class CaptchaValidator
         $this->session          = $session;
         $this->key              = $key;
         $this->invalidMessage   = $invalidMessage;
-        $this->bypassCode       = $bypassCode;
+        $this->bypassCode       = (string)$bypassCode;
         $this->humanity         = $humanity;
     }
 
@@ -82,7 +82,7 @@ class CaptchaValidator
             }
         }
 
-        if (!($code && is_string($code) && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
+        if (!($code !== null && is_string($code) && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
             $form->addError(new FormError($this->translator->trans($this->invalidMessage, array(), 'validators')));
         } else {
             if ($this->humanity > 0) {
@@ -159,6 +159,6 @@ class CaptchaValidator
      */
     protected function compare($code, $expectedCode)
     {
-        return ($expectedCode && is_string($expectedCode) && $this->niceize($code) == $this->niceize($expectedCode));
+        return ($expectedCode !== null && is_string($expectedCode) && $this->niceize($code) == $this->niceize($expectedCode));
     }
 }
