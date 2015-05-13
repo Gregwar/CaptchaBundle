@@ -23,9 +23,8 @@
         "symfony/form": "~2.1"
     },
     "autoload": {
-        "psr-0": {
-            "Gregwar\\CaptchaBundle": ""
+        "psr-4": {
+            "Gregwar\\CaptchaBundle": "/"
         }
-    },
-    "target-dir": "Gregwar/CaptchaBundle"
+    }
 }
