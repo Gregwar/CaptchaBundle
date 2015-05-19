@@ -124,10 +124,7 @@ class CaptchaGenerator
 
         $fingerprint = isset($options['fingerprint']) ? $options['fingerprint'] : null;
 
-        // set background images
         $this->builder->setBackgroundImages($options['background_images']);
-
-        // set ignore all effects
         $this->builder->setIgnoreAllEffects($options['ignore_all_effects']);
 
         $content = $this->builder->build(
