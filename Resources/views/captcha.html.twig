@@ -3,7 +3,7 @@
 -
 {% else %}
 {% spaceless %}
-    <img id="{{ image_id }}" src="{{ captcha_code }}" alt="" title="captcha" width="{{ captcha_width }}" height="{{ captcha_height }}" />
+    <img id="{{ image_id }}" src="{{ captcha_code }}?n={{ 'now'|date('U') }}" alt="" title="captcha" width="{{ captcha_width }}" height="{{ captcha_height }}" />
     {% if reload %}
     <script type="text/javascript">
         function reload_{{ image_id }}() {
@@ -17,4 +17,3 @@
 {% endspaceless %}
 {% endif %}
 {% endblock %}
-
