@@ -4,14 +4,12 @@ namespace Gregwar\CaptchaBundle\Generator;
 
 use Gregwar\Captcha\CaptchaBuilder;
 use Gregwar\Captcha\PhraseBuilder;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
-
 use Gregwar\Captcha\CaptchaBuilderInterface;
 use Gregwar\Captcha\PhraseBuilderInterface;
 
 /**
- * Uses configuration parameters to call the services that generate captcha images
+ * Uses configuration parameters to call the services that generate captcha images.
  *
  * @author Gregwar <g.passault@gmail.com>
  * @author Jeremy Livingston <jeremy.j.livingston@gmail.com>
@@ -39,10 +37,10 @@ class CaptchaGenerator
     protected $imageFileHandler;
 
     /**
-     * @param RouterInterface $router
+     * @param RouterInterface         $router
      * @param CaptchaBuilderInterface $builder
-     * @param PhraseBuilderInterface $phraseBuilder
-     * @param ImageFileHandler $imageFileHandler
+     * @param PhraseBuilderInterface  $phraseBuilder
+     * @param ImageFileHandler        $imageFileHandler
      */
     public function __construct(
         RouterInterface $router,
@@ -50,14 +48,14 @@ class CaptchaGenerator
         PhraseBuilderInterface $phraseBuilder,
         ImageFileHandler $imageFileHandler
     ) {
-        $this->router           = $router;
-        $this->builder          = $builder;
-        $this->phraseBuilder    = $phraseBuilder;
-        $this->imageFileHandler = $imageFileHandler;    
+        $this->router = $router;
+        $this->builder = $builder;
+        $this->phraseBuilder = $phraseBuilder;
+        $this->imageFileHandler = $imageFileHandler;
     }
 
     /**
-     * Get the captcha URL, stream, or filename that will go in the image's src attribute
+     * Get the captcha URL, stream, or filename that will go in the image's src attribute.
      *
      * @param array $options
      *
@@ -76,15 +74,15 @@ class CaptchaGenerator
 
         // Returns the image generation URL
         if ($options['as_url']) {
-            return $this->router->generate('gregwar_captcha.generate_captcha', 
+            return $this->router->generate('gregwar_captcha.generate_captcha',
                 array('key' => $options['session_key'], 'n' => time()));
         }
 
-        return 'data:image/jpeg;base64,' . base64_encode($this->generate($options));
+        return 'data:image/jpeg;base64,'.base64_encode($this->generate($options));
     }
 
     /**
-     * Sets the phrase to the builder
+     * Sets the phrase to the builder.
      */
     public function setPhrase($phrase)
     {
@@ -160,7 +158,7 @@ class CaptchaGenerator
             $phrase = $this->phraseBuilder->build($options['length'], $options['charset']);
             $options['phrase'] = $phrase;
         }
-        
+
         return $phrase;
     }
 }

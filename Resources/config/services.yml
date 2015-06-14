@@ -4,7 +4,7 @@ parameters:
     gregwar_captcha.image_file_handler.class: Gregwar\CaptchaBundle\Generator\ImageFileHandler
     gregwar_captcha.captcha_builder.class: Gregwar\Captcha\CaptchaBuilder
     gregwar_captcha.phrase_builder.class: Gregwar\Captcha\PhraseBuilder
-    
+
 services:
     captcha.type:
         class: %gregwar_captcha.captcha_type.class%

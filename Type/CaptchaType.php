@@ -10,12 +10,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Translation\TranslatorInterface;
-
 use Gregwar\CaptchaBundle\Validator\CaptchaValidator;
 use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
 
 /**
- * Captcha type
+ * Captcha type.
  *
  * @author Gregwar <g.passault@gmail.com>
  */
@@ -37,7 +36,8 @@ class CaptchaType extends AbstractType
     protected $translator;
 
     /**
-     * Options
+     * Options.
+     *
      * @var array
      */
     private $options = array();
@@ -50,10 +50,10 @@ class CaptchaType extends AbstractType
      */
     public function __construct(SessionInterface $session, CaptchaGenerator $generator, TranslatorInterface $translator, $options)
     {
-        $this->session      = $session;
-        $this->generator    = $generator;
+        $this->session = $session;
+        $this->generator = $generator;
         $this->translator = $translator;
-        $this->options      = $options;
+        $this->options = $options;
     }
 
     /**
@@ -83,7 +83,7 @@ class CaptchaType extends AbstractType
         }
 
         $sessionKey = sprintf('gcb_%s', $form->getName());
-        $isHuman    = false;
+        $isHuman = false;
 
         if ($options['humanity'] > 0) {
             $humanityKey = sprintf('%s_humanity', $sessionKey);
@@ -102,13 +102,13 @@ class CaptchaType extends AbstractType
         }
 
         $view->vars = array_merge($view->vars, array(
-            'captcha_width'     => $options['width'],
-            'captcha_height'    => $options['height'],
-            'reload'            => $options['reload'],
-            'image_id'          => uniqid('captcha_'),
-            'captcha_code'      => $this->generator->getCaptchaCode($options),
-            'value'             => '',
-            'is_human'          => $isHuman
+            'captcha_width' => $options['width'],
+            'captcha_height' => $options['height'],
+            'reload' => $options['reload'],
+            'image_id' => uniqid('captcha_'),
+            'captcha_code' => $this->generator->getCaptchaCode($options),
+            'value' => '',
+            'is_human' => $isHuman,
         ));
 
         $persistOptions = array();

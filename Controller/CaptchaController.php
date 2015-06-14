@@ -7,14 +7,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Generates a captcha via a URL
+ * Generates a captcha via a URL.
  *
  * @author Jeremy Livingston <jeremy.j.livingston@gmail.com>
  */
 class CaptchaController extends Controller
 {
     /**
-     * Action that is used to generate the captcha, save its code, and stream the image
+     * Action that is used to generate the captcha, save its code, and stream the image.
      *
      * @param string $key
      *
@@ -60,7 +60,7 @@ class CaptchaController extends Controller
     }
 
     /**
-     * Returns an empty image with status code 428 Precondition Required
+     * Returns an empty image with status code 428 Precondition Required.
      *
      * @param array $options
      *

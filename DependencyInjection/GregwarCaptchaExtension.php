@@ -8,14 +8,14 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 
 /**
- * Extension used to load the configuration, set parameters, and initialize the captcha view
+ * Extension used to load the configuration, set parameters, and initialize the captcha view.
  *
  * @author Gregwar <g.passault@gmail.com>
  */
 class GregwarCaptchaExtension extends Extension
 {
     /**
-     * @param array $configs
+     * @param array            $configs
      * @param ContainerBuilder $container
      */
     public function load(array $configs, ContainerBuilder $container)
