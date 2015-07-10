@@ -18,7 +18,10 @@ Add the following to the "repositories" section of your `composer.json` file:
 ```
 
 And add the following to the "require" section of your `composer.json` file:
+
+```
 "gregwar/captcha-bundle": "dev-master"
+```
 
 And update your dependencies
 
