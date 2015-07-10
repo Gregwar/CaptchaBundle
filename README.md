@@ -1,56 +1,26 @@
-Gregwar's CaptchaBundle
+Gregwar's CaptchaBundle (for Symfony 2.7)
 =====================
 
-The `GregwarCaptchaBundle` adds support for a "captcha" form type for the
-Symfony2 form component.
-
-Important note: the master of this repository is containing current development
-in order to work with Symfony 2.1. If you are using Symfony 2.0 please checkout
-the 2.0 branch.
+Modification of Gregwar's CaptchaBundle to avoid deprecated calls in Symfony 2.7.
 
 Installation
 ============
 
-### Step 1: Download the GregwarCaptchaBundle
-
-Ultimately, the GregwarCaptchaBundle files should be downloaded to the
-'vendor/bundles/Gregwar/CaptchaBundle' directory.
-
-You can accomplish this several ways, depending on your personal preference.
-The first method is the standard Symfony2 method.
-
-***Using the vendors script***
-
-Add the following lines to your `deps` file:
+Add the following to the "repositories" section of your `composer.json` file:
 
 ```
-    [GregwarCaptchaBundle]
-        git=http://github.com/Gregwar/CaptchaBundle.git
-        target=/bundles/Gregwar/CaptchaBundle
-        version=origin/2.0 <- add this if you are using Symfony 2.0
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/juanantoniodelgado/CaptchaBundle.git"
+        }
+    ]
 ```
 
-Now, run the vendors script to download the bundle:
-
-``` bash
-$ php bin/vendors install
-```
-
-***Using submodules***
-
-If you prefer instead to use git submodules, then run the following:
-
-``` bash
-$ git submodule add git://github.com/Gregwar/CaptchaBundle.git vendor/bundles/Gregwar/CaptchaBundle
-$ git submodule update --init
-```
-
-***Using Composer***
-
-Add the following to the "require" section of your `composer.json` file:
+And add the following to the "require" section of your `composer.json` file:
 
 ```
-    "gregwar/captcha-bundle": "dev-master"
+"gregwar/captcha-bundle": "dev-master"
 ```
 
 And update your dependencies
