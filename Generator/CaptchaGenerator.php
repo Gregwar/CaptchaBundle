@@ -77,7 +77,7 @@ class CaptchaGenerator
         // Returns the image generation URL
         if ($options['as_url']) {
             return $this->router->generate('gregwar_captcha.generate_captcha', 
-                array('key' => $options['session_key'], 'n' => time()));
+                array('key' => $options['session_key'], 'n' => md5(microtime(true).rand(0, 9))));
         }
 
         return 'data:image/jpeg;base64,' . base64_encode($this->generate($options));
