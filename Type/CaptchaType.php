@@ -70,8 +70,8 @@ class CaptchaType extends AbstractType
             $options['bypass_code'],
             $options['humanity']
         );
-
-        $builder->addEventListener(FormEvents::POST_BIND, array($validator, 'validate'));
+        $event = \Symfony\Component\HttpKernel\Kernel::VERSION >= 2.3 ? FormEvents::POST_SUBMIT : FormEvents::POST_BIND;
+        $builder->addEventListener($event, array($validator, 'validate'));
     }
 
     /**
