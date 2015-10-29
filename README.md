@@ -47,13 +47,11 @@ $ git submodule update --init
 
 ***Using Composer***
 
-Add the following to the "require" section of your `composer.json` file:
+Use composer require to download and install the package.
 
+``` bash
+    composer require gregwar/captcha-bundle
 ```
-    "gregwar/captcha-bundle": "dev-master"
-```
-
-And update your dependencies
 
 ### Step 2: Configure the Autoloader
 
