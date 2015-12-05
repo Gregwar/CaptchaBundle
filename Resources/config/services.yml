@@ -9,9 +9,9 @@ services:
     captcha.type:
         class: %gregwar_captcha.captcha_type.class%
         arguments:
-            - @session
-            - @gregwar_captcha.generator
-            - @translator
+            - '@session'
+            - '@gregwar_captcha.generator'
+            - '@translator'
             - %gregwar_captcha.config%
         tags:
             - { name: form.type, alias: captcha }
@@ -19,10 +19,10 @@ services:
     gregwar_captcha.generator:
         class: %gregwar_captcha.captcha_generator.class%
         arguments:
-            - @router
-            - @gregwar_captcha.captcha_builder
-            - @gregwar_captcha.phrase_builder
-            - @gregwar_captcha.image_file_handler
+            - '@router'
+            - '@gregwar_captcha.captcha_builder'
+            - '@gregwar_captcha.phrase_builder'
+            - '@gregwar_captcha.image_file_handler'
 
     gregwar_captcha.image_file_handler:
         class: %gregwar_captcha.image_file_handler.class%
