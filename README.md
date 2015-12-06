@@ -99,8 +99,9 @@ You can use the "captcha" type in your forms this way:
 
 ```php
 <?php
+    use Gregwar\CaptchaBundle\Type\CaptchaType;
     // ...
-    $builder->add('captcha', 'captcha'); // That's all !
+    $builder->add('captcha', CaptchaType::class); // That's all !
     // ...
 ```
 
@@ -147,8 +148,9 @@ Example :
 
 ```php
 <?php
+    use Gregwar\CaptchaBundle\Type\CaptchaType;
     // ...
-    $builder->add('captcha', 'captcha', array(
+    $builder->add('captcha', CaptchaType::class, array(
         'width' => 200,
         'height' => 50,
         'length' => 6,
