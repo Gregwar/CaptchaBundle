@@ -1,12 +1,8 @@
 Gregwar's CaptchaBundle
 =====================
 
-The `GregwarCaptchaBundle` adds support for a "captcha" form type for the
-Symfony2 form component.
-
-Important note: the master of this repository is containing current development
-in order to work with Symfony 2.1. If you are using Symfony 2.0 please checkout
-the 2.0 branch.
+The `GregwarCaptchaBundle` adds support for a captcha form type for the
+Symfony form component.
 
 Installation
 ============
@@ -17,7 +13,15 @@ Ultimately, the GregwarCaptchaBundle files should be downloaded to the
 'vendor/bundles/Gregwar/CaptchaBundle' directory.
 
 You can accomplish this several ways, depending on your personal preference.
-The first method is the standard Symfony2 method.
+The first method is the standard Symfony method.
+
+***Using Composer***
+
+Use composer require to download and install the package.
+
+``` bash
+    composer require gregwar/captcha-bundle
+```
 
 ***Using the vendors script***
 
@@ -43,14 +47,6 @@ If you prefer instead to use git submodules, then run the following:
 ``` bash
 $ git submodule add git://github.com/Gregwar/CaptchaBundle.git vendor/bundles/Gregwar/CaptchaBundle
 $ git submodule update --init
-```
-
-***Using Composer***
-
-Use composer require to download and install the package.
-
-``` bash
-    composer require gregwar/captcha-bundle
 ```
 
 ### Step 2: Configure the Autoloader
@@ -99,8 +95,9 @@ You can use the "captcha" type in your forms this way:
 
 ```php
 <?php
+    use Gregwar\CaptchaBundle\Type\CaptchaType;
     // ...
-    $builder->add('captcha', 'captcha'); // That's all !
+    $builder->add('captcha', CaptchaType::class); // That's all !
     // ...
 ```
 
@@ -147,8 +144,9 @@ Example :
 
 ```php
 <?php
+    use Gregwar\CaptchaBundle\Type\CaptchaType;
     // ...
-    $builder->add('captcha', 'captcha', array(
+    $builder->add('captcha', CaptchaType::class, array(
         'width' => 200,
         'height' => 50,
         'length' => 6,

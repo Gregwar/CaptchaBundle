@@ -11,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 use Gregwar\CaptchaBundle\Validator\CaptchaValidator;
 use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
@@ -143,7 +144,7 @@ class CaptchaType extends AbstractType
      */
     public function getParent()
     {
-        return 'text';
+        return TextType::class;
     }
 
     /**
