@@ -105,6 +105,8 @@ You can use the "captcha" type in your forms this way:
     use Gregwar\CaptchaBundle\Type\CaptchaType;
     // ...
     $builder->add('captcha', CaptchaType::class); // That's all !
+    // If you're using php<5.5, you can use instead:
+    $builder->add('captcha', 'Gregwar\CaptchaBundle\Type\CaptchaType');
     // ...
 ```
 
