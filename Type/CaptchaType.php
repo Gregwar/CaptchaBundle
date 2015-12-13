@@ -143,7 +143,7 @@ class CaptchaType extends AbstractType
      */
     public function getParent()
     {
-        // Not using ::class to support Symfony 2.8 w/ php<5.5
+        // Not using ::class to support Symfony 2.8 w/ php>=5.3.9
         return 'Symfony\Component\Form\Extension\Core\Type\TextType';
     }
 
