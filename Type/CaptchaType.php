@@ -148,9 +148,18 @@ class CaptchaType extends AbstractType
     }
 
     /**
+     * BC for SF < 3.0
      * @return string
      */
     public function getName()
+    {
+        return $this->getBlockPrefix();
+    }
+    
+    /**
+     * @return string
+     */
+    public function getBlockPrefix()
     {
         return 'captcha';
     }
