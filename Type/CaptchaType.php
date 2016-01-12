@@ -65,7 +65,7 @@ class CaptchaType extends AbstractType
         $validator = new CaptchaValidator(
             $this->translator,
             $this->session,
-            sprintf('gcb_%s', $builder->getForm()->getName()),
+            sprintf('gcb_%s', !empty($options['block_name'])?$options['block_name']:$builder->getForm()->getName()),
             $options['invalid_message'],
             $options['bypass_code'],
             $options['humanity']
@@ -83,7 +83,7 @@ class CaptchaType extends AbstractType
             throw new \InvalidArgumentException('GregwarCaptcha: The reload option cannot be set without as_url, see the README for more information');
         }
 
-        $sessionKey = sprintf('gcb_%s', $form->getName());
+        $sessionKey = sprintf('gcb_%s', !empty($options['block_name'])?$options['block_name']:$form->getName());
         $isHuman    = false;
 
         if ($options['humanity'] > 0) {
