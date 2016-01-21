@@ -44,7 +44,7 @@ class CaptchaController extends Controller
         $generator = $this->container->get('gregwar_captcha.generator');
 
         $persistedOptions = $session->get($key, array());
-        $options = array_merge($options, $persistedOptions);
+        $options = array_merge($persistedOptions, $options);
 
         $phrase = $generator->getPhrase($options);
         $generator->setPhrase($phrase);
