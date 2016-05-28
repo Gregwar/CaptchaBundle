@@ -7,17 +7,17 @@ parameters:
     
 services:
     captcha.type:
-        class: %gregwar_captcha.captcha_type.class%
+        class: '%gregwar_captcha.captcha_type.class%' 
         arguments:
             - '@session'
             - '@gregwar_captcha.generator'
             - '@translator'
-            - %gregwar_captcha.config%
+            - '%gregwar_captcha.config%'
         tags:
             - { name: form.type, alias: captcha }
 
     gregwar_captcha.generator:
-        class: %gregwar_captcha.captcha_generator.class%
+        class: '%gregwar_captcha.captcha_generator.class%'
         arguments:
             - '@router'
             - '@gregwar_captcha.captcha_builder'
@@ -25,15 +25,15 @@ services:
             - '@gregwar_captcha.image_file_handler'
 
     gregwar_captcha.image_file_handler:
-        class: %gregwar_captcha.image_file_handler.class%
+        class: '%gregwar_captcha.image_file_handler.class%'
         arguments:
-            - %gregwar_captcha.config.image_folder%
-            - %gregwar_captcha.config.web_path%
-            - %gregwar_captcha.config.gc_freq%
-            - %gregwar_captcha.config.expiration%
+            - '%gregwar_captcha.config.image_folder%'
+            - '%gregwar_captcha.config.web_path%'
+            - '%gregwar_captcha.config.gc_freq%'
+            - '%gregwar_captcha.config.expiration%'
 
     gregwar_captcha.captcha_builder:
-        class: %gregwar_captcha.captcha_builder.class%
+        class: '%gregwar_captcha.captcha_builder.class%'
 
     gregwar_captcha.phrase_builder:
-        class: %gregwar_captcha.phrase_builder.class%
+        class: '%gregwar_captcha.phrase_builder.class%'
