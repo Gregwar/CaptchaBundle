@@ -4,6 +4,8 @@ Gregwar's CaptchaBundle
 The `GregwarCaptchaBundle` adds support for a captcha form type for the
 Symfony form component.
 
+It uses [gregwar/captcha](https://github.com/Gregwar/Captcha) as captcha generator, which is a separate standalone library that can be used for none-symfony projects.
+
 Compatibility with Symfony
 ==========================
 
