@@ -22,6 +22,8 @@ use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
  */
 class CaptchaType extends AbstractType
 {
+    const SESSION_KEY_PREFIX = '_captcha/';
+
     /**
      * @var SessionInterface
      */
@@ -53,7 +55,7 @@ class CaptchaType extends AbstractType
     {
         $this->session      = $session;
         $this->generator    = $generator;
-        $this->translator = $translator;
+        $this->translator   = $translator;
         $this->options      = $options;
     }
 
@@ -65,7 +67,7 @@ class CaptchaType extends AbstractType
         $validator = new CaptchaValidator(
             $this->translator,
             $this->session,
-            sprintf('gcb_%s', $builder->getForm()->getName()),
+            sprintf('%s%s', self::SESSION_KEY_PREFIX, $options['session_key']),
             $options['invalid_message'],
             $options['bypass_code'],
             $options['humanity']
@@ -83,7 +85,7 @@ class CaptchaType extends AbstractType
             throw new \InvalidArgumentException('GregwarCaptcha: The reload option cannot be set without as_url, see the README for more information');
         }
 
-        $sessionKey = sprintf('gcb_%s', $form->getName());
+        $sessionKey = sprintf('%s%s', self::SESSION_KEY_PREFIX, $options['session_key']);
         $isHuman    = false;
 
         if ($options['humanity'] > 0) {
