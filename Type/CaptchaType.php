@@ -22,7 +22,7 @@ use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
  */
 class CaptchaType extends AbstractType
 {
-    const SESSION_KEY_PREFIX = '_captcha/';
+    const SESSION_KEY_PREFIX = '_captcha_';
 
     /**
      * @var SessionInterface
