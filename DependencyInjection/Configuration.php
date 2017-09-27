@@ -33,7 +33,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('web_path')->defaultValue('%kernel.root_dir%/../web')->end()
                 ->scalarNode('gc_freq')->defaultValue(100)->end()
                 ->scalarNode('expiration')->defaultValue(60)->end()
-                ->scalarNode('quality')->defaultValue(30)->end()
+                ->scalarNode('quality')->defaultValue(50)->end()
                 ->scalarNode('invalid_message')->defaultValue('Bad code value')->end()
                 ->scalarNode('bypass_code')->defaultValue(null)->end()
                 ->scalarNode('whitelist_key')->defaultValue('captcha_whitelist_key')->end()
