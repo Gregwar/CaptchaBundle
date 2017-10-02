@@ -113,7 +113,8 @@ class CaptchaType extends AbstractType
         ));
 
         $persistOptions = array();
-        foreach (array('phrase', 'width', 'height', 'distortion', 'length', 'quality', 'background_color', 'text_color') as $key) {
+        foreach (array('phrase', 'width', 'height', 'distortion', 'length',
+        'quality', 'background_color', 'background_images', 'text_color') as $key) {
             $persistOptions[$key] = $options[$key];
         }
 
