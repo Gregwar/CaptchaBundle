@@ -1,0 +1,13 @@
+function reload_{{ image_id }}() {
+    var img = document.getElementById('{{ image_id }}');
+    img.src = '{{ captcha_code }}?n=' + (new Date()).getTime();
+}
+
+window.addEventListener('DOMContentLoaded', (event) => {
+    let buttons = document.getElementsByClassName('captcha_reload');
+    for(let i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', () => {
+            reload_{{ image_id }}();
+        })
+    }
+});
