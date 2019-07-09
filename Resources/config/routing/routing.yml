@@ -1,3 +1,6 @@
+gregwar_captcha.generate_captcha_reload:
+    path:           /generate-captcha/js/reload.js
+    defaults:       { _controller: GregwarCaptchaBundle:Captcha:reload }
 gregwar_captcha.generate_captcha:
     path:           /generate-captcha/{key}
     defaults:       { _controller: GregwarCaptchaBundle:Captcha:generateCaptcha }

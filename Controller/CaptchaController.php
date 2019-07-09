@@ -3,6 +3,7 @@
 namespace Gregwar\CaptchaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -56,6 +57,17 @@ class CaptchaController extends Controller
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Cache-Control', 'no-cache');
 
+        return $response;
+    }
+
+    public function reloadAction(Request $request)
+    {
+        $imageId = $request->get('image_id');
+        $captchaCode = $request->get('captcha_code');
+        $response = new Response($this->renderView('@GregwarCaptcha/reload.js.twig', ['image_id' =>$imageId, 'captcha_code' => $captchaCode]));
+        $response->headers->set('Content-type', 'text/javascript');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Cache-Control', 'no-cache');
         return $response;
     }
 
