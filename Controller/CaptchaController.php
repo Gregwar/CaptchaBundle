@@ -2,7 +2,7 @@
 
 namespace Gregwar\CaptchaBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @author Jeremy Livingston <jeremy.j.livingston@gmail.com>
  */
-class CaptchaController extends Controller
+class CaptchaController extends AbstractController
 {
     /**
      * Action that is used to generate the captcha, save its code, and stream the image
