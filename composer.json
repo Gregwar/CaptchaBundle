@@ -2,7 +2,7 @@
     "name": "gregwar/captcha-bundle",
     "type": "captcha-bundle",
     "description": "Captcha bundle",
-    "keywords": ["symfony2", "captcha", "bot", "visual", "code", "security", "spam"],
+    "keywords": ["symfony2", "symfony", "captcha", "bot", "visual", "code", "security", "spam"],
     "homepage": "https://github.com/Gregwar/CaptchaBundle",
     "license": "MIT",
     "authors": [
@@ -19,9 +19,9 @@
     "require": {
         "php": ">=5.3.9",
         "gregwar/captcha": "~1.1",
-        "symfony/framework-bundle": "~2.8|~3.0|~4.0",
-        "symfony/form": "~2.8|~3.0|~4.0",
-        "twig/twig": "^1.40|^2.9"
+        "symfony/framework-bundle": "~3.0|~4.0|~5.0",
+        "symfony/form": "~3.0|~4.0|~5.0",
+        "twig/twig": "^1.40|^2.9|^3"
     },
     "autoload": {
         "psr-4": {
