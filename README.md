@@ -13,7 +13,7 @@ Compatibility with Symfony
 
 If you are using Symfony `< 2.8`, you should use version `1.*`
 
-If you are using SYmfony `>= 2.8`, you should use version `2.*`
+If you are using Symfony `>= 2.8`, you should use version `2.*`
 
 Installation
 ============
