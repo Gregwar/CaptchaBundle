@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Gregwar\CaptchaBundle\Generator;
 
 use Gregwar\Captcha\CaptchaBuilder;
 use Gregwar\Captcha\PhraseBuilder;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 use Gregwar\Captcha\CaptchaBuilderInterface;
@@ -18,24 +19,16 @@ use Gregwar\Captcha\PhraseBuilderInterface;
  */
 class CaptchaGenerator
 {
-    /**
-     * @var RouterInterface
-     */
+    /** @var RouterInterface */
     protected $router;
 
-    /**
-     * @var CaptchaBuilder
-     */
+    /** @var CaptchaBuilder */
     protected $builder;
 
-    /**
-     * @var PhraseBuilder
-     */
+    /** @var PhraseBuilder */
     protected $phraseBuilder;
 
-    /**
-     * @var ImageFileHandler
-     */
+    /** @var ImageFileHandler */
     protected $imageFileHandler;
 
     /**
@@ -56,14 +49,7 @@ class CaptchaGenerator
         $this->imageFileHandler = $imageFileHandler;    
     }
 
-    /**
-     * Get the captcha URL, stream, or filename that will go in the image's src attribute
-     *
-     * @param array $options
-     *
-     * @return array
-     */
-    public function getCaptchaCode(array &$options)
+    public function getCaptchaCode(array &$options): string
     {
         $this->builder->setPhrase($this->getPhrase($options));
 
@@ -83,20 +69,12 @@ class CaptchaGenerator
         return 'data:image/jpeg;base64,' . base64_encode($this->generate($options));
     }
 
-    /**
-     * Sets the phrase to the builder
-     */
-    public function setPhrase($phrase)
+    public function setPhrase(string $phrase): void
     {
         $this->builder->setPhrase($phrase);
     }
 
-    /**
-     * @param array $options
-     *
-     * @return string
-     */
-    public function generate(array &$options)
+    public function generate(array &$options): string
     {
         $this->builder->setDistortion($options['distortion']);
 
@@ -149,12 +127,7 @@ class CaptchaGenerator
         return $this->imageFileHandler->saveAsFile($content);
     }
 
-    /**
-     * @param array $options
-     *
-     * @return string
-     */
-    public function getPhrase(array &$options)
+    public function getPhrase(array &$options): string
     {
         // Get the phrase that we'll use for this image
         if ($options['keep_value'] && isset($options['phrase'])) {

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Gregwar\CaptchaBundle\Controller;
 
+use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Generates a captcha via a URL
@@ -13,20 +16,22 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class CaptchaController extends AbstractController
 {
-    /**
-     * Action that is used to generate the captcha, save its code, and stream the image
-     *
-     * @param string $key
-     *
-     * @return Response
-     *
-     * @throws NotFoundHttpException
-     */
-    public function generateCaptchaAction($key)
+    /** @var CaptchaGenerator */
+    private $captchaGenerator;
+
+    /** @var array */
+    private $config;
+
+    public function __construct(CaptchaGenerator $captchaGenerator, array $config)
     {
-        $options = $this->container->getParameter('gregwar_captcha.config');
-        $session = $this->get('session');
-        $whitelistKey = $options['whitelist_key'];
+        $this->captchaGenerator = $captchaGenerator;
+        $this->config = $config;
+    }
+
+    public function generateCaptchaAction(Request $request, string $key): Response
+    {
+        $session = $request->getSession();
+        $whitelistKey = $this->config['whitelist_key'];
         $isOk = false;
 
         if ($session->has($whitelistKey)) {
@@ -37,21 +42,18 @@ class CaptchaController extends AbstractController
         }
 
         if (!$isOk) {
-            return $this->error($options);
+            return $this->error($this->config);
         }
 
-        /* @var \Gregwar\CaptchaBundle\Generator\CaptchaGenerator $generator */
-        $generator = $this->container->get('gregwar_captcha.generator');
-
         $persistedOptions = $session->get($key, array());
-        $options = array_merge($options, $persistedOptions);
+        $options = array_merge($this->config, $persistedOptions);
 
-        $phrase = $generator->getPhrase($options);
-        $generator->setPhrase($phrase);
+        $phrase = $this->captchaGenerator->getPhrase($options);
+        $this->captchaGenerator->setPhrase($phrase);
         $persistedOptions['phrase'] = $phrase;
         $session->set($key, $persistedOptions);
 
-        $response = new Response($generator->generate($options));
+        $response = new Response($this->captchaGenerator->generate($options));
         $response->headers->set('Content-type', 'image/jpeg');
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Cache-Control', 'no-cache');
@@ -59,20 +61,11 @@ class CaptchaController extends AbstractController
         return $response;
     }
 
-    /**
-     * Returns an empty image with status code 428 Precondition Required
-     *
-     * @param array $options
-     *
-     * @return Response
-     */
-    protected function error($options)
+    private function error(array $options): Response
     {
-        /* @var \Gregwar\CaptchaBundle\Generator\CaptchaGenerator $generator */
-        $generator = $this->container->get('gregwar_captcha.generator');
-        $generator->setPhrase('');
+        $this->captchaGenerator->setPhrase('');
 
-        $response = new Response($generator->generate($options));
+        $response = new Response($this->captchaGenerator->generate($options));
         $response->setStatusCode(428);
         $response->headers->set('Content-type', 'image/jpeg');
         $response->headers->set('Pragma', 'no-cache');

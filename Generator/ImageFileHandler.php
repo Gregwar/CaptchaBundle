@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Gregwar\CaptchaBundle\Generator;
 
 use Symfony\Component\Finder\Finder;
@@ -37,27 +39,20 @@ class ImageFileHandler
     protected $expiration;
 
     /**
-     * @param $imageFolder
-     * @param $webPath
-     * @param $gcFreq
-     * @param $expiration
+     * @param string $imageFolder
+     * @param string $webPath
+     * @param string $gcFreq
+     * @param string $expiration
      */
-    public function __construct($imageFolder, $webPath, $gcFreq, $expiration)
+    public function __construct(string $imageFolder, string $webPath, string $gcFreq, string $expiration)
     {
-        $this->imageFolder      = $imageFolder;
-        $this->webPath          = $webPath;
-        $this->gcFreq           = $gcFreq;
-        $this->expiration       = $expiration;
+        $this->imageFolder = $imageFolder;
+        $this->webPath= $webPath;
+        $this->gcFreq = $gcFreq;
+        $this->expiration = $expiration;
     }
 
-    /**
-     * Saves the provided image content as a file
-     *
-     * @param string $contents
-     *
-     * @return string
-     */
-    public function saveAsFile($contents)
+    public function saveAsFile($contents):string
     {
         $this->createFolderIfMissing();
 
@@ -68,12 +63,7 @@ class ImageFileHandler
         return '/' . $this->imageFolder . '/' . $filename;
     }
 
-    /**
-     * Randomly runs garbage collection on the image directory
-     *
-     * @return bool
-     */
-    public function collectGarbage()
+    public function collectGarbage(): bool
     {
         if (!mt_rand(1, $this->gcFreq) == 1) {
             return false;
@@ -93,10 +83,7 @@ class ImageFileHandler
         return true;
     }
 
-    /**
-     * Creates the folder if it doesn't exist
-     */
-    protected function createFolderIfMissing()
+    protected function createFolderIfMissing(): void
     {
         if (!file_exists($this->webPath . '/' . $this->imageFolder)) {
             mkdir($this->webPath . '/' . $this->imageFolder, 0755);

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Gregwar\CaptchaBundle\Validator;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Captcha validator
@@ -14,23 +16,24 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class CaptchaValidator
 {
-    /**
-     * @var SessionInterface
-     */
+    /** @var SessionInterface */
     private $session;
 
     /**
      * Session key to store the code
+     * @var string
      */
     private $key;
 
     /**
      * Error message text for non-matching submissions
+     * @var string
      */
     private $invalidMessage;
 
     /**
      * Configuration parameter used to bypass a required code match
+     * @var string
      */
     private $bypassCode;
 
@@ -54,20 +57,23 @@ class CaptchaValidator
      * @param string              $bypassCode
      * @param int                 $humanity
      */
-    public function __construct(TranslatorInterface $translator, SessionInterface $session, $key, $invalidMessage, $bypassCode, $humanity)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        SessionInterface $session,
+        string $key,
+        string $invalidMessage,
+        string $bypassCode,
+        int $humanity
+    ) {
         $this->translator       = $translator;
         $this->session          = $session;
         $this->key              = $key;
         $this->invalidMessage   = $invalidMessage;
-        $this->bypassCode       = (string)$bypassCode;
+        $this->bypassCode       = $bypassCode;
         $this->humanity         = $humanity;
     }
 
-    /**
-     * @param FormEvent $event
-     */
-    public function validate(FormEvent $event)
+    public function validate(FormEvent $event): void
     {
         $form = $event->getForm();
 
@@ -123,28 +129,16 @@ class CaptchaValidator
         return $this->session->get($this->key . '_humanity', 0);
     }
 
-    /**
-     * Updates the humanity
-     */
-    protected function updateHumanity($newValue)
+    protected function updateHumanity(int $newValue): void
     {
         if ($newValue > 0) {
             $this->session->set($this->key . '_humanity', $newValue);
         } else {
             $this->session->remove($this->key . '_humanity');
         }
-
-        return null;
     }
 
-    /**
-     * Process the codes
-     *
-     * @param $code
-     *
-     * @return string
-     */
-    protected function niceize($code)
+    protected function niceize(string $code): string
     {
         return strtr(strtolower($code), 'oil', '01l');
     }
@@ -157,7 +151,7 @@ class CaptchaValidator
      *
      * @return bool
      */
-    protected function compare($code, $expectedCode)
+    protected function compare($code, $expectedCode): bool
     {
         return ($expectedCode !== null && is_string($expectedCode) && $this->niceize($code) == $this->niceize($expectedCode));
     }
