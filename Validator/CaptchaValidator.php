@@ -49,20 +49,12 @@ class CaptchaValidator
      */
     private $translator;
 
-    /**
-     * @param TranslatorInterface $translator
-     * @param SessionInterface    $session
-     * @param string              $key
-     * @param string              $invalidMessage
-     * @param string              $bypassCode
-     * @param int                 $humanity
-     */
     public function __construct(
         TranslatorInterface $translator,
         SessionInterface $session,
         string $key,
         string $invalidMessage,
-        string $bypassCode,
+        ?string $bypassCode,
         int $humanity
     ) {
         $this->translator       = $translator;
@@ -146,9 +138,8 @@ class CaptchaValidator
     /**
      * Run a match comparison on the provided code and the expected code
      *
-     * @param $code
-     * @param $expectedCode
-     *
+     * @param string $code
+     * @param string|null $expectedCode
      * @return bool
      */
     protected function compare($code, $expectedCode): bool
