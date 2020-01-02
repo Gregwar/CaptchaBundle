@@ -17,7 +17,7 @@ use Gregwar\CaptchaBundle\Validator\CaptchaValidator;
 use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
 
 /**
- * Captcha type
+ * Captcha type.
  *
  * @author Gregwar <g.passault@gmail.com>
  */
@@ -78,7 +78,7 @@ class CaptchaType extends AbstractType
         }
 
         $sessionKey = sprintf('%s%s', self::SESSION_KEY_PREFIX, $options['session_key']);
-        $isHuman    = false;
+        $isHuman = false;
 
         if ($options['humanity'] > 0) {
             $humanityKey = sprintf('%s_humanity', $sessionKey);
@@ -97,18 +97,18 @@ class CaptchaType extends AbstractType
         }
 
         $view->vars = array_merge($view->vars, array(
-            'captcha_width'     => $options['width'],
-            'captcha_height'    => $options['height'],
-            'reload'            => $options['reload'],
-            'image_id'          => uniqid('captcha_'),
-            'captcha_code'      => $this->generator->getCaptchaCode($options),
-            'value'             => '',
-            'is_human'          => $isHuman
+            'captcha_width' => $options['width'],
+            'captcha_height' => $options['height'],
+            'reload' => $options['reload'],
+            'image_id' => uniqid('captcha_'),
+            'captcha_code' => $this->generator->getCaptchaCode($options),
+            'value' => '',
+            'is_human' => $isHuman,
         ));
 
         $persistOptions = array();
         foreach (array('phrase', 'width', 'height', 'distortion', 'length',
-        'quality', 'background_color', 'background_images', 'text_color') as $key) {
+        'quality', 'background_color', 'background_images', 'text_color', ) as $key) {
             $persistOptions[$key] = $options[$key];
         }
 

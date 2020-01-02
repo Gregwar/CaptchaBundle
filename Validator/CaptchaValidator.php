@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Captcha validator
+ * Captcha validator.
  *
  * @author Gregwar <g.passault@gmail.com>
  */
@@ -20,31 +20,36 @@ class CaptchaValidator
     private $session;
 
     /**
-     * Session key to store the code
+     * Session key to store the code.
+     *
      * @var string
      */
     private $key;
 
     /**
-     * Error message text for non-matching submissions
+     * Error message text for non-matching submissions.
+     *
      * @var string
      */
     private $invalidMessage;
 
     /**
-     * Configuration parameter used to bypass a required code match
+     * Configuration parameter used to bypass a required code match.
+     *
      * @var string
      */
     private $bypassCode;
 
     /**
-     * Number of form that the user can submit without captcha
+     * Number of form that the user can submit without captcha.
+     *
      * @var int
      */
     private $humanity;
 
     /**
-     * Translator
+     * Translator.
+     *
      * @var TranslatorInterface
      */
     private $translator;
@@ -57,12 +62,12 @@ class CaptchaValidator
         ?string $bypassCode,
         int $humanity
     ) {
-        $this->translator       = $translator;
-        $this->session          = $session;
-        $this->key              = $key;
-        $this->invalidMessage   = $invalidMessage;
-        $this->bypassCode       = $bypassCode;
-        $this->humanity         = $humanity;
+        $this->translator = $translator;
+        $this->session = $session;
+        $this->key = $key;
+        $this->invalidMessage = $invalidMessage;
+        $this->bypassCode = $bypassCode;
+        $this->humanity = $humanity;
     }
 
     public function validate(FormEvent $event): void
@@ -75,12 +80,13 @@ class CaptchaValidator
         if ($this->humanity > 0) {
             $humanity = $this->getHumanity();
             if ($humanity > 0) {
-                $this->updateHumanity($humanity-1);
+                $this->updateHumanity($humanity - 1);
+
                 return;
             }
         }
 
-        if (!($code !== null && is_string($code) && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
+        if (!(null !== $code && is_string($code) && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
             $form->addError(new FormError($this->translator->trans($this->invalidMessage, array(), 'validators')));
         } else {
             if ($this->humanity > 0) {
@@ -90,13 +96,13 @@ class CaptchaValidator
 
         $this->session->remove($this->key);
 
-        if ($this->session->has($this->key . '_fingerprint')) {
-            $this->session->remove($this->key . '_fingerprint');
+        if ($this->session->has($this->key.'_fingerprint')) {
+            $this->session->remove($this->key.'_fingerprint');
         }
     }
 
     /**
-     * Retrieve the expected CAPTCHA code
+     * Retrieve the expected CAPTCHA code.
      *
      * @return mixed|null
      */
@@ -112,21 +118,21 @@ class CaptchaValidator
     }
 
     /**
-     * Retrieve the humanity
+     * Retrieve the humanity.
      *
      * @return mixed|null
      */
     protected function getHumanity()
     {
-        return $this->session->get($this->key . '_humanity', 0);
+        return $this->session->get($this->key.'_humanity', 0);
     }
 
     protected function updateHumanity(int $newValue): void
     {
         if ($newValue > 0) {
-            $this->session->set($this->key . '_humanity', $newValue);
+            $this->session->set($this->key.'_humanity', $newValue);
         } else {
-            $this->session->remove($this->key . '_humanity');
+            $this->session->remove($this->key.'_humanity');
         }
     }
 
@@ -136,14 +142,15 @@ class CaptchaValidator
     }
 
     /**
-     * Run a match comparison on the provided code and the expected code
+     * Run a match comparison on the provided code and the expected code.
      *
-     * @param string $code
+     * @param string      $code
      * @param string|null $expectedCode
+     *
      * @return bool
      */
     protected function compare($code, $expectedCode): bool
     {
-        return ($expectedCode !== null && is_string($expectedCode) && $this->niceize($code) == $this->niceize($expectedCode));
+        return null !== $expectedCode && is_string($expectedCode) && $this->niceize($code) == $this->niceize($expectedCode);
     }
 }

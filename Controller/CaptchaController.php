@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Generates a captcha via a URL
+ * Generates a captcha via a URL.
  *
  * @author Jeremy Livingston <jeremy.j.livingston@gmail.com>
  */
