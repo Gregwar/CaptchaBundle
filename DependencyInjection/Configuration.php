@@ -27,7 +27,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('as_url')->defaultValue(false)->end()
                 ->scalarNode('reload')->defaultValue(false)->end()
                 ->scalarNode('image_folder')->defaultValue('captcha')->end()
-                ->scalarNode('web_path')->defaultValue('%kernel.root_dir%/../web')->end()
+                ->scalarNode('web_path')->defaultValue('%kernel.project_dir%/public')->end()
                 ->scalarNode('gc_freq')->defaultValue(100)->end()
                 ->scalarNode('expiration')->defaultValue(60)->end()
                 ->scalarNode('quality')->defaultValue(50)->end()
