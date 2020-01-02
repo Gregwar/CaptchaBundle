@@ -32,5 +32,8 @@
     },
     "config": {
         "sort-packages": true
+    },
+    "require-dev": {
+        "symplify/easy-coding-standard": "^7.1"
     }
 }
