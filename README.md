@@ -11,11 +11,11 @@ It uses [gregwar/captcha](https://github.com/Gregwar/Captcha) as captcha generat
 Compatibility with Symfony
 ==========================
 
-| CaptchaBundle   | Symfony |
-|:---------------:|:-------:|
-| 3.*             | 5.*     |
-| 2.*             | \>= 2.8 |
-| 1.*             | < 2.8   |
+| CaptchaBundle   | Symfony   | PHP     |
+|:---------------:|:---------:|:-------:|
+| 3.*             | 4.* - 5.* | 7.1 >   |
+| 2.*             | 2.8 - 3.* | 5.3.9 > |
+| 1.*             | 2.1 - 2.7 | 5.3.0 > |
 
 
 Installation
