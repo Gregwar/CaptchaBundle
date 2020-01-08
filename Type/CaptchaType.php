@@ -1,22 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Gregwar\CaptchaBundle\Type;
 
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Translation\TranslatorInterface;
-
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Gregwar\CaptchaBundle\Validator\CaptchaValidator;
 use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
 
 /**
- * Captcha type
+ * Captcha type.
  *
  * @author Gregwar <g.passault@gmail.com>
  */
@@ -24,25 +25,16 @@ class CaptchaType extends AbstractType
 {
     const SESSION_KEY_PREFIX = '_captcha_';
 
-    /**
-     * @var SessionInterface
-     */
+    /** @var SessionInterface */
     protected $session;
 
-    /**
-     * @var CaptchaGenerator
-     */
+    /** @var CaptchaGenerator */
     protected $generator;
 
-    /**
-     * @var TranslatorInterface
-     */
+    /** @var TranslatorInterface */
     protected $translator;
 
-    /**
-     * Options
-     * @var array
-     */
+    /** @var array */
     private $options = array();
 
     /**
@@ -53,10 +45,10 @@ class CaptchaType extends AbstractType
      */
     public function __construct(SessionInterface $session, CaptchaGenerator $generator, TranslatorInterface $translator, $options)
     {
-        $this->session      = $session;
-        $this->generator    = $generator;
-        $this->translator   = $translator;
-        $this->options      = $options;
+        $this->session = $session;
+        $this->generator = $generator;
+        $this->translator = $translator;
+        $this->options = $options;
     }
 
     /**
@@ -72,8 +64,8 @@ class CaptchaType extends AbstractType
             $options['bypass_code'],
             $options['humanity']
         );
-        $event = \Symfony\Component\HttpKernel\Kernel::VERSION >= 2.3 ? FormEvents::POST_SUBMIT : FormEvents::POST_BIND;
-        $builder->addEventListener($event, array($validator, 'validate'));
+
+        $builder->addEventListener(FormEvents::POST_SUBMIT, array($validator, 'validate'));
     }
 
     /**
@@ -86,7 +78,7 @@ class CaptchaType extends AbstractType
         }
 
         $sessionKey = sprintf('%s%s', self::SESSION_KEY_PREFIX, $options['session_key']);
-        $isHuman    = false;
+        $isHuman = false;
 
         if ($options['humanity'] > 0) {
             $humanityKey = sprintf('%s_humanity', $sessionKey);
@@ -105,18 +97,18 @@ class CaptchaType extends AbstractType
         }
 
         $view->vars = array_merge($view->vars, array(
-            'captcha_width'     => $options['width'],
-            'captcha_height'    => $options['height'],
-            'reload'            => $options['reload'],
-            'image_id'          => uniqid('captcha_'),
-            'captcha_code'      => $this->generator->getCaptchaCode($options),
-            'value'             => '',
-            'is_human'          => $isHuman
+            'captcha_width' => $options['width'],
+            'captcha_height' => $options['height'],
+            'reload' => $options['reload'],
+            'image_id' => uniqid('captcha_'),
+            'captcha_code' => $this->generator->getCaptchaCode($options),
+            'value' => '',
+            'is_human' => $isHuman,
         ));
 
         $persistOptions = array();
         foreach (array('phrase', 'width', 'height', 'distortion', 'length',
-        'quality', 'background_color', 'background_images', 'text_color') as $key) {
+        'quality', 'background_color', 'background_images', 'text_color', ) as $key) {
             $persistOptions[$key] = $options[$key];
         }
 
@@ -132,36 +124,17 @@ class CaptchaType extends AbstractType
         $resolver->setDefaults($this->options);
     }
 
-    /**
-     * {@inheritdoc}
-     * BC for SF < 2.7
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function getParent(): string
     {
-        $this->configureOptions($resolver);
+        return TextType::class;
     }
 
-    /**
-     * @return string
-     */
-    public function getParent()
-    {
-        // Not using ::class to support Symfony 2.8 w/ php>=5.3.9
-        return 'Symfony\Component\Form\Extension\Core\Type\TextType';
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->getBlockPrefix();
     }
 
-    /**
-     * @return string
-     */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'captcha';
     }

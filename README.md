@@ -11,106 +11,45 @@ It uses [gregwar/captcha](https://github.com/Gregwar/Captcha) as captcha generat
 Compatibility with Symfony
 ==========================
 
-If you are using Symfony `< 2.8`, you should use version `1.*`
+| CaptchaBundle   | Symfony   | PHP     |
+|:---------------:|:---------:|:-------:|
+| 3.*             | 4.* - 5.* | 7.1 >   |
+| 2.*             | 2.8 - 3.* | 5.3.9 > |
+| 1.*             | 2.1 - 2.7 | 5.3.0 > |
 
-If you are using Symfony `>= 2.8`, you should use version `2.*`
 
 Installation
 ============
 
 ### Step 1: Download the GregwarCaptchaBundle
 
-Ultimately, the GregwarCaptchaBundle files should be downloaded to the
-'vendor/bundles/Gregwar/CaptchaBundle' directory.
-
-You can accomplish this several ways, depending on your personal preference.
-The first method is the standard Symfony method.
-
-***Using Composer***
-
-Use composer require to download and install the package.
+Use composer require to download and install the package. 
+At the end of the installation you can automaticly create the configuration thanks to the Symfony recipe.
 
 ``` bash
     composer require gregwar/captcha-bundle
 ```
 
-***Using the vendors script***
-
-Add the following lines to your `deps` file:
-
-```
-    [GregwarCaptchaBundle]
-        git=http://github.com/Gregwar/CaptchaBundle.git
-        target=/bundles/Gregwar/CaptchaBundle
-        version=origin/2.0 <- add this if you are using Symfony 2.0
-```
-
-Now, run the vendors script to download the bundle:
-
-``` bash
-$ php bin/vendors install
-```
-
-***Using submodules***
-
-If you prefer instead to use git submodules, then run the following:
-
-``` bash
-$ git submodule add git://github.com/Gregwar/CaptchaBundle.git vendor/bundles/Gregwar/CaptchaBundle
-$ git submodule update --init
-```
-
-### Step 2: Configure the Autoloader
-
-If you use composer, you can skip this step.
-
-Now you will need to add the `Gregwar` namespace to your autoloader:
-
-``` php
-<?php
-// app/autoload.php
-
-$loader->registerNamespaces(array(
-    // ...
-    'Gregwar' => __DIR__.'/../vendor/bundles',
-));
-```
-### Step 3: Enable the bundle
-
-Finally, enable the bundle in the kernel:
-
-```php
-<?php
-// app/appKernel.php
-
-public function registerBundles()
-{
-    $bundles = array(
-        // ...
-        new Gregwar\CaptchaBundle\GregwarCaptchaBundle(),
-    );
-}
-```
-
 Configuration
 =============
 
-Add the following configuration to your `app/config/config.yml`:
+If you made the configuration automaticly trough the Symfony recipe, you should have the following config file `/config/packages/gregwar_captcha.yaml` 
 
+Otherwise you can create it manually `/config/packages/gregwar_captcha.yaml` with the following default configuration:
+``` yaml
     gregwar_captcha: ~
+```
 
 Usage
 =====
 
 You can use the "captcha" type in your forms this way:
 
-```php
+``` php
 <?php
     use Gregwar\CaptchaBundle\Type\CaptchaType;
     // ...
     $builder->add('captcha', CaptchaType::class); // That's all !
-    // If you're using php<5.5, you can use instead:
-    $builder->add('captcha', 'Gregwar\CaptchaBundle\Type\CaptchaType');
     // ...
 ```
 
@@ -123,7 +62,7 @@ Options
 You can define the following configuration options globally:
 
 * **image_folder**: name of folder for captcha images relative to public web folder in case **as_file** is set to true (default="captcha")
-* **web_path**: absolute path to public web folder (default="%kernel.root_dir%/../web")
+* **web_path**: absolute path to public web folder (default='%kernel.project_dir%/public')
 * **gc_freq**: frequency of garbage collection in fractions of 1 (default=100)
 * **expiration**: maximum lifetime of captcha image files in minutes (default=60)
 
@@ -155,7 +94,7 @@ number of lines depends on the size of the image). (default=null)
 
 Example :
 
-```php
+``` php
 <?php
     use Gregwar\CaptchaBundle\Type\CaptchaType;
     // ...
@@ -168,11 +107,12 @@ Example :
 
 You can also set these options for your whole application using the `gregwar_captcha`
 configuration entry in your `config.yml` file:
-
+``` yaml 
     gregwar_captcha:
         width: 200
         height: 50
         length: 6
+```
 
 Translation
 ===========
@@ -182,15 +122,17 @@ The messages are using the translator, you can either change the `invalid_messag
 As URL
 ============
 To use a URL to generate a captcha image, you must add the bundle's routing configuration to your app/routing.yml file:
-
+``` yaml 
     gregwar_captcha_routing:
         resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
+```
 
 This will use the bundle's route of "/generate-captcha/{key}" to handle the generation. If this route conflicts with an application route, you can prefix the bundle's routes when you import:
-
+``` yaml 
     gregwar_captcha_routing:
         resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
         prefix: /_gcb
+```
 
 Since the session key is transported in the URL, it's also added in another session array, under the `whitelist_key` key, for security reasons
 
@@ -201,7 +143,7 @@ The widget support the standard Symfony theming, see the [documentation](http://
 
 The default rendering is:
 
-```html
+``` twig
 {% block captcha_widget %}
 {% spaceless %}
     <img src="{{ captcha_code }}" title="captcha" width="{{ captcha_width }}" height="{{ captcha_height }}" />

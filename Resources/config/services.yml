@@ -1,4 +1,5 @@
 parameters:
+    gregwar_captcha.controller.class: Gregwar\CaptchaBundle\Controller\CaptchaController
     gregwar_captcha.captcha_type.class: Gregwar\CaptchaBundle\Type\CaptchaType
     gregwar_captcha.captcha_generator.class: Gregwar\CaptchaBundle\Generator\CaptchaGenerator
     gregwar_captcha.image_file_handler.class: Gregwar\CaptchaBundle\Generator\ImageFileHandler
@@ -6,7 +7,15 @@ parameters:
     gregwar_captcha.phrase_builder.class: Gregwar\Captcha\PhraseBuilder
     
 services:
-    captcha.type:
+    gregwar_captcha.controller:
+        class: '%gregwar_captcha.controller.class%'
+        public: true
+        arguments:
+            - '@gregwar_captcha.generator'
+            - '%gregwar_captcha.config%'
+
+#    captcha.type:
+    gregwar_captcha.type:
         class: '%gregwar_captcha.captcha_type.class%'
         public: true
         arguments:

@@ -1,48 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Gregwar\CaptchaBundle\Generator;
 
 use Gregwar\Captcha\CaptchaBuilder;
 use Gregwar\Captcha\PhraseBuilder;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
-
 use Gregwar\Captcha\CaptchaBuilderInterface;
 use Gregwar\Captcha\PhraseBuilderInterface;
 
 /**
- * Uses configuration parameters to call the services that generate captcha images
+ * Uses configuration parameters to call the services that generate captcha images.
  *
  * @author Gregwar <g.passault@gmail.com>
  * @author Jeremy Livingston <jeremy.j.livingston@gmail.com>
  */
 class CaptchaGenerator
 {
-    /**
-     * @var RouterInterface
-     */
+    /** @var RouterInterface */
     protected $router;
 
-    /**
-     * @var CaptchaBuilder
-     */
+    /** @var CaptchaBuilder */
     protected $builder;
 
-    /**
-     * @var PhraseBuilder
-     */
+    /** @var PhraseBuilder */
     protected $phraseBuilder;
 
-    /**
-     * @var ImageFileHandler
-     */
+    /** @var ImageFileHandler */
     protected $imageFileHandler;
 
     /**
-     * @param RouterInterface $router
+     * @param RouterInterface         $router
      * @param CaptchaBuilderInterface $builder
-     * @param PhraseBuilderInterface $phraseBuilder
-     * @param ImageFileHandler $imageFileHandler
+     * @param PhraseBuilderInterface  $phraseBuilder
+     * @param ImageFileHandler        $imageFileHandler
      */
     public function __construct(
         RouterInterface $router,
@@ -50,20 +42,13 @@ class CaptchaGenerator
         PhraseBuilderInterface $phraseBuilder,
         ImageFileHandler $imageFileHandler
     ) {
-        $this->router           = $router;
-        $this->builder          = $builder;
-        $this->phraseBuilder    = $phraseBuilder;
-        $this->imageFileHandler = $imageFileHandler;    
+        $this->router = $router;
+        $this->builder = $builder;
+        $this->phraseBuilder = $phraseBuilder;
+        $this->imageFileHandler = $imageFileHandler;
     }
 
-    /**
-     * Get the captcha URL, stream, or filename that will go in the image's src attribute
-     *
-     * @param array $options
-     *
-     * @return array
-     */
-    public function getCaptchaCode(array &$options)
+    public function getCaptchaCode(array &$options): string
     {
         $this->builder->setPhrase($this->getPhrase($options));
 
@@ -76,27 +61,21 @@ class CaptchaGenerator
 
         // Returns the image generation URL
         if ($options['as_url']) {
-            return $this->router->generate('gregwar_captcha.generate_captcha', 
-                array('key' => $options['session_key'], 'n' => md5(microtime(true).mt_rand())));
+            return $this->router->generate(
+                'gregwar_captcha.generate_captcha',
+                array('key' => $options['session_key'], 'n' => md5(microtime(true).mt_rand()))
+            );
         }
 
-        return 'data:image/jpeg;base64,' . base64_encode($this->generate($options));
+        return 'data:image/jpeg;base64,'.base64_encode($this->generate($options));
     }
 
-    /**
-     * Sets the phrase to the builder
-     */
-    public function setPhrase($phrase)
+    public function setPhrase(string $phrase): void
     {
         $this->builder->setPhrase($phrase);
     }
 
-    /**
-     * @param array $options
-     *
-     * @return string
-     */
-    public function generate(array &$options)
+    public function generate(array &$options): string
     {
         $this->builder->setDistortion($options['distortion']);
 
@@ -104,7 +83,7 @@ class CaptchaGenerator
         $this->builder->setMaxBehindLines($options['max_behind_lines']);
 
         if (isset($options['text_color']) && $options['text_color']) {
-            if (count($options['text_color']) !== 3) {
+            if (3 !== count($options['text_color'])) {
                 throw new \RuntimeException('text_color should be an array of r, g and b');
             }
 
@@ -113,7 +92,7 @@ class CaptchaGenerator
         }
 
         if (isset($options['background_color']) && $options['background_color']) {
-            if (count($options['background_color']) !== 3) {
+            if (3 !== count($options['background_color'])) {
                 throw new \RuntimeException('background_color should be an array of r, g and b');
             }
 
@@ -149,12 +128,7 @@ class CaptchaGenerator
         return $this->imageFileHandler->saveAsFile($content);
     }
 
-    /**
-     * @param array $options
-     *
-     * @return string
-     */
-    public function getPhrase(array &$options)
+    public function getPhrase(array &$options): string
     {
         // Get the phrase that we'll use for this image
         if ($options['keep_value'] && isset($options['phrase'])) {
@@ -163,7 +137,7 @@ class CaptchaGenerator
             $phrase = $this->phraseBuilder->build($options['length'], $options['charset']);
             $options['phrase'] = $phrase;
         }
-        
+
         return $phrase;
     }
 }
