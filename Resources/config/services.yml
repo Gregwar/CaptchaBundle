@@ -7,6 +7,10 @@ parameters:
     gregwar_captcha.phrase_builder.class: Gregwar\Captcha\PhraseBuilder
     
 services:
+    Gregwar\CaptchaBundle\Controller\CaptchaController:
+        public: true
+        alias: 'gregwar_captcha.controller'
+
     gregwar_captcha.controller:
         class: '%gregwar_captcha.controller.class%'
         public: true
