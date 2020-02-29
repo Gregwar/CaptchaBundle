@@ -1,6 +1,6 @@
 {
     "name": "gregwar/captcha-bundle",
-    "type": "captcha-bundle",
+    "type": "symfony-bundle",
     "description": "Captcha bundle",
     "keywords": ["symfony2", "symfony", "captcha", "bot", "visual", "code", "security", "spam"],
     "homepage": "https://github.com/Gregwar/CaptchaBundle",
