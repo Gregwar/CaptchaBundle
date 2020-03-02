@@ -24,20 +24,30 @@ Installation
 ### Step 1: Download the GregwarCaptchaBundle
 
 Use composer require to download and install the package. 
-At the end of the installation you can automaticly create the configuration thanks to the Symfony recipe.
+At the end of the installation, the bundle is automatically registered thanks to the Symfony recipe.
 
 ``` bash
     composer require gregwar/captcha-bundle
 ```
 
+If you don't use flex, register it manually:
+```php
+<?php
+// config/bundles.php
+return [
+    // ...
+    Gregwar\CaptchaBundle\GregwarCaptchaBundle::class => ['all' => true]
+];
+```
+
 Configuration
 =============
 
-If you made the configuration automaticly trough the Symfony recipe, you should have the following config file `/config/packages/gregwar_captcha.yaml` 
-
-Otherwise you can create it manually `/config/packages/gregwar_captcha.yaml` with the following default configuration:
+If you need to customize the global bundle configuration, you can create a  `/config/packages/gregwar_captcha.yaml` file with your configuration:
 ``` yaml
-    gregwar_captcha: ~
+    gregwar_captcha:
+      width: 160
+      height: 50
 ```
 
 Usage
