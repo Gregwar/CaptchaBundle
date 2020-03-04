@@ -17,6 +17,8 @@ services:
         arguments:
             - '@gregwar_captcha.generator'
             - '%gregwar_captcha.config%'
+        tags:
+            - controller.service_arguments
 
 #    captcha.type:
     gregwar_captcha.type:
