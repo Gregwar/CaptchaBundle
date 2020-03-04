@@ -8,10 +8,6 @@ parameters:
     
 services:
     Gregwar\CaptchaBundle\Controller\CaptchaController:
-        public: true
-        alias: 'gregwar_captcha.controller'
-
-    gregwar_captcha.controller:
         class: '%gregwar_captcha.controller.class%'
         public: true
         arguments:
@@ -23,7 +19,6 @@ services:
 #    captcha.type:
     gregwar_captcha.type:
         class: '%gregwar_captcha.captcha_type.class%'
-        public: true
         arguments:
             - '@session'
             - '@gregwar_captcha.generator'
@@ -34,7 +29,6 @@ services:
 
     gregwar_captcha.generator:
         class: '%gregwar_captcha.captcha_generator.class%'
-        public: true
         arguments:
             - '@router'
             - '@gregwar_captcha.captcha_builder'
@@ -43,7 +37,6 @@ services:
 
     gregwar_captcha.image_file_handler:
         class: '%gregwar_captcha.image_file_handler.class%'
-        public: true
         arguments:
             - '%gregwar_captcha.config.image_folder%'
             - '%gregwar_captcha.config.web_path%'
@@ -52,8 +45,6 @@ services:
 
     gregwar_captcha.captcha_builder:
         class: '%gregwar_captcha.captcha_builder.class%'
-        public: true
 
     gregwar_captcha.phrase_builder:
         class: '%gregwar_captcha.phrase_builder.class%'
-        public: true
