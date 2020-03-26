@@ -50,6 +50,16 @@ If you need to customize the global bundle configuration, you can create a  `/co
       height: 50
 ```
 
+### Testing
+
+
+You should disable the captcha type in your test environment:
+
+``` yaml
+gregwar_captcha:
+    disabled: true
+```
+
 Usage
 =====
 
