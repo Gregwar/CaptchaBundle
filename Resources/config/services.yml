@@ -17,6 +17,7 @@ services:
         arguments:
             - '@gregwar_captcha.generator'
             - '%gregwar_captcha.config%'
+        autowire: true
 
 #    captcha.type:
     gregwar_captcha.type:
