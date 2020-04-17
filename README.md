@@ -101,6 +101,7 @@ number of lines depends on the size of the image). (default=null)
 * **background_images**: Sets custom user defined images as the captcha background (1 image is selected randomly). It is recommended to turn off all the effects on the image (ignore_all_effects). The full paths to the images must be passed.
 * **interpolation**: enable or disable the interpolation on the captcha
 * **ignore_all_effects**: Recommended to use when setting background images, will disable all image effects.
+* **session_key**, if you want to host multiple CAPTCHA on the same page, you might have different session keys to ensure proper storage of the clear phrase for those different forms
 
 Example :
 
