@@ -132,14 +132,14 @@ The messages are using the translator, you can either change the `invalid_messag
 
 As URL
 ============
-To use a URL to generate a captcha image, you must add the bundle's routing configuration to your app/routing.yml file:
+To use a URL to generate a captcha image, you must add the bundle's routing configuration to your `config/routes.yaml` file:
 
 ``` yaml 
 gregwar_captcha_routing:
     resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
 ```
 
-This will use the bundle's route of "/generate-captcha/{key}" to handle the generation. If this route conflicts with an application route, you can prefix the bundle's routes when you import:
+This will use the bundle's route of `/generate-captcha/{key}` to handle the generation. If this route conflicts with an application route, you can prefix the bundle's routes when you import:
 
 ``` yaml 
 gregwar_captcha_routing:
