@@ -107,22 +107,22 @@ Example :
 
 ``` php
 <?php
-    use Gregwar\CaptchaBundle\Type\CaptchaType;
-    // ...
-    $builder->add('captcha', CaptchaType::class, array(
-        'width' => 200,
-        'height' => 50,
-        'length' => 6,
-    ));
+use Gregwar\CaptchaBundle\Type\CaptchaType;
+// ...
+$builder->add('captcha', CaptchaType::class, array(
+    'width' => 200,
+    'height' => 50,
+    'length' => 6,
+));
 ```
 
 You can also set these options for your whole application using the `gregwar_captcha`
 configuration entry in your `config.yml` file:
 ``` yaml 
-    gregwar_captcha:
-        width: 200
-        height: 50
-        length: 6
+gregwar_captcha:
+    width: 200
+    height: 50
+    length: 6
 ```
 
 Translation
@@ -133,16 +133,18 @@ The messages are using the translator, you can either change the `invalid_messag
 As URL
 ============
 To use a URL to generate a captcha image, you must add the bundle's routing configuration to your app/routing.yml file:
+
 ``` yaml 
-    gregwar_captcha_routing:
-        resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
+gregwar_captcha_routing:
+    resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
 ```
 
 This will use the bundle's route of "/generate-captcha/{key}" to handle the generation. If this route conflicts with an application route, you can prefix the bundle's routes when you import:
+
 ``` yaml 
-    gregwar_captcha_routing:
-        resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
-        prefix: /_gcb
+gregwar_captcha_routing:
+    resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
+    prefix: /_gcb
 ```
 
 Since the session key is transported in the URL, it's also added in another session array, under the `whitelist_key` key, for security reasons
