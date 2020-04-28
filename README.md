@@ -45,9 +45,9 @@ Configuration
 
 If you need to customize the global bundle configuration, you can create a  `/config/packages/gregwar_captcha.yaml` file with your configuration:
 ``` yaml
-    gregwar_captcha:
-      width: 160
-      height: 50
+gregwar_captcha:
+  width: 160
+  height: 50
 ```
 
 Usage
@@ -57,10 +57,10 @@ You can use the "captcha" type in your forms this way:
 
 ``` php
 <?php
-    use Gregwar\CaptchaBundle\Type\CaptchaType;
-    // ...
-    $builder->add('captcha', CaptchaType::class); // That's all !
-    // ...
+use Gregwar\CaptchaBundle\Type\CaptchaType;
+// ...
+$builder->add('captcha', CaptchaType::class); // That's all !
+// ...
 ```
 
 Note that the generated image will, by default, be embedded in the HTML document
