@@ -18,9 +18,15 @@ class CaptchaController
     /** @var CaptchaGenerator */
     private $captchaGenerator;
 
-    /** @var array */
+    /** @var array<mixed> */
     private $config;
 
+    /**
+     * CaptchaController constructor.
+     *
+     * @param CaptchaGenerator  $captchaGenerator
+     * @param array<mixed>      $config
+     */
     public function __construct(CaptchaGenerator $captchaGenerator, array $config)
     {
         $this->captchaGenerator = $captchaGenerator;
@@ -60,6 +66,11 @@ class CaptchaController
         return $response;
     }
 
+    /**
+     * @param array<mixed> $options
+     *
+     * @return Response
+     */
     private function error(array $options): Response
     {
         $this->captchaGenerator->setPhrase('');

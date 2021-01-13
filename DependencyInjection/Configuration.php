@@ -12,12 +12,13 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('gregwar_captcha');
-        $rootNode = $treeBuilder->getRootNode();
 
-        $rootNode
+        $treeBuilder->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('length')->defaultValue(5)->end()
+                ->scalarNode('length')
+                    ->defaultValue(5)
+                ->end()
                 ->scalarNode('width')->defaultValue(130)->end()
                 ->scalarNode('height')->defaultValue(50)->end()
                 ->scalarNode('font')->defaultValue(__DIR__.'/../Generator/Font/captcha.ttf')->end()

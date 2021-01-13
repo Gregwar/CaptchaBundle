@@ -7,8 +7,6 @@ namespace Gregwar\CaptchaBundle\Generator;
 use Gregwar\Captcha\CaptchaBuilder;
 use Gregwar\Captcha\PhraseBuilder;
 use Symfony\Component\Routing\RouterInterface;
-use Gregwar\Captcha\CaptchaBuilderInterface;
-use Gregwar\Captcha\PhraseBuilderInterface;
 
 /**
  * Uses configuration parameters to call the services that generate captcha images.
@@ -32,14 +30,14 @@ class CaptchaGenerator
 
     /**
      * @param RouterInterface         $router
-     * @param CaptchaBuilderInterface $builder
-     * @param PhraseBuilderInterface  $phraseBuilder
+     * @param CaptchaBuilder          $builder
+     * @param PhraseBuilder           $phraseBuilder
      * @param ImageFileHandler        $imageFileHandler
      */
     public function __construct(
         RouterInterface $router,
-        CaptchaBuilderInterface $builder,
-        PhraseBuilderInterface $phraseBuilder,
+        CaptchaBuilder $builder,
+        PhraseBuilder $phraseBuilder,
         ImageFileHandler $imageFileHandler
     ) {
         $this->router = $router;
@@ -48,6 +46,11 @@ class CaptchaGenerator
         $this->imageFileHandler = $imageFileHandler;
     }
 
+    /**
+     * @param array<mixed> $options
+     *
+     * @return string
+     */
     public function getCaptchaCode(array &$options): string
     {
         $this->builder->setPhrase($this->getPhrase($options));
@@ -75,6 +78,11 @@ class CaptchaGenerator
         $this->builder->setPhrase($phrase);
     }
 
+    /**
+     * @param array<mixed> $options
+     *
+     * @return string
+     */
     public function generate(array &$options): string
     {
         $this->builder->setDistortion($options['distortion']);
@@ -122,12 +130,19 @@ class CaptchaGenerator
             ob_start();
             imagejpeg($content, null, $options['quality']);
 
-            return ob_get_clean();
+            $bufferContents = ob_get_clean();
+
+            return false === $bufferContents ? '' : $bufferContents;
         }
 
         return $this->imageFileHandler->saveAsFile($content);
     }
 
+    /**
+     * @param array<mixed> $options
+     *
+     * @return string
+     */
     public function getPhrase(array &$options): string
     {
         // Get the phrase that we'll use for this image

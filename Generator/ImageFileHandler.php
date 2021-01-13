@@ -45,10 +45,10 @@ class ImageFileHandler
     /**
      * @param string $imageFolder
      * @param string $webPath
-     * @param string $gcFreq
-     * @param string $expiration
+     * @param int    $gcFreq
+     * @param int    $expiration
      */
-    public function __construct(string $imageFolder, string $webPath, string $gcFreq, string $expiration)
+    public function __construct(string $imageFolder, string $webPath, int $gcFreq, int $expiration)
     {
         $this->imageFolder = $imageFolder;
         $this->webPath = $webPath;
@@ -56,6 +56,11 @@ class ImageFileHandler
         $this->expiration = $expiration;
     }
 
+    /**
+     * @param resource $contents
+     *
+     * @return string
+     */
     public function saveAsFile($contents): string
     {
         $this->createFolderIfMissing();

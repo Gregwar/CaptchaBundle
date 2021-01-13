@@ -18,7 +18,7 @@ use Symfony\Component\Config\FileLocator;
 class GregwarCaptchaExtension extends Extension
 {
     /**
-     * @param array            $configs
+     * @param array<mixed>     $configs
      * @param ContainerBuilder $container
      *
      * @throws Exception
