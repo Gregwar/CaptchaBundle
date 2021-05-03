@@ -34,16 +34,16 @@ class CaptchaType extends AbstractType
     /** @var TranslatorInterface */
     protected $translator;
 
-    /** @var array */
-    private $options = array();
+    /** @var array<mixed> */
+    private $options;
 
     /**
-     * @param SessionInterface    $session
-     * @param CaptchaGenerator    $generator
+     * @param SessionInterface $session
+     * @param CaptchaGenerator $generator
      * @param TranslatorInterface $translator
-     * @param array               $options
+     * @param array<mixed> $options
      */
-    public function __construct(SessionInterface $session, CaptchaGenerator $generator, TranslatorInterface $translator, $options)
+    public function __construct(SessionInterface $session, CaptchaGenerator $generator, TranslatorInterface $translator, array $options)
     {
         $this->session = $session;
         $this->generator = $generator;
@@ -52,9 +52,10 @@ class CaptchaType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @param FormBuilderInterface<mixed> $builder
+     * @param array<mixed> $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $validator = new CaptchaValidator(
             $this->translator,
@@ -69,9 +70,11 @@ class CaptchaType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @param FormView<mixed> $view
+     * @param FormInterface<mixed> $form
+     * @param array<mixed> $options
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         if ($options['reload'] && !$options['as_url']) {
             throw new \InvalidArgumentException('GregwarCaptcha: The reload option cannot be set without as_url, see the README for more information');
@@ -118,7 +121,7 @@ class CaptchaType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $this->options['mapped'] = false;
         $resolver->setDefaults($this->options);
