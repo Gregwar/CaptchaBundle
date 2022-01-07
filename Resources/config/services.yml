@@ -24,7 +24,7 @@ services:
         class: '%gregwar_captcha.captcha_type.class%'
         public: true
         arguments:
-            - '@session'
+            - '@request_stack'
             - '@gregwar_captcha.generator'
             - '@translator'
             - '%gregwar_captcha.config%'

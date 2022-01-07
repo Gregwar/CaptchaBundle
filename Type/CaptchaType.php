@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Gregwar\CaptchaBundle\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\AbstractType;
@@ -15,6 +14,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Gregwar\CaptchaBundle\Validator\CaptchaValidator;
 use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
+use Symfony\Component\HttpFoundation\RequestStack; 
 
 /**
  * Captcha type.
@@ -43,9 +43,9 @@ class CaptchaType extends AbstractType
      * @param TranslatorInterface $translator
      * @param array<mixed> $options
      */
-    public function __construct(SessionInterface $session, CaptchaGenerator $generator, TranslatorInterface $translator, array $options)
+    public function __construct(RequestStack $requestStack, CaptchaGenerator $generator, TranslatorInterface $translator, array $options)
     {
-        $this->session = $session;
+        $this->session = $requestStack->getSession();
         $this->generator = $generator;
         $this->translator = $translator;
         $this->options = $options;
