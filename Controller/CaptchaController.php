@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Gregwar\CaptchaBundle\Controller;
 
 use Gregwar\CaptchaBundle\Generator\CaptchaGenerator;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,14 +13,20 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Jeremy Livingston <jeremy.j.livingston@gmail.com>
  */
-class CaptchaController extends AbstractController
+class CaptchaController
 {
     /** @var CaptchaGenerator */
     private $captchaGenerator;
 
-    /** @var array */
+    /** @var array<mixed> */
     private $config;
 
+    /**
+     * CaptchaController constructor.
+     *
+     * @param CaptchaGenerator  $captchaGenerator
+     * @param array<mixed>      $config
+     */
     public function __construct(CaptchaGenerator $captchaGenerator, array $config)
     {
         $this->captchaGenerator = $captchaGenerator;
@@ -61,6 +66,11 @@ class CaptchaController extends AbstractController
         return $response;
     }
 
+    /**
+     * @param array<mixed> $options
+     *
+     * @return Response
+     */
     private function error(array $options): Response
     {
         $this->captchaGenerator->setPhrase('');

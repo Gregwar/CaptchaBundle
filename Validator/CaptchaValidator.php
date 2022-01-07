@@ -36,7 +36,7 @@ class CaptchaValidator
     /**
      * Configuration parameter used to bypass a required code match.
      *
-     * @var string
+     * @var string|null
      */
     private $bypassCode;
 
@@ -149,7 +149,7 @@ class CaptchaValidator
      *
      * @return bool
      */
-    protected function compare($code, $expectedCode): bool
+    protected function compare(string $code, ?string $expectedCode): bool
     {
         return null !== $expectedCode && is_string($expectedCode) && $this->niceize($code) == $this->niceize($expectedCode);
     }
