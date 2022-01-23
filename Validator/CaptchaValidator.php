@@ -17,42 +17,42 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class CaptchaValidator
 {
     /** @var SessionInterface */
-    private $session;
+    protected $session;
 
     /**
      * Session key to store the code.
      *
      * @var string
      */
-    private $key;
+    protected $key;
 
     /**
      * Error message text for non-matching submissions.
      *
      * @var string
      */
-    private $invalidMessage;
+    protected $invalidMessage;
 
     /**
      * Configuration parameter used to bypass a required code match.
      *
      * @var string|null
      */
-    private $bypassCode;
+    protected $bypassCode;
 
     /**
      * Number of form that the user can submit without captcha.
      *
      * @var int
      */
-    private $humanity;
+    protected $humanity;
 
     /**
      * Translator.
      *
      * @var TranslatorInterface
      */
-    private $translator;
+    protected $translator;
 
     public function __construct(
         TranslatorInterface $translator,
