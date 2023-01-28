@@ -171,6 +171,14 @@ Image creation
 If you choose to use image files instead of embedding the widget will execute a garbage collection
 randomly and delete images that exceed the configured lifetime.
 
+Use internal Quality-Tools
+==============
+
+```
+vendor/bin/phpstan analyse
+vendor/bin/ecs check .
+```
+
 License
 =======
 This bundle is under the MIT license. See the complete license in the bundle:
