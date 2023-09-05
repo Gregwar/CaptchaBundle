@@ -2,24 +2,32 @@
     "name": "gregwar/captcha-bundle",
     "type": "symfony-bundle",
     "description": "Captcha bundle",
-    "keywords": ["symfony2", "symfony", "captcha", "bot", "visual", "code", "security", "spam"],
+    "keywords": ["symfony2", "symfony", "captcha", "bot", "visual", "code", "security", "spam", "split", "multiple"],
     "homepage": "https://github.com/Gregwar/CaptchaBundle",
     "license": "MIT",
     "authors": [
         {
             "name": "Grégoire Passault",
             "email": "g.passault@gmail.com",
-            "homepage": "http://www.gregwar.com/"
+            "homepage": "http://www.gregwar.com/",
+            "role": "Developer"
         },
         {
             "name": "Jeremy Livingston",
-            "email": "jeremy.j.livingston@gmail.com"
+            "email": "jeremy.j.livingston@gmail.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Petronel Malutan",
+            "email": "malutanpetronel@gmail.com",
+            "homepage": "https://www.webnou.ro/",
+            "role": "Developer"
         }
     ],
     "require": {
         "php": ">=7.1.3",
         "ext-gd": "*",
-        "gregwar/captcha": "^1.1.9",
+        "malutanpetronel/captcha": "@dev",
         "symfony/form": "~5.0|~6.0",
         "symfony/framework-bundle": "~5.0|~6.0",
         "symfony/translation": "~5.0|^6.0",
