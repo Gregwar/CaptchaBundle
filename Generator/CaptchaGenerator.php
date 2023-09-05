@@ -115,6 +115,8 @@ class CaptchaGenerator
         $this->builder->setBackgroundImages($options['background_images']);
         $this->builder->setIgnoreAllEffects($options['ignore_all_effects']);
 
+        $letters = strlen($options['phrase']);
+
         $content = $this->builder->build(
             $options['width'],
             $options['height'],
@@ -126,9 +128,19 @@ class CaptchaGenerator
             $options['fingerprint'] = $this->builder->getFingerprint();
         }
 
+        $resImage = imagecreatetruecolor ($options['width'], $options['height']);
+
         if (!$options['as_file']) {
             ob_start();
-            imagejpeg($content, null, $options['quality']);
+
+            $i=0;
+            foreach ($content as $letterImg) {
+                $x = imagesx($letterImg);
+                $y = imagesy($letterImg);
+                imagecopymerge ($resImage, $letterImg, $x * $i, 0, 0, 0, $x, $y, 100);;
+                $i++;
+            }
+            imagejpeg($resImage, null, $options['quality']);
 
             $bufferContents = ob_get_clean();
 
