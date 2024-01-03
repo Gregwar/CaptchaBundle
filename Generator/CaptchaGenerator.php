@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gregwar\CaptchaBundle\Generator;
 
+use GdImage;
 use Gregwar\Captcha\CaptchaBuilder;
 use Gregwar\Captcha\PhraseBuilder;
 use Symfony\Component\Routing\RouterInterface;
@@ -16,17 +17,13 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class CaptchaGenerator
 {
-    /** @var RouterInterface */
-    protected $router;
+    protected RouterInterface $router;
 
-    /** @var CaptchaBuilder */
-    protected $builder;
+    protected CaptchaBuilder $builder;
 
-    /** @var PhraseBuilder */
-    protected $phraseBuilder;
+    protected PhraseBuilder $phraseBuilder;
 
-    /** @var ImageFileHandler */
-    protected $imageFileHandler;
+    protected ImageFileHandler $imageFileHandler;
 
     /**
      * @param RouterInterface         $router
@@ -48,8 +45,6 @@ class CaptchaGenerator
 
     /**
      * @param array<mixed> $options
-     *
-     * @return string
      */
     public function getCaptchaCode(array &$options): string
     {
@@ -80,8 +75,6 @@ class CaptchaGenerator
 
     /**
      * @param array<mixed> $options
-     *
-     * @return string
      */
     public function generate(array &$options): string
     {
@@ -110,11 +103,12 @@ class CaptchaGenerator
 
         $this->builder->setInterpolation($options['interpolation']);
 
-        $fingerprint = isset($options['fingerprint']) ? $options['fingerprint'] : null;
+        $fingerprint = $options['fingerprint'] ?? null;
 
         $this->builder->setBackgroundImages($options['background_images']);
         $this->builder->setIgnoreAllEffects($options['ignore_all_effects']);
 
+        /** @var GdImage $content */
         $content = $this->builder->build(
             $options['width'],
             $options['height'],
@@ -140,8 +134,6 @@ class CaptchaGenerator
 
     /**
      * @param array<mixed> $options
-     *
-     * @return string
      */
     public function getPhrase(array &$options): string
     {

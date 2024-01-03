@@ -15,17 +15,15 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CaptchaController
 {
-    /** @var CaptchaGenerator */
-    private $captchaGenerator;
+    private CaptchaGenerator $captchaGenerator;
 
     /** @var array<mixed> */
-    private $config;
+    private array $config;
 
     /**
      * CaptchaController constructor.
      *
-     * @param CaptchaGenerator  $captchaGenerator
-     * @param array<mixed>      $config
+     * @param array<mixed> $config
      */
     public function __construct(CaptchaGenerator $captchaGenerator, array $config)
     {
