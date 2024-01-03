@@ -19,7 +19,7 @@
     "require": {
         "php": ">=8.0.2",
         "ext-gd": "*",
-        "gregwar/captcha": "^1.1.9",
+        "gregwar/captcha": "^1.2.1",
         "symfony/form": "~6.0|~7.0",
         "symfony/framework-bundle": "~6.0|~7.0",
         "symfony/translation": "~6.0|^7.0",
@@ -31,14 +31,11 @@
         }
     },
     "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
+        "sort-packages": true
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.45",
-        "phpstan/phpstan": "^1",
+        "phpstan/phpstan": "^1.10",
         "symplify/easy-coding-standard": "^12"
     }
 }
