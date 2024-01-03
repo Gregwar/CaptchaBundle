@@ -18,8 +18,7 @@ use Symfony\Component\Config\FileLocator;
 class GregwarCaptchaExtension extends Extension
 {
     /**
-     * @param array<mixed>     $configs
-     * @param ContainerBuilder $container
+     * @param array<mixed> $configs
      *
      * @throws Exception
      */
@@ -38,6 +37,7 @@ class GregwarCaptchaExtension extends Extension
         $container->setParameter('gregwar_captcha.config.expiration', $config['expiration']);
         $container->setParameter('gregwar_captcha.config.whitelist_key', $config['whitelist_key']);
 
+        /** @var array<string> $resources */
         $resources = $container->getParameter('twig.form.resources');
         $container->setParameter('twig.form.resources', array_merge(array('@GregwarCaptcha/captcha.html.twig'), $resources));
     }

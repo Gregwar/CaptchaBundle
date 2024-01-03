@@ -16,43 +16,32 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class CaptchaValidator
 {
-    /** @var SessionInterface */
-    private $session;
+    private SessionInterface $session;
 
     /**
      * Session key to store the code.
-     *
-     * @var string
      */
-    private $key;
+    private string $key;
 
     /**
      * Error message text for non-matching submissions.
-     *
-     * @var string
      */
-    private $invalidMessage;
+    private string $invalidMessage;
 
     /**
      * Configuration parameter used to bypass a required code match.
-     *
-     * @var string|null
      */
-    private $bypassCode;
+    private ?string $bypassCode;
 
     /**
      * Number of form that the user can submit without captcha.
-     *
-     * @var int
      */
-    private $humanity;
+    private int $humanity;
 
     /**
      * Translator.
-     *
-     * @var TranslatorInterface
      */
-    private $translator;
+    private TranslatorInterface $translator;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -86,7 +75,7 @@ class CaptchaValidator
             }
         }
 
-        if (!(null !== $code && is_string($code) && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
+        if (!(is_string($code) && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
             $form->addError(new FormError($this->translator->trans($this->invalidMessage, array(), 'validators')));
         } else {
             if ($this->humanity > 0) {
@@ -103,10 +92,8 @@ class CaptchaValidator
 
     /**
      * Retrieve the expected CAPTCHA code.
-     *
-     * @return mixed|null
      */
-    protected function getExpectedCode()
+    protected function getExpectedCode(): ?string
     {
         $options = $this->session->get($this->key, array());
 
@@ -119,12 +106,10 @@ class CaptchaValidator
 
     /**
      * Retrieve the humanity.
-     *
-     * @return mixed|null
      */
-    protected function getHumanity()
+    protected function getHumanity(): int
     {
-        return $this->session->get($this->key.'_humanity', 0);
+        return (int) $this->session->get($this->key.'_humanity', 0);
     }
 
     protected function updateHumanity(int $newValue): void
@@ -143,14 +128,9 @@ class CaptchaValidator
 
     /**
      * Run a match comparison on the provided code and the expected code.
-     *
-     * @param string      $code
-     * @param string|null $expectedCode
-     *
-     * @return bool
      */
     protected function compare(string $code, ?string $expectedCode): bool
     {
-        return null !== $expectedCode && is_string($expectedCode) && $this->niceize($code) == $this->niceize($expectedCode);
+        return is_string($expectedCode) && $this->niceize($code) == $this->niceize($expectedCode);
     }
 }

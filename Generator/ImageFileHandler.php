@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gregwar\CaptchaBundle\Generator;
 
+use GdImage;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -16,31 +17,23 @@ class ImageFileHandler
 {
     /**
      * Name of folder for captcha images.
-     *
-     * @var string
      */
-    protected $imageFolder;
+    protected string $imageFolder;
 
     /**
      * Absolute path to public web folder.
-     *
-     * @var string
      */
-    protected $webPath;
+    protected string $webPath;
 
     /**
      * Frequency of garbage collection in fractions of 1.
-     *
-     * @var int
      */
-    protected $gcFreq;
+    protected int $gcFreq;
 
     /**
      * Maximum age of images in minutes.
-     *
-     * @var int
      */
-    protected $expiration;
+    protected int $expiration;
 
     /**
      * @param string $imageFolder
@@ -56,12 +49,7 @@ class ImageFileHandler
         $this->expiration = $expiration;
     }
 
-    /**
-     * @param resource $contents
-     *
-     * @return string
-     */
-    public function saveAsFile($contents): string
+    public function saveAsFile(GdImage $contents): string
     {
         $this->createFolderIfMissing();
 
@@ -74,7 +62,7 @@ class ImageFileHandler
 
     public function collectGarbage(): bool
     {
-        if (1 == !mt_rand(1, $this->gcFreq)) {
+        if (1 != mt_rand(1, $this->gcFreq)) {
             return false;
         }
 
