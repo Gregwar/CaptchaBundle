@@ -11,12 +11,13 @@ It uses [gregwar/captcha](https://github.com/Gregwar/Captcha) as captcha generat
 Compatibility with Symfony
 ==========================
 
-| CaptchaBundle   | Symfony   | PHP      |
-|:---------------:|:---------:|:--------:|
-| 2.2.*           | 5.* - 6.* | >= 7.1   |
-| 2.1.*           | 4.* - 5.* | >= 7.1   |
-| 2.0.*           | 2.8 - 3.* | >= 5.3.9 |
-| 1.*             | 2.1 - 2.7 | >= 5.3.0 |
+| CaptchaBundle |  Symfony  |   PHP    |
+|:-------------:|:---------:|:--------:|
+|     2.3.*     | 6.* - 7.* | >= 8.0.2 |
+|     2.2.*     | 5.* - 6.* |  >= 7.1  |
+|     2.1.*     | 4.* - 5.* |  >= 7.1  |
+|     2.0.*     | 2.8 - 3.* | >= 5.3.9 |
+|      1.*      | 2.1 - 2.7 | >= 5.3.0 |
 
 
 Installation
@@ -170,6 +171,14 @@ Image creation
 ==============
 If you choose to use image files instead of embedding the widget will execute a garbage collection
 randomly and delete images that exceed the configured lifetime.
+
+Use internal Quality-Tools
+==============
+
+```
+vendor/bin/phpstan analyse
+vendor/bin/ecs check .
+```
 
 License
 =======
