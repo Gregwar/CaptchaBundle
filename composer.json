@@ -27,7 +27,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Gregwar\\CaptchaBundle\\": "/"
+            "Gregwar\\CaptchaBundle\\": ""
         }
     },
     "config": {
