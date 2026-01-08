@@ -20,9 +20,9 @@
         "php": ">=8.0.2",
         "ext-gd": "*",
         "gregwar/captcha": "^1.2.1",
-        "symfony/form": "~6.0|~7.0",
-        "symfony/framework-bundle": "~6.0|~7.0",
-        "symfony/translation": "~6.0|^7.0",
+        "symfony/form": "~6.0|~7.0|~8.0",
+        "symfony/framework-bundle": "~6.0|~7.0|~8.0",
+        "symfony/translation": "~6.0|~7.0|~8.0",
         "twig/twig": "^3.0"
     },
     "autoload": {
