@@ -28,22 +28,16 @@ class CaptchaType extends AbstractType
 
     protected SessionInterface $session;
 
-    protected CaptchaGenerator $generator;
-
-    protected TranslatorInterface $translator;
-
-    /** @var array<mixed> */
-    private array $options;
-
     /**
      * @param array<mixed> $options
      */
-    public function __construct(RequestStack $requestStack, CaptchaGenerator $generator, TranslatorInterface $translator, array $options)
+    public function __construct(
+        RequestStack $requestStack,
+        protected CaptchaGenerator $generator,
+        protected TranslatorInterface $translator,
+        private array $options)
     {
         $this->session = $requestStack->getSession();
-        $this->generator = $generator;
-        $this->translator = $translator;
-        $this->options = $options;
     }
 
     /**
@@ -61,7 +55,7 @@ class CaptchaType extends AbstractType
             $options['humanity']
         );
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, array($validator, 'validate'));
+        $builder->addEventListener(FormEvents::POST_SUBMIT, $validator->validate(...));
     }
 
     /**
@@ -86,7 +80,7 @@ class CaptchaType extends AbstractType
         }
 
         if ($options['as_url']) {
-            $keys = $this->session->get($options['whitelist_key'], array());
+            $keys = $this->session->get($options['whitelist_key'], []);
             if (!in_array($sessionKey, $keys)) {
                 $keys[] = $sessionKey;
             }
@@ -94,7 +88,7 @@ class CaptchaType extends AbstractType
             $options['session_key'] = $sessionKey;
         }
 
-        $view->vars = array_merge($view->vars, array(
+        $view->vars = array_merge($view->vars, [
             'captcha_width' => $options['width'],
             'captcha_height' => $options['height'],
             'reload' => $options['reload'],
@@ -102,14 +96,12 @@ class CaptchaType extends AbstractType
             'captcha_code' => $this->generator->getCaptchaCode($options),
             'value' => '',
             'is_human' => $isHuman,
-        ));
+        ]);
 
-        $persistOptions = array();
-        foreach (array('phrase', 'width', 'height', 'distortion', 'length',
-        'quality', 'background_color', 'background_images', 'text_color',
-        'charset', 'ignore_all_effects', 'max_front_lines', 'humanity', ) as $key) {
-            $persistOptions[$key] = $options[$key];
-        }
+        $allowed = ['phrase', 'width', 'height', 'distortion', 'length',
+            'quality', 'background_color', 'background_images', 'text_color',
+            'charset', 'ignore_all_effects', 'max_front_lines', 'humanity', ];
+        $persistOptions = array_intersect_key($options, array_flip($allowed));
 
         $this->session->set($sessionKey, $persistOptions);
     }

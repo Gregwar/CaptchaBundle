@@ -48,7 +48,7 @@ class CaptchaController
             return $this->error($this->config);
         }
 
-        $persistedOptions = $session->get($key, array());
+        $persistedOptions = $session->get($key, []);
         $options = array_merge($this->config, $persistedOptions);
 
         $phrase = $this->captchaGenerator->getPhrase($options);

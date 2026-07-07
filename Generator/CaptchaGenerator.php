@@ -17,30 +17,12 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class CaptchaGenerator
 {
-    protected RouterInterface $router;
-
-    protected CaptchaBuilder $builder;
-
-    protected PhraseBuilder $phraseBuilder;
-
-    protected ImageFileHandler $imageFileHandler;
-
-    /**
-     * @param RouterInterface         $router
-     * @param CaptchaBuilder          $builder
-     * @param PhraseBuilder           $phraseBuilder
-     * @param ImageFileHandler        $imageFileHandler
-     */
     public function __construct(
-        RouterInterface $router,
-        CaptchaBuilder $builder,
-        PhraseBuilder $phraseBuilder,
-        ImageFileHandler $imageFileHandler
+        protected RouterInterface $router,
+        protected CaptchaBuilder $builder,
+        protected PhraseBuilder $phraseBuilder,
+        protected ImageFileHandler $imageFileHandler
     ) {
-        $this->router = $router;
-        $this->builder = $builder;
-        $this->phraseBuilder = $phraseBuilder;
-        $this->imageFileHandler = $imageFileHandler;
     }
 
     /**
@@ -60,8 +42,10 @@ class CaptchaGenerator
         // Returns the image generation URL
         if ($options['as_url']) {
             return $this->router->generate(
-                'gregwar_captcha.generate_captcha',
-                array('key' => $options['session_key'], 'n' => md5(microtime(true).mt_rand()))
+                'gregwar_captcha.generate_captcha', [
+                    'key' => $options['session_key'],
+                    'n' => md5(microtime(true).mt_rand())
+                ]
             );
         }
 

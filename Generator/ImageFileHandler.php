@@ -16,37 +16,18 @@ use Symfony\Component\Finder\Finder;
 class ImageFileHandler
 {
     /**
-     * Name of folder for captcha images.
+     * @param string $imageFolder name of folder for captcha images
+     * @param string $webPath absolute path to public web folder
+     * @param int    $gcFreq frequency of garbage collection in fractions of 1
+     * @param int    $expiration maximum age of images in minutes
      */
-    protected string $imageFolder;
-
-    /**
-     * Absolute path to public web folder.
-     */
-    protected string $webPath;
-
-    /**
-     * Frequency of garbage collection in fractions of 1.
-     */
-    protected int $gcFreq;
-
-    /**
-     * Maximum age of images in minutes.
-     */
-    protected int $expiration;
-
-    /**
-     * @param string $imageFolder
-     * @param string $webPath
-     * @param int    $gcFreq
-     * @param int    $expiration
-     */
-    public function __construct(string $imageFolder, string $webPath, int $gcFreq, int $expiration)
+    public function __construct(
+        protected string $imageFolder,
+        protected string $webPath,
+        protected int $gcFreq,
+        protected int $expiration
+    )
     {
-        $this->imageFolder = $imageFolder;
-        $this->webPath = $webPath;
-        $this->gcFreq = $gcFreq;
-        $this->expiration = $expiration;
     }
 
     public function saveAsFile(GdImage $contents): string

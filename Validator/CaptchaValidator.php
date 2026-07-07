@@ -14,49 +14,24 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *
  * @author Gregwar <g.passault@gmail.com>
  */
-class CaptchaValidator
+readonly class CaptchaValidator
 {
-    private SessionInterface $session;
-
     /**
-     * Session key to store the code.
+     * @param TranslatorInterface $translator
+     * @param SessionInterface $session
+     * @param string $key session key to store the code
+     * @param string $invalidMessage error message text for non-matching submissions
+     * @param string|null $bypassCode configuration parameter used to bypass a required code match
+     * @param int $humanity number of form that the user can submit without captcha
      */
-    private string $key;
-
-    /**
-     * Error message text for non-matching submissions.
-     */
-    private string $invalidMessage;
-
-    /**
-     * Configuration parameter used to bypass a required code match.
-     */
-    private ?string $bypassCode;
-
-    /**
-     * Number of form that the user can submit without captcha.
-     */
-    private int $humanity;
-
-    /**
-     * Translator.
-     */
-    private TranslatorInterface $translator;
-
     public function __construct(
-        TranslatorInterface $translator,
-        SessionInterface $session,
-        string $key,
-        string $invalidMessage,
-        ?string $bypassCode,
-        int $humanity
+        private TranslatorInterface $translator,
+        private SessionInterface $session,
+        private string $key,
+        private string $invalidMessage,
+        private ?string $bypassCode,
+        private int $humanity
     ) {
-        $this->translator = $translator;
-        $this->session = $session;
-        $this->key = $key;
-        $this->invalidMessage = $invalidMessage;
-        $this->bypassCode = $bypassCode;
-        $this->humanity = $humanity;
     }
 
     public function validate(FormEvent $event): void
@@ -76,7 +51,7 @@ class CaptchaValidator
         }
 
         if (!(is_string($code) && ($this->compare($code, $expectedCode) || $this->compare($code, $this->bypassCode)))) {
-            $form->addError(new FormError($this->translator->trans($this->invalidMessage, array(), 'validators')));
+            $form->addError(new FormError($this->translator->trans($this->invalidMessage, [], 'validators')));
         } else {
             if ($this->humanity > 0) {
                 $this->updateHumanity($this->humanity);
@@ -95,7 +70,7 @@ class CaptchaValidator
      */
     protected function getExpectedCode(): ?string
     {
-        $options = $this->session->get($this->key, array());
+        $options = $this->session->get($this->key, []);
 
         if (is_array($options) && isset($options['phrase'])) {
             return $options['phrase'];
