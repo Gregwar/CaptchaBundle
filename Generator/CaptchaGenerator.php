@@ -107,10 +107,7 @@ class CaptchaGenerator
         if (!$options['as_file']) {
             ob_start();
             imagejpeg($content, null, $options['quality']);
-
-            $bufferContents = ob_get_clean();
-
-            return false === $bufferContents ? '' : $bufferContents;
+            return ob_get_clean();
         }
 
         return $this->imageFileHandler->saveAsFile($content);
