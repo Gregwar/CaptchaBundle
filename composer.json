@@ -17,9 +17,9 @@
         }
     ],
     "require": {
-        "php": ">=8.0.2",
+        "php": ">=8.2",
         "ext-gd": "*",
-        "gregwar/captcha": "^1.2.1",
+        "gregwar/captcha": "^2.1",
         "symfony/form": "~6.0|~7.0|~8.0",
         "symfony/framework-bundle": "~6.0|~7.0|~8.0",
         "symfony/translation": "~6.0|~7.0|~8.0",
@@ -35,7 +35,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.45",
-        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan": "^2.2.5",
         "symplify/easy-coding-standard": "^12"
     }
 }

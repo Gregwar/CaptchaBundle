@@ -111,11 +111,11 @@ Example :
 <?php
 use Gregwar\CaptchaBundle\Type\CaptchaType;
 // ...
-$builder->add('captcha', CaptchaType::class, array(
+$builder->add('captcha', CaptchaType::class, [
     'width' => 200,
     'height' => 50,
     'length' => 6,
-));
+]);
 ```
 
 You can also set these options for your whole application using the `gregwar_captcha`
